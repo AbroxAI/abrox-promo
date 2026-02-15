@@ -1,218 +1,309 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Abrox</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Abrox</title>
 
-  <!-- Tailwind CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: { bgDark: '#05070a' },
-          boxShadow: {
-            'soft-xl': '0 20px 60px rgba(0,0,0,0.55), inset 0 -4px 20px rgba(0,0,0,0.2)'
-          }
-        }
-      }
-    }
-  </script>
-
-  <style>
-    :root{
-      --glow-color: 235,80,255;
-      --glow-alpha: 0.22;
-      --glow-alpha-2: 0.08;
-      --glow-blur: 36px;
-      --glow-spread: 18%;
-    }
-
-    .logo-glow {
-      position: relative;
-      display: inline-block;
-      padding: 0.125rem;
-      border-radius: 0.5rem;
-      isolation: isolate;
-    }
-
-    .logo-glow::before{
-      content: '';
-      position: absolute;
-      left: calc(-1 * var(--glow-spread));
-      top: calc(-1 * var(--glow-spread));
-      width: calc(100% + (var(--glow-spread) * 2));
-      height: calc(100% + (var(--glow-spread) * 2));
-      border-radius: 14px;
-      background: radial-gradient(40% 40% at 25% 20%,
-        rgba(var(--glow-color), var(--glow-alpha)) 0%,
-        rgba(var(--glow-color), calc(var(--glow-alpha) * 0.6)) 20%,
-        rgba(var(--glow-color), var(--glow-alpha-2)) 55%,
-        transparent 70%);
-      filter: blur(var(--glow-blur));
-      z-index: 0;
-      pointer-events: none;
-      opacity: .92;
-      animation: glowPulse 3.6s ease-in-out infinite;
-    }
-
-    .logo-glow img {
-      position: relative;
-      z-index: 10;
-      display: block;
-      background: transparent;
-      border-radius: 0;
-      width: 100%;
-      height: auto;
-      object-fit: contain;
-    }
-
-    @keyframes glowPulse {
-      0%   { transform: scale(.995); opacity: .86; }
-      50%  { transform: scale(1.04); opacity: 1; }
-      100% { transform: scale(.995); opacity: .86; }
-    }
-
-    .premium-cta {
-      transition: transform .12s ease, box-shadow .18s ease;
-      box-shadow: 0 8px 22px rgba(2,6,23,0.55);
-      border: 1px solid rgba(255,255,255,0.035);
-    }
-
-    .premium-cta:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 18px 48px rgba(2,6,23,0.65);
-    }
-
-    .fade-in { opacity: 0; transition: opacity .6s ease; }
-    .fade-in.ready { opacity: 1; }
-
-    @media (hover: hover) {
-      video::-webkit-media-controls { opacity: 0; transition: opacity 0.2s ease; }
-      .aspect-video:hover video::-webkit-media-controls { opacity: 1; }
-    }
-  </style>
-</head>
-
-<body class="min-h-screen bg-gradient-to-b from-[#03060a] via-[#050a12] to-[#020407] text-[#e6e8eb] font-sans">
-
-  <!-- Noise -->
-  <div class="pointer-events-none fixed inset-0 z-0 opacity-[0.025]"
-    style="background-image:url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27140%27 height=%27140%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.8%27 numOctaves=%274%27/%3E%3C/filter%3E%3Crect width=%27140%27 height=%27140%27 filter=%27url(%23n)%27/%3E%3C/svg%3E')">
-  </div>
-
-  <div class="relative z-10">
-
-    <!-- LOGO -->
-    <header class="flex justify-center pt-3 pb-1 px-4">
-      <div class="logo-glow w-full max-w-[170px] sm:max-w-[240px] md:max-w-[320px] lg:max-w-[380px]">
-        <img src="assets/logo.png" alt="Abrox Logo" loading="eager" />
-      </div>
-    </header>
-
-    <!-- HERO -->
-    <section class="flex justify-center px-4">
-      <div class="w-full max-w-[20rem] sm:max-w-[32rem] md:max-w-4xl lg:max-w-5xl xl:max-w-6xl mb-1 sm:mb-2">
-        <img src="assets/hero.png" alt="Abrox Hero" class="w-full h-auto object-contain" loading="lazy" />
-      </div>
-    </section>
-
-    <!-- VIDEO -->
-    <section class="flex justify-center px-3 sm:px-4 mt-2">
-      <div class="w-full max-w-[1024px]">
-        <div id="videoWrapper" class="relative aspect-video rounded-xl overflow-hidden bg-black border border-white/10 shadow-[0_14px_40px_rgba(0,0,0,0.5)] cursor-pointer fade-in" onclick="toggleVideo()">
-
-          <video id="demoVideo"
-            src="assets/demo.mp4"
-            poster="assets/poster.jpg"
-            muted
-            playsinline
-            controls
-            preload="auto"
-            class="w-full h-full object-contain">
-          </video>
-
-          <div id="loadingSpinner" class="absolute inset-0 flex items-center justify-center bg-black/60">
-            <div class="w-10 h-10 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-          </div>
-
-          <div id="playOverlay" class="absolute inset-0 flex items-center justify-center bg-black/30 transition-opacity pointer-events-none">
-            <div class="relative">
-              <div class="absolute inset-0 rounded-full bg-white/40 animate-ping"></div>
-              <div class="relative w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-xl text-black text-xl font-bold">▶</div>
-            </div>
-          </div>
-
-          <div id="unmuteHint" class="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/70 text-white text-xs sm:text-sm px-4 py-1.5 rounded-full backdrop-blur opacity-0 transition-opacity pointer-events-none">
-            🔊 Tap to unmute
-          </div>
-
-        </div>
-
-        <!-- CTA BUTTONS -->
-        <div class="mt-6 sm:mt-8 flex flex-col gap-4 sm:gap-5">
-
-          <!-- BUY -->
-          <a href="#checkout"
-             class="w-full inline-flex items-center justify-center gap-3 min-h-[56px] px-6 py-3.5 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 hover:brightness-110 transition premium-cta">
-            <span class="font-extrabold tracking-tight text-lg sm:text-xl">
-              BUY NOW — $399 LIFETIME
-            </span>
-          </a>
-
-          <!-- DOWNLOAD -->
-          <a href="#download"
-             class="w-full inline-flex items-center justify-center gap-3 min-h-[56px] px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#ff6ec7] to-[#7c4dff] hover:brightness-110 transition premium-cta">
-            <span class="font-extrabold tracking-tight text-lg sm:text-xl">
-              DOWNLOAD APP
-            </span>
-          </a>
-
-          <!-- TELEGRAM (UPDATED TO JPG) -->
-          <a href="https://t.me/YOUR_TELEGRAM_USERNAME"
-             class="w-full inline-flex items-center justify-center gap-3 min-h-[56px] px-6 py-3.5 rounded-xl bg-[#0088cc] hover:brightness-110 transition premium-cta">
-            <img src="assets/telegram.jpg" alt="Telegram" class="w-5 h-5 object-contain" />
-            <span class="font-medium text-sm sm:text-base">
-              Telegram Support
-            </span>
-          </a>
-
-        </div>
-
-      </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="mt-10 border-t border-white/10">
-      <p class="text-center text-sm text-white/60 py-4">
-        © 2026 Abrox. All rights reserved.
-      </p>
-    </footer>
-
-  </div>
+<script src="https://cdn.tailwindcss.com"></script>
 
 <script>
+tailwind.config = {
+theme: {
+extend: {
+colors: { bgDark: '#05070a' },
+boxShadow: {
+'soft-xl': '0 20px 60px rgba(0,0,0,0.55), inset 0 -4px 20px rgba(0,0,0,0.2)'
+}
+}
+}
+}
+</script>
+
+<style>
+
+/* Logo halo (premium subtle) */
+:root{
+--glow-color: 235,80,255;
+--glow-alpha: 0.22;
+--glow-alpha-2: 0.08;
+--glow-blur: 36px;
+--glow-spread: 18%;
+}
+
+.logo-glow {
+position: relative;
+display: inline-block;
+padding: 2px;
+border-radius: 12px;
+isolation: isolate;
+}
+
+.logo-glow::before{
+content: '';
+position: absolute;
+left: calc(-1 * var(--glow-spread));
+top: calc(-1 * var(--glow-spread));
+width: calc(100% + (var(--glow-spread) * 2));
+height: calc(100% + (var(--glow-spread) * 2));
+border-radius: 14px;
+background: radial-gradient(
+rgba(var(--glow-color), var(--glow-alpha)),
+transparent 70%
+);
+filter: blur(var(--glow-blur));
+z-index: 0;
+opacity: .9;
+}
+
+.logo-glow img {
+position: relative;
+z-index: 10;
+border-radius: 0;
+display:block;
+}
+
+/* Premium CTA buttons */
+
+.premium-cta {
+
+transition: all .18s ease;
+
+box-shadow:
+0 10px 30px rgba(0,0,0,0.5),
+inset 0 -2px 6px rgba(255,255,255,0.04);
+
+}
+
+.premium-cta:hover {
+
+transform: translateY(-2px);
+
+box-shadow:
+0 18px 48px rgba(0,0,0,0.65),
+inset 0 -2px 6px rgba(255,255,255,0.03);
+
+}
+
+/* video fade */
+
+.fade-in {
+opacity:0;
+transition:opacity .6s ease;
+}
+
+.fade-in.ready {
+opacity:1;
+}
+
+</style>
+</head>
+
+<body class="min-h-screen bg-gradient-to-b from-[#03060a] via-[#050a12] to-[#020407] text-white">
+
+<div class="relative z-10">
+
+<!-- LOGO -->
+<header class="flex justify-center pt-4 pb-2">
+
+<div class="logo-glow w-full max-w-[180px] sm:max-w-[260px] md:max-w-[340px]">
+
+<img src="assets/logo.png" alt="Abrox Logo" />
+
+</div>
+
+</header>
+
+
+<!-- HERO -->
+<section class="flex justify-center px-4">
+
+<div class="w-full max-w-[22rem] sm:max-w-[36rem] md:max-w-4xl lg:max-w-5xl">
+
+<img src="assets/hero.png"
+class="w-full h-auto object-contain"
+alt="Hero"/>
+
+</div>
+
+</section>
+
+
+<!-- VIDEO -->
+<section class="flex justify-center px-4 mt-4">
+
+<div class="w-full max-w-[1024px]">
+
+<div id="videoWrapper"
+class="relative aspect-video rounded-xl overflow-hidden border border-white/10 shadow-xl cursor-pointer fade-in"
+onclick="toggleVideo()">
+
+<video
+id="demoVideo"
+src="assets/demo.mp4"
+poster="assets/poster.jpg"
+muted
+playsinline
+controls
+preload="auto"
+class="w-full h-full object-contain"></video>
+
+<div id="loadingSpinner"
+class="absolute inset-0 flex items-center justify-center bg-black/60">
+
+<div class="w-10 h-10 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+
+</div>
+
+</div>
+
+
+<!-- BUTTONS -->
+<div class="mt-8 flex flex-col gap-5">
+
+
+<!-- BUY -->
+<a href="#checkout"
+
+class="premium-cta w-full min-h-[68px] px-7 py-4 rounded-xl
+bg-gradient-to-r from-green-500 to-emerald-600
+flex items-center justify-center gap-3">
+
+<span class="font-extrabold text-lg sm:text-xl md:text-[22px]">
+
+BUY NOW — $399 LIFETIME
+
+</span>
+
+</a>
+
+
+
+<!-- DOWNLOAD -->
+<a href="#download"
+
+class="premium-cta w-full min-h-[68px] px-7 py-4 rounded-xl
+bg-gradient-to-r from-[#ff6ec7] to-[#7c4dff]
+flex items-center justify-center gap-3">
+
+<svg class="w-6 h-6"
+fill="none"
+stroke="currentColor"
+viewBox="0 0 24 24">
+
+<path stroke-width="2"
+stroke-linecap="round"
+stroke-linejoin="round"
+d="M12 16v-8m0 0l-4 4m4-4l4 4"/>
+
+</svg>
+
+<span class="font-extrabold text-lg sm:text-xl md:text-[22px]">
+
+DOWNLOAD APP
+
+</span>
+
+</a>
+
+
+
+<!-- TELEGRAM -->
+<a href="https://t.me/YOUR_TELEGRAM_USERNAME"
+
+class="premium-cta w-full min-h-[68px] px-7 py-4 rounded-xl
+bg-[#0088cc]
+flex items-center justify-center gap-3">
+
+<div class="w-7 h-7 rounded-full overflow-hidden flex items-center justify-center">
+
+<img src="assets/telegram.jpg"
+class="w-full h-full object-cover"/>
+
+</div>
+
+<span class="font-semibold text-lg sm:text-xl md:text-[22px]">
+
+Telegram Support
+
+</span>
+
+</a>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- BROKERS -->
+<section class="mt-14 px-4">
+
+<div class="max-w-[1024px] mx-auto">
+
+<h2 class="text-center text-3xl font-bold mb-8">
+
+Compatible Brokers
+
+</h2>
+
+
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
+
+<!-- example broker -->
+<div class="p-5 rounded-lg border border-white/10 flex flex-col items-center">
+
+<img src="assets/brokers/quotex.png"
+class="h-11 mb-2">
+
+<span class="text-sm">Quotex</span>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<footer class="mt-14 border-t border-white/10">
+
+<p class="text-center text-white/60 py-4">
+
+© 2026 Abrox. All rights reserved.
+
+</p>
+
+</footer>
+
+
+</div>
+
+
+<script>
+
 const video = document.getElementById('demoVideo');
 const spinner = document.getElementById('loadingSpinner');
-const overlay = document.getElementById('playOverlay');
 const wrapper = document.getElementById('videoWrapper');
-const unmuteHint = document.getElementById('unmuteHint');
 
-function toggleVideo() {
-  if (!video) return;
-  if (video.paused) video.play(); else video.pause();
+function toggleVideo(){
+
+if(video.paused) video.play();
+else video.pause();
+
 }
 
-if (video) {
-  video.addEventListener('canplay', () => {
-    if (spinner) spinner.style.display = 'none';
-    wrapper.classList.add('ready');
-  });
+video.addEventListener('canplay', () => {
 
-  video.addEventListener('play', () => overlay.style.opacity = '0');
-  video.addEventListener('pause', () => overlay.style.opacity = '1');
-}
+spinner.style.display='none';
+wrapper.classList.add('ready');
+
+});
+
 </script>
 
 </body>
