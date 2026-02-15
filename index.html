@@ -3,44 +3,38 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="theme-color" content="#03060a" />
   <title>Abrox</title>
 
-  <!-- Tailwind CDN + small config extension -->
+  <!-- Tailwind config + CDN -->
   <script>
     tailwind = window.tailwind || {};
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            bgDark: '#05070a',
-            abroxBlue: '#00a2e6'
-          },
-          boxShadow: {
-            'soft-xl': '0 20px 60px rgba(0,0,0,0.55), inset 0 -4px 20px rgba(0,0,0,0.2)'
-          }
-        }
-      }
-    };
+    tailwind.config = { theme: { extend: { boxShadow: { 'soft-xl': '0 20px 60px rgba(0,0,0,0.55), inset 0 -4px 20px rgba(0,0,0,0.2)' } } } };
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Preload important images -->
-  <link rel="preload" as="image" href="assets/logo.svg">
-  <link rel="preload" as="image" href="assets/poster.jpg">
+  <!-- Preload visible assets -->
+  <link rel="preload" as="image" href="assets/logo.png">
+  <link rel="preload" as="image" href="assets/hero.png">
+  <link rel="preload" as="video" href="assets/demo.mp4">
+  <link rel="preload" as="image" href="assets/telegram.jpg">
 
   <style>
-    /* Minimum custom CSS: glow + tiny helpers (kept small and performant) */
+    /* minimal required custom CSS: glow, broker cards, tg-icon, helpers */
     html { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
     body, button, input { -webkit-tap-highlight-color: transparent; }
 
     :root{
       --glow-color: 235,80,255;
-      --glow-alpha: 0.12;
-      --glow-alpha-2: 0.05;
-      --glow-blur: 28px;
-      --glow-spread: 14%;
+      --glow-alpha: 0.10;
+      --glow-alpha-2: 0.04;
+      --glow-blur: 20px;
+      --glow-spread: 12%;
+      --card-bg: rgba(255,255,255,0.02);
+      --card-bg-2: rgba(255,255,255,0.025);
+      --card-shadow: 0 10px 30px rgba(2,6,23,0.55);
     }
+
+    /* logo glow */
     .logo-glow { position: relative; display: inline-block; padding: 0.125rem; border-radius: 0.5rem; isolation: isolate; }
     .logo-glow::before{
       content: '';
@@ -61,256 +55,283 @@
       opacity: .88;
       animation: glowPulse 6s ease-in-out infinite;
     }
-    .logo-glow img, .logo-glow svg { position: relative; z-index: 10; display: block; width:100%; height:auto; object-fit:contain; }
-
     @keyframes glowPulse {0%{transform:scale(1);opacity:.92}50%{transform:scale(1.02);opacity:1}100%{transform:scale(1);opacity:.92}}
 
-    /* Micro-interaction: improved focus ring for accessibility */
-    .premium-cta:focus { outline: 3px solid rgba(255,255,255,0.06); outline-offset: 3px; border-radius: 0.75rem; }
+    /* telegram icon slot */
+    .tg-icon {
+      width: 40px; height: 40px; border-radius: 10px; overflow: hidden; display:inline-flex; align-items:center; justify-content:center;
+      background: rgba(255,255,255,0.02);
+    }
+    .tg-icon img { width:100%; height:100%; object-fit:cover; display:block; }
 
-    /* Simple fade helper used on video wrapper */
+    /* CTA focus & fade */
+    .premium-cta:focus { outline: 3px solid rgba(255,255,255,0.06); outline-offset: 3px; border-radius: 0.75rem; }
     .fade-in { opacity: 0; transition: opacity .6s ease; }
     .fade-in.ready { opacity: 1; }
 
-    @media (max-width:420px){
-      :root { --glow-blur: 18px; --glow-spread: 10%; --glow-alpha: 0.10; }
+    /* large button pill */
+    .large-pill { border-radius: 14px; box-shadow: 0 12px 36px rgba(0,0,0,0.45); }
+
+    /* broker-card glass style */
+    .broker-card {
+      background: linear-gradient(180deg, var(--card-bg-2), var(--card-bg));
+      border: 1px solid rgba(255,255,255,0.04);
+      box-shadow: var(--card-shadow);
+      border-radius: 14px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      transition: transform 180ms ease, box-shadow 180ms ease, background .18s ease;
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+      min-height: 140px;
+    }
+    .broker-card:hover { transform: translateY(-8px); box-shadow: 0 20px 44px rgba(0,0,0,0.6); background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.018)); }
+    .broker-logo-wrap { width: 140px; height: 56px; display:flex; align-items:center; justify-content:center; }
+    .broker-logo { max-height: 56px; max-width: 100%; object-fit: contain; display:block; }
+    .broker-label { color: #e6e8eb; font-weight: 600; letter-spacing: 0.02em; text-align: center; }
+
+    @media (max-width: 640px) {
+      .broker-card { min-height: 120px; padding: 1rem; border-radius: 12px; }
+      .broker-logo-wrap { width: 110px; height: 48px; }
     }
   </style>
 </head>
 
 <body class="min-h-screen bg-gradient-to-b from-[#03060a] via-[#050a12] to-[#020407] text-[#e6e8eb] antialiased">
 
-  <!-- Subtle noise background (CSS data-uri) -->
+  <!-- subtle noise -->
   <div class="pointer-events-none fixed inset-0 z-0 opacity-[0.03]" style="background-image:url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27140%27 height=%27140%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.8%27 numOctaves=%274%27/%3E%3C/filter%3E%3Crect width=%27140%27 height=%27140%27 filter=%27url(%23n)%27/%3E%3C/svg%3E')"></div>
 
-  <div class="relative z-10 max-w-[1400px] mx-auto px-4">
+  <div class="relative z-10 max-w-[1100px] mx-auto px-4">
 
-    <!-- Header / Logo -->
-    <header class="flex justify-center pt-4 pb-2">
-      <div class="logo-glow w-full max-w-[320px] sm:max-w-[380px]" aria-label="Abrox logo">
-        <picture>
-          <source srcset="assets/logo.svg" type="image/svg+xml">
-          <source srcset="assets/logo.webp" type="image/webp">
-          <img src="assets/logo.png" alt="Abrox Logo" width="360" height="88" decoding="async" loading="eager" />
-        </picture>
+    <!-- Logo -->
+    <header class="flex justify-center pt-4 pb-1">
+      <div class="logo-glow w-full max-w-[360px] sm:max-w-[420px]" aria-label="Abrox logo">
+        <img src="assets/logo.png" alt="Abrox Logo" width="420" height="100" loading="eager" decoding="async" class="w-full h-auto object-contain" />
       </div>
     </header>
 
     <!-- Hero -->
-    <main>
-      <section class="flex justify-center">
-        <div class="w-full max-w-[1200px] my-2">
-          <picture>
-            <source srcset="assets/hero.webp" type="image/webp">
-            <img src="assets/hero.jpg" alt="Abrox Hero" class="w-full rounded-lg object-contain" loading="lazy" decoding="async" width="1200" height="560" />
-          </picture>
-        </div>
-      </section>
+    <section class="flex justify-center">
+      <div class="w-full max-w-[960px] my-3">
+        <img src="assets/hero.png" alt="Abrox Hero" class="w-full rounded-xl object-contain" width="1200" height="560" loading="lazy" decoding="async" />
+      </div>
+    </section>
 
-      <!-- Video + CTAs -->
-      <section class="flex flex-col items-center mt-3">
-        <div class="w-full max-w-[1024px]">
-          <!-- Video wrapper -->
-          <div id="videoWrapper" class="relative aspect-video rounded-xl overflow-hidden bg-black border border-white/10 shadow-soft-xl cursor-pointer fade-in" role="button" aria-label="Play demo video" tabindex="0">
-            <video id="demoVideo" poster="assets/poster.jpg" muted playsinline controls preload="metadata" class="w-full h-full object-cover bg-black" aria-label="Demo video">
-              <source src="assets/demo-720p.mp4" type="video/mp4">
-              <!-- fallback -->
-              Your browser does not support the video tag.
-            </video>
+    <!-- Video + CTAs -->
+    <section class="flex flex-col items-center mt-3">
+      <div class="w-full max-w-[900px]">
 
-            <!-- Spinner & overlay -->
-            <div id="loadingSpinner" class="absolute inset-0 flex items-center justify-center bg-black/50">
-              <div class="w-10 h-10 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+        <div id="videoWrapper" class="relative aspect-video rounded-xl overflow-hidden bg-black border border-white/10 shadow-soft-xl cursor-pointer fade-in" tabindex="0" role="button" aria-label="Play demo video">
+          <video id="demoVideo" class="w-full h-full object-cover bg-black" poster="assets/poster.jpg" controls playsinline preload="metadata" aria-label="Demo video">
+            <source src="assets/demo.mp4" type="video/mp4">
+            Your browser does not support HTML5 video.
+          </video>
+
+          <div id="playOverlay" class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div class="relative">
+              <div class="absolute inset-0 rounded-full bg-white/20 animate-ping"></div>
+              <div class="relative w-20 h-20 rounded-full bg-white flex items-center justify-center shadow-xl text-black text-2xl font-bold">▶</div>
             </div>
-
-            <div id="playOverlay" class="absolute inset-0 flex items-center justify-center bg-black/30 pointer-events-none">
-              <div class="relative">
-                <div class="absolute inset-0 rounded-full bg-white/30 animate-ping"></div>
-                <div class="relative w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-xl text-black text-xl font-bold">▶</div>
-              </div>
-            </div>
-
-            <div id="unmuteHint" class="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/70 text-white text-xs sm:text-sm px-4 py-1.5 rounded-full backdrop-blur opacity-0 transition-opacity pointer-events-none">🔊 Tap to unmute</div>
           </div>
 
-          <!-- CTAs -->
-          <div class="mt-6 sm:mt-8 flex flex-col gap-4 sm:gap-5">
-            <!-- Primary CTA -->
-            <a id="buyBtn" href="#checkout" class="w-full inline-flex items-center justify-center gap-3 min-h-[72px] px-6 py-4 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 hover:brightness-105 transition shadow-[0_14px_36px_rgba(0,0,0,0.45)] active:scale-[0.995] premium-cta">
-              <span class="font-extrabold tracking-tight text-2xl sm:text-3xl leading-tight">BUY NOW — $399 LIFETIME</span>
-            </a>
-
-            <!-- Download CTA -->
-            <a href="#download" class="w-full inline-flex items-center justify-center gap-3 min-h-[56px] px-5 py-3 rounded-xl bg-gradient-to-r from-[#4da7ff] to-[#376bff] hover:brightness-105 transition shadow-[0_12px_30px_rgba(55,107,255,0.12)] active:scale-[0.995] premium-cta">
-              <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M12 3v12m0 0l4-4m-4 4l-4-4M4 21h16" /></svg>
-              <span class="font-extrabold tracking-tight text-lg sm:text-xl">DOWNLOAD APP</span>
-            </a>
-
-            <!-- Telegram/WhatsApp support -->
-            <a href="https://t.me/YOUR_TELEGRAM_USERNAME" class="w-full inline-flex items-center justify-center gap-3 min-h-[44px] px-4 py-2 rounded-xl bg-abroxBlue hover:brightness-105 transition shadow-md active:scale-[0.995] premium-cta">
-              <div class="w-7 h-7 rounded-full overflow-hidden flex items-center justify-center">
-                <img src="assets/telegram.jpg" alt="Telegram icon" class="w-full h-full object-contain" width="48" height="48" loading="lazy" decoding="async">
-              </div>
-              <span class="font-medium text-base">WhatsApp / Telegram Support</span>
-            </a>
+          <div id="loadingSpinner" class="absolute inset-0 flex items-center justify-center bg-black/40 hidden">
+            <div class="w-10 h-10 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
           </div>
+
+          <div id="unmuteHint" class="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/70 text-white text-xs sm:text-sm px-4 py-1.5 rounded-full backdrop-blur opacity-0 transition-opacity pointer-events-none">🔊 Tap to unmute</div>
         </div>
-      </section>
 
-      <!-- Brokers -->
-      <section class="mt-10 sm:mt-14 px-2 w-full">
-        <div class="max-w-[1024px] mx-auto">
-          <h2 class="text-center text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">Compatible Brokers</h2>
-          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-5">
-            <!-- 12 broker tiles -->
-            <template id="brokerTile">
-              <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
-                <img src="#" alt="" class="h-11 w-auto object-contain" loading="lazy" decoding="async" width="140" height="44"/>
-                <span class="text-sm font-medium text-center"></span>
-              </div>
-            </template>
+        <!-- Buttons staged vertically -->
+        <div class="mt-8 flex flex-col items-center gap-5">
 
-            <!-- Hard-coded list for reliability -->
-            <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
-              <img src="assets/brokers/iq-option.png" alt="IQ Option" class="h-11 w-auto object-contain" width="140" height="44" loading="lazy" decoding="async" />
-              <span class="text-sm font-medium text-center">IQ OPTION</span>
+          <!-- Big BUY button -->
+          <a id="buyBtn" href="#checkout" class="w-full large-pill inline-flex items-center justify-center px-6 py-6 rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 hover:brightness-105 transition premium-cta">
+            <span class="text-white font-extrabold text-3xl sm:text-4xl tracking-tight">BUY NOW — $399 LIFETIME</span>
+          </a>
+
+          <!-- DOWNLOAD APP: purple with phone icon -->
+          <a id="downloadBtn" href="#download" class="w-3/4 sm:w-2/3 md:w-1/2 inline-flex items-center justify-center gap-3 min-h-[64px] px-6 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-violet-600 hover:brightness-105 transition premium-cta">
+            <i data-lucide="smartphone" class="w-6 h-6"></i>
+            <span class="text-white font-extrabold text-xl">Download App</span>
+          </a>
+
+          <!-- TELEGRAM support: blue, rounded icon slot -->
+          <a id="telegramSupport" href="https://t.me/YOUR_TELEGRAM_USERNAME" class="inline-flex items-center justify-center gap-3 min-h-[48px] px-4 py-2 rounded-xl bg-[#0088cc] hover:brightness-105 transition premium-cta" aria-label="Telegram Support">
+            <span class="tg-icon" aria-hidden="true">
+              <img src="assets/telegram.jpg" alt="Telegram icon" width="40" height="40" loading="lazy" decoding="async">
+            </span>
+            <span class="text-white font-medium text-base">Telegram Support</span>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Brokers -->
+    <section class="mt-12 px-2 w-full">
+      <div class="max-w-[1024px] mx-auto">
+        <h2 class="text-center text-2xl sm:text-3xl font-bold mb-6">Compatible Brokers</h2>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
+          <!-- 12 broker cards (glassy style) -->
+          <div class="broker-card">
+            <div class="broker-logo-wrap">
+              <img src="assets/brokers/iq-option.png" alt="IQ Option" class="broker-logo" width="140" height="44" loading="lazy" decoding="async">
             </div>
-
-            <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
-              <img src="assets/brokers/quotex.png" alt="QUOTEX" class="h-11 w-auto object-contain" width="140" height="44" loading="lazy" decoding="async" />
-              <span class="text-sm font-medium text-center">QUOTEX</span>
-            </div>
-
-            <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
-              <img src="assets/brokers/pocket-option.png" alt="Pocket Option" class="h-11 w-auto object-contain" width="140" height="44" loading="lazy" decoding="async" />
-              <span class="text-sm font-medium text-center">POCKET OPTION</span>
-            </div>
-
-            <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
-              <img src="assets/brokers/polarium-broker.png" alt="Polarium Broker" class="h-11 w-auto object-contain" width="140" height="44" loading="lazy" decoding="async" />
-              <span class="text-sm font-medium text-center">POLARIUM BROKER</span>
-            </div>
-
-            <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
-              <img src="assets/brokers/expert-option.png" alt="Expert Option" class="h-11 w-auto object-contain" width="140" height="44" loading="lazy" decoding="async" />
-              <span class="text-sm font-medium text-center">EXPERT OPTION</span>
-            </div>
-
-            <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
-              <img src="assets/brokers/binomo.png" alt="Binomo" class="h-11 w-auto object-contain" width="140" height="44" loading="lazy" decoding="async" />
-              <span class="text-sm font-medium text-center">BINOMO</span>
-            </div>
-
-            <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
-              <img src="assets/brokers/olymp-trade.png" alt="Olymp Trade" class="h-11 w-auto object-contain" width="140" height="44" loading="lazy" decoding="async" />
-              <span class="text-sm font-medium text-center">OLYMP TRADE</span>
-            </div>
-
-            <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
-              <img src="assets/brokers/home-broker.png" alt="Home Broker" class="h-11 w-auto object-contain" width="140" height="44" loading="lazy" decoding="async" />
-              <span class="text-sm font-medium text-center">HOME BROKER</span>
-            </div>
-
-            <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
-              <img src="assets/brokers/exnova.png" alt="Exnova" class="h-11 w-auto object-contain" width="140" height="44" loading="lazy" decoding="async" />
-              <span class="text-sm font-medium text-center">EXNOVA</span>
-            </div>
-
-            <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
-              <img src="assets/brokers/avalon.png" alt="Avalon" class="h-11 w-auto object-contain" width="140" height="44" loading="lazy" decoding="async" />
-              <span class="text-sm font-medium text-center">AVALON</span>
-            </div>
-
-            <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
-              <img src="assets/brokers/bullex.png" alt="Bullex" class="h-11 w-auto object-contain" width="140" height="44" loading="lazy" decoding="async" />
-              <span class="text-sm font-medium text-center">BULLEX</span>
-            </div>
-
-            <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
-              <img src="assets/brokers/ebinex.png" alt="Ebinex" class="h-11 w-auto object-contain" width="140" height="44" loading="lazy" decoding="async" />
-              <span class="text-sm font-medium text-center">EBINEX</span>
-            </div>
-
+            <div class="broker-label">IQ OPTION</div>
           </div>
+
+          <div class="broker-card">
+            <div class="broker-logo-wrap">
+              <img src="assets/brokers/quotex.png" alt="QUOTEX" class="broker-logo" width="140" height="44" loading="lazy" decoding="async">
+            </div>
+            <div class="broker-label">QUOTEX</div>
+          </div>
+
+          <div class="broker-card">
+            <div class="broker-logo-wrap">
+              <img src="assets/brokers/pocket-option.png" alt="Pocket Option" class="broker-logo" width="140" height="44" loading="lazy" decoding="async">
+            </div>
+            <div class="broker-label">POCKET OPTION</div>
+          </div>
+
+          <div class="broker-card">
+            <div class="broker-logo-wrap">
+              <img src="assets/brokers/polarium-broker.png" alt="Polarium" class="broker-logo" width="140" height="44" loading="lazy" decoding="async">
+            </div>
+            <div class="broker-label">POLARIUM BROKER</div>
+          </div>
+
+          <div class="broker-card">
+            <div class="broker-logo-wrap">
+              <img src="assets/brokers/expert-option.png" alt="Expert Option" class="broker-logo" width="140" height="44" loading="lazy" decoding="async">
+            </div>
+            <div class="broker-label">EXPERT OPTION</div>
+          </div>
+
+          <div class="broker-card">
+            <div class="broker-logo-wrap">
+              <img src="assets/brokers/binomo.png" alt="Binomo" class="broker-logo" width="140" height="44" loading="lazy" decoding="async">
+            </div>
+            <div class="broker-label">BINOMO</div>
+          </div>
+
+          <div class="broker-card">
+            <div class="broker-logo-wrap">
+              <img src="assets/brokers/olymp-trade.png" alt="Olymp Trade" class="broker-logo" width="140" height="44" loading="lazy" decoding="async">
+            </div>
+            <div class="broker-label">OLYMP TRADE</div>
+          </div>
+
+          <div class="broker-card">
+            <div class="broker-logo-wrap">
+              <img src="assets/brokers/home-broker.png" alt="Home Broker" class="broker-logo" width="140" height="44" loading="lazy" decoding="async">
+            </div>
+            <div class="broker-label">HOME BROKER</div>
+          </div>
+
+          <div class="broker-card">
+            <div class="broker-logo-wrap">
+              <img src="assets/brokers/exnova.png" alt="Exnova" class="broker-logo" width="140" height="44" loading="lazy" decoding="async">
+            </div>
+            <div class="broker-label">EXNOVA</div>
+          </div>
+
+          <div class="broker-card">
+            <div class="broker-logo-wrap">
+              <img src="assets/brokers/avalon.png" alt="Avalon" class="broker-logo" width="140" height="44" loading="lazy" decoding="async">
+            </div>
+            <div class="broker-label">AVALON</div>
+          </div>
+
+          <div class="broker-card">
+            <div class="broker-logo-wrap">
+              <img src="assets/brokers/bullex.png" alt="Bullex" class="broker-logo" width="140" height="44" loading="lazy" decoding="async">
+            </div>
+            <div class="broker-label">BULLEX</div>
+          </div>
+
+          <div class="broker-card">
+            <div class="broker-logo-wrap">
+              <img src="assets/brokers/ebinex.png" alt="Ebinex" class="broker-logo" width="140" height="44" loading="lazy" decoding="async">
+            </div>
+            <div class="broker-label">EBINEX</div>
+          </div>
+
         </div>
-      </section>
-    </main>
+      </div>
+    </section>
 
     <!-- Footer -->
-    <footer class="mt-10 border-t border-white/10">
-      <p class="text-center text-sm text-white/60 py-4">© 2026 Abrox. All rights reserved.</p>
+    <footer class="mt-12 border-t border-white/10">
+      <p class="text-center text-sm text-white/60 py-6">© 2026 Abrox. All rights reserved.</p>
     </footer>
-
   </div>
 
-  <!-- Lucide icons (loaded at end) -->
+  <!-- Lucide icons -->
   <script src="https://unpkg.com/lucide@latest/dist/lucide.min.js" defer></script>
 
-  <!-- Behavior scripts - run after DOM ready -->
+  <!-- Behavior scripts (DOMContentLoaded) -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      // lucide icons replacement if available
-      if (window.lucide && typeof window.lucide.replace === 'function') {
-        window.lucide.replace();
-      }
+      // lucide icon replacement
+      if (window.lucide && typeof window.lucide.replace === 'function') window.lucide.replace();
 
       const video = document.getElementById('demoVideo');
-      const spinner = document.getElementById('loadingSpinner');
-      const overlay = document.getElementById('playOverlay');
       const wrapper = document.getElementById('videoWrapper');
+      const overlay = document.getElementById('playOverlay');
+      const spinner = document.getElementById('loadingSpinner');
       const unmuteHint = document.getElementById('unmuteHint');
-
-      // Toggle play/pause when wrapper or Enter/Space pressed
-      if (wrapper) {
-        wrapper.addEventListener('click', toggleVideo);
-        wrapper.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            toggleVideo();
-          }
-        });
-      }
 
       function toggleVideo() {
         if (!video) return;
         if (video.paused) {
-          video.play().catch(()=>{/* Autoplay blocked — user must interact */});
+          if (spinner) spinner.classList.remove('hidden');
+          video.play().then(()=> {
+            if (spinner) spinner.classList.add('hidden');
+            if (overlay) overlay.style.opacity = '0';
+          }).catch(()=> {
+            if (spinner) spinner.classList.add('hidden');
+            if (overlay) overlay.style.opacity = '1';
+          });
         } else {
           video.pause();
+          if (overlay) overlay.style.opacity = '1';
         }
       }
 
-      if (video) {
-        video.addEventListener('canplay', () => {
-          if (spinner) spinner.style.display = 'none';
-          if (wrapper) wrapper.classList.add('ready');
-        });
-        video.addEventListener('play', () => {
-          if (overlay) overlay.style.opacity = '0';
-          if (video.muted && unmuteHint) unmuteHint.style.opacity = '1';
-        });
-        video.addEventListener('pause', () => {
-          if (overlay) overlay.style.opacity = '1';
-          if (unmuteHint) unmuteHint.style.opacity = '0';
-        });
-        video.addEventListener('volumechange', () => {
-          if (!video.muted && unmuteHint) unmuteHint.style.opacity = '0';
-        });
+      if (wrapper) {
+        wrapper.addEventListener('click', toggleVideo);
+        wrapper.addEventListener('keydown', (e)=> { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleVideo(); }});
       }
 
-      // On load, reveal fade-in elements (perceived performance)
-      window.addEventListener('load', () => {
+      if (video) {
+        video.addEventListener('canplay', ()=> { if (spinner) spinner.classList.add('hidden'); if (overlay && !video.paused) overlay.style.opacity = '0'; });
+        video.addEventListener('play', ()=> { if (overlay) overlay.style.opacity = '0'; if (video.muted && unmuteHint) unmuteHint.style.opacity = '1'; });
+        video.addEventListener('pause', ()=> { if (overlay) overlay.style.opacity = '1'; if (unmuteHint) unmuteHint.style.opacity = '0'; });
+        video.addEventListener('volumechange', ()=> { if (!video.muted && unmuteHint) unmuteHint.style.opacity = '0'; });
+      }
+
+      // reveal fade-ins & hide spinner after load
+      window.addEventListener('load', ()=> {
         document.querySelectorAll('.fade-in').forEach(el => el.classList.add('ready'));
-        setTimeout(()=>{ const s = document.getElementById('loadingSpinner'); if(s) s.style.display = 'none'; }, 1800);
+        setTimeout(()=>{ const s = document.getElementById('loadingSpinner'); if(s) s.classList.add('hidden'); }, 1400);
+      });
+
+      // quick non-blocking asset checks (console warnings only)
+      ['assets/logo.png','assets/hero.png','assets/demo.mp4','assets/telegram.jpg'].forEach(path=>{
+        fetch(path, { method:'HEAD' }).then(r=>{ if(!r.ok) console.warn('Missing asset:', path); }).catch(()=> console.warn('Unable to check asset (CORS/server):', path));
       });
     });
   </script>
 
   <noscript>
-    <style> .fade-in { opacity: 1 !important; } </style>
-    <div class="fixed bottom-2 left-2 right-2 bg-yellow-50 text-yellow-800 rounded p-2 text-sm text-center z-[9999]">
-      JavaScript disabled — interactive features (video overlays, icons) may not work.
-    </div>
+    <style>.fade-in{opacity:1 !important}</style>
+    <div class="fixed bottom-3 left-3 right-3 bg-yellow-50 text-yellow-900 rounded p-3 text-sm text-center z-[9999]">JavaScript disabled — video controls and icons may not function.</div>
   </noscript>
 </body>
 </html>
