@@ -3,32 +3,44 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#03060a" />
   <title>Abrox</title>
 
-  <!-- Tailwind CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind CDN + small config extension -->
   <script>
+    tailwind = window.tailwind || {};
     tailwind.config = {
       theme: {
         extend: {
-          colors: { bgDark: '#05070a' },
+          colors: {
+            bgDark: '#05070a',
+            abroxBlue: '#00a2e6'
+          },
           boxShadow: {
             'soft-xl': '0 20px 60px rgba(0,0,0,0.55), inset 0 -4px 20px rgba(0,0,0,0.2)'
           }
         }
       }
-    }
+    };
   </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Preload important images -->
+  <link rel="preload" as="image" href="assets/logo.svg">
+  <link rel="preload" as="image" href="assets/poster.jpg">
 
   <style>
+    /* Minimum custom CSS: glow + tiny helpers (kept small and performant) */
+    html { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    body, button, input { -webkit-tap-highlight-color: transparent; }
+
     :root{
       --glow-color: 235,80,255;
-      --glow-alpha: 0.22;
-      --glow-alpha-2: 0.08;
-      --glow-blur: 36px;
-      --glow-spread: 18%;
+      --glow-alpha: 0.12;
+      --glow-alpha-2: 0.05;
+      --glow-blur: 28px;
+      --glow-spread: 14%;
     }
-
     .logo-glow { position: relative; display: inline-block; padding: 0.125rem; border-radius: 0.5rem; isolation: isolate; }
     .logo-glow::before{
       content: '';
@@ -37,7 +49,7 @@
       top: calc(-1 * var(--glow-spread));
       width: calc(100% + (var(--glow-spread) * 2));
       height: calc(100% + (var(--glow-spread) * 2));
-      border-radius: 14px;
+      border-radius: 12px;
       background: radial-gradient(40% 40% at 25% 20%,
         rgba(var(--glow-color), var(--glow-alpha)) 0%,
         rgba(var(--glow-color), calc(var(--glow-alpha) * 0.6)) 20%,
@@ -46,190 +58,259 @@
       filter: blur(var(--glow-blur));
       z-index: 0;
       pointer-events: none;
-      opacity: .92;
-      animation: glowPulse 3.6s ease-in-out infinite;
+      opacity: .88;
+      animation: glowPulse 6s ease-in-out infinite;
     }
-    .logo-glow::after{
-      content: '';
-      position: absolute;
-      left: -40%;
-      top: -10%;
-      width: 180%;
-      height: 120%;
-      background: linear-gradient(120deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0.06) 100%);
-      transform: rotate(-18deg) translateX(-10%);
-      mix-blend-mode: overlay;
-      filter: blur(6px);
-      opacity: 0;
-      z-index: 1;
-      pointer-events: none;
-      animation: sheenMove 4.5s linear infinite;
-    }
-    .logo-glow img { position: relative; z-index: 10; display: block; background: transparent; border-radius: 0; width: 100%; height: auto; object-fit: contain; }
+    .logo-glow img, .logo-glow svg { position: relative; z-index: 10; display: block; width:100%; height:auto; object-fit:contain; }
 
-    @keyframes glowPulse {0% {transform: scale(.995); opacity: .86;} 50% {transform: scale(1.04); opacity: 1;} 100% {transform: scale(.995); opacity: .86;}}
-    @keyframes sheenMove {0% {transform: rotate(-18deg) translateX(-30%); opacity: 0;} 15% {opacity: .16;} 50% {transform: rotate(-18deg) translateX(0%); opacity: .34;} 85% {opacity: .06;} 100% {transform: rotate(-18deg) translateX(30%); opacity: 0;}}
+    @keyframes glowPulse {0%{transform:scale(1);opacity:.92}50%{transform:scale(1.02);opacity:1}100%{transform:scale(1);opacity:.92}}
 
-    @media (max-width:420px){:root { --glow-blur: 24px; --glow-spread: 12%; --glow-alpha: 0.18; } .logo-glow::before { border-radius: 12px; } }
+    /* Micro-interaction: improved focus ring for accessibility */
+    .premium-cta:focus { outline: 3px solid rgba(255,255,255,0.06); outline-offset: 3px; border-radius: 0.75rem; }
 
-    .premium-cta { transition: transform .12s ease, box-shadow .18s ease, filter .12s ease; box-shadow: 0 8px 22px rgba(2,6,23,0.55), inset 0 -2px 6px rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.035); will-change: transform, box-shadow;}
-    .premium-cta:hover { transform: translateY(-3px) scale(1.002); box-shadow: 0 18px 48px rgba(2,6,23,0.65), inset 0 -2px 6px rgba(255,255,255,0.02); }
-
+    /* Simple fade helper used on video wrapper */
     .fade-in { opacity: 0; transition: opacity .6s ease; }
     .fade-in.ready { opacity: 1; }
+
+    @media (max-width:420px){
+      :root { --glow-blur: 18px; --glow-spread: 10%; --glow-alpha: 0.10; }
+    }
   </style>
 </head>
 
-<body class="min-h-screen bg-gradient-to-b from-[#03060a] via-[#050a12] to-[#020407] text-[#e6e8eb] font-sans">
+<body class="min-h-screen bg-gradient-to-b from-[#03060a] via-[#050a12] to-[#020407] text-[#e6e8eb] antialiased">
 
-  <!-- Noise -->
-  <div class="pointer-events-none fixed inset-0 z-0 opacity-[0.025]" style="background-image:url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27140%27 height=%27140%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.8%27 numOctaves=%274%27/%3E%3C/filter%3E%3Crect width=%27140%27 height=%27140%27 filter=%27url(%23n)%27/%3E%3C/svg%3E')"></div>
+  <!-- Subtle noise background (CSS data-uri) -->
+  <div class="pointer-events-none fixed inset-0 z-0 opacity-[0.03]" style="background-image:url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27140%27 height=%27140%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.8%27 numOctaves=%274%27/%3E%3C/filter%3E%3Crect width=%27140%27 height=%27140%27 filter=%27url(%23n)%27/%3E%3C/svg%3E')"></div>
 
-  <div class="relative z-10">
+  <div class="relative z-10 max-w-[1400px] mx-auto px-4">
 
-    <!-- Logo -->
-    <header class="flex justify-center pt-3 pb-1 px-4">
-      <div class="logo-glow w-full max-w-[320px] sm:max-w-[380px]">
-        <img src="assets/logo.png" alt="Abrox Logo" loading="eager" />
+    <!-- Header / Logo -->
+    <header class="flex justify-center pt-4 pb-2">
+      <div class="logo-glow w-full max-w-[320px] sm:max-w-[380px]" aria-label="Abrox logo">
+        <picture>
+          <source srcset="assets/logo.svg" type="image/svg+xml">
+          <source srcset="assets/logo.webp" type="image/webp">
+          <img src="assets/logo.png" alt="Abrox Logo" width="360" height="88" decoding="async" loading="eager" />
+        </picture>
       </div>
     </header>
 
     <!-- Hero -->
-    <section class="flex justify-center px-4">
-      <div class="w-full max-w-[32rem] md:max-w-5xl xl:max-w-6xl mb-2">
-        <img src="assets/hero.png" alt="Abrox Hero" class="w-full h-auto object-contain" loading="lazy" />
-      </div>
-    </section>
+    <main>
+      <section class="flex justify-center">
+        <div class="w-full max-w-[1200px] my-2">
+          <picture>
+            <source srcset="assets/hero.webp" type="image/webp">
+            <img src="assets/hero.jpg" alt="Abrox Hero" class="w-full rounded-lg object-contain" loading="lazy" decoding="async" width="1200" height="560" />
+          </picture>
+        </div>
+      </section>
 
-    <!-- Video -->
-    <section class="flex justify-center px-3 sm:px-4 mt-2">
-      <div class="w-full max-w-[1024px]">
-        <div id="videoWrapper" class="relative aspect-video rounded-xl overflow-hidden bg-black border border-white/10 shadow-[0_14px_40px_rgba(0,0,0,0.5)] cursor-pointer fade-in" onclick="toggleVideo()">
-          <video id="demoVideo" src="assets/demo.mp4" poster="assets/poster.jpg" muted playsinline controls preload="auto" class="w-full h-full object-contain"></video>
-          <div id="loadingSpinner" class="absolute inset-0 flex items-center justify-center bg-black/60">
-            <div class="w-10 h-10 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-          </div>
-          <div id="playOverlay" class="absolute inset-0 flex items-center justify-center bg-black/30 transition-opacity pointer-events-none">
-            <div class="relative">
-              <div class="absolute inset-0 rounded-full bg-white/40 animate-ping"></div>
-              <div class="relative w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-xl text-black text-xl font-bold">▶</div>
+      <!-- Video + CTAs -->
+      <section class="flex flex-col items-center mt-3">
+        <div class="w-full max-w-[1024px]">
+          <!-- Video wrapper -->
+          <div id="videoWrapper" class="relative aspect-video rounded-xl overflow-hidden bg-black border border-white/10 shadow-soft-xl cursor-pointer fade-in" role="button" aria-label="Play demo video" tabindex="0">
+            <video id="demoVideo" poster="assets/poster.jpg" muted playsinline controls preload="metadata" class="w-full h-full object-cover bg-black" aria-label="Demo video">
+              <source src="assets/demo-720p.mp4" type="video/mp4">
+              <!-- fallback -->
+              Your browser does not support the video tag.
+            </video>
+
+            <!-- Spinner & overlay -->
+            <div id="loadingSpinner" class="absolute inset-0 flex items-center justify-center bg-black/50">
+              <div class="w-10 h-10 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
             </div>
-          </div>
-          <div id="unmuteHint" class="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/70 text-white text-xs sm:text-sm px-4 py-1.5 rounded-full backdrop-blur opacity-0 transition-opacity pointer-events-none">🔊 Tap to unmute</div>
-        </div>
 
-        <!-- Buttons -->
-        <div class="mt-6 sm:mt-8 flex flex-col gap-4 sm:gap-5">
-          <a href="#checkout" class="w-full inline-flex items-center justify-center gap-3 min-h-[56px] px-6 py-3.5 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 hover:brightness-110 transition shadow-[0_12px_30px_rgba(0,0,0,0.45)] active:scale-[0.99] premium-cta">
-            <span class="font-extrabold tracking-tight text-lg sm:text-xl">BUY NOW — $399 LIFETIME</span>
-          </a>
-
-          <a href="#download" class="w-full inline-flex items-center justify-center gap-3 min-h-[48px] px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#ff6ec7] to-[#7c4dff] hover:brightness-110 transition shadow-[0_12px_30px_rgba(124,77,255,0.18)] active:scale-[0.99] premium-cta">
-            <i data-lucide="smartphone" class="w-5 h-5"></i>
-            <span class="font-extrabold tracking-tight text-lg sm:text-xl">DOWNLOAD APP</span>
-          </a>
-
-          <a href="https://t.me/YOUR_TELEGRAM_USERNAME" class="w-full inline-flex items-center justify-center gap-3 min-h-[40px] px-4 py-2 rounded-xl bg-[#0088cc] hover:brightness-110 transition shadow-md active:scale-[0.99] premium-cta">
-            <div class="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center">
-              <img src="assets/telegram.jpg" alt="Telegram" class="w-full h-full object-contain" />
+            <div id="playOverlay" class="absolute inset-0 flex items-center justify-center bg-black/30 pointer-events-none">
+              <div class="relative">
+                <div class="absolute inset-0 rounded-full bg-white/30 animate-ping"></div>
+                <div class="relative w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-xl text-black text-xl font-bold">▶</div>
+              </div>
             </div>
-            <span class="font-medium text-sm sm:text-base">Telegram Support</span>
-          </a>
+
+            <div id="unmuteHint" class="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/70 text-white text-xs sm:text-sm px-4 py-1.5 rounded-full backdrop-blur opacity-0 transition-opacity pointer-events-none">🔊 Tap to unmute</div>
+          </div>
+
+          <!-- CTAs -->
+          <div class="mt-6 sm:mt-8 flex flex-col gap-4 sm:gap-5">
+            <!-- Primary CTA -->
+            <a id="buyBtn" href="#checkout" class="w-full inline-flex items-center justify-center gap-3 min-h-[72px] px-6 py-4 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 hover:brightness-105 transition shadow-[0_14px_36px_rgba(0,0,0,0.45)] active:scale-[0.995] premium-cta">
+              <span class="font-extrabold tracking-tight text-2xl sm:text-3xl leading-tight">BUY NOW — $399 LIFETIME</span>
+            </a>
+
+            <!-- Download CTA -->
+            <a href="#download" class="w-full inline-flex items-center justify-center gap-3 min-h-[56px] px-5 py-3 rounded-xl bg-gradient-to-r from-[#4da7ff] to-[#376bff] hover:brightness-105 transition shadow-[0_12px_30px_rgba(55,107,255,0.12)] active:scale-[0.995] premium-cta">
+              <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M12 3v12m0 0l4-4m-4 4l-4-4M4 21h16" /></svg>
+              <span class="font-extrabold tracking-tight text-lg sm:text-xl">DOWNLOAD APP</span>
+            </a>
+
+            <!-- Telegram/WhatsApp support -->
+            <a href="https://t.me/YOUR_TELEGRAM_USERNAME" class="w-full inline-flex items-center justify-center gap-3 min-h-[44px] px-4 py-2 rounded-xl bg-abroxBlue hover:brightness-105 transition shadow-md active:scale-[0.995] premium-cta">
+              <div class="w-7 h-7 rounded-full overflow-hidden flex items-center justify-center">
+                <img src="assets/telegram.jpg" alt="Telegram icon" class="w-full h-full object-contain" width="48" height="48" loading="lazy" decoding="async">
+              </div>
+              <span class="font-medium text-base">WhatsApp / Telegram Support</span>
+            </a>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Brokers Section -->
-    <section class="mt-10 sm:mt-14 px-3 sm:px-4">
-      <div class="max-w-[1024px] mx-auto">
-        <h2 class="text-center text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">Compatible Brokers</h2>
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-5">
+      <!-- Brokers -->
+      <section class="mt-10 sm:mt-14 px-2 w-full">
+        <div class="max-w-[1024px] mx-auto">
+          <h2 class="text-center text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">Compatible Brokers</h2>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-5">
+            <!-- 12 broker tiles -->
+            <template id="brokerTile">
+              <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
+                <img src="#" alt="" class="h-11 w-auto object-contain" loading="lazy" decoding="async" width="140" height="44"/>
+                <span class="text-sm font-medium text-center"></span>
+              </div>
+            </template>
 
-          <!-- All 12 brokers -->
-          <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
-            <img src="assets/brokers/iq-option.png" alt="IQ Option" class="h-11 w-auto object-contain" />
-            <span class="text-sm font-medium text-center">IQ OPTION</span>
-          </div>
-          <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
-            <img src="assets/brokers/quotex.png" alt="QUOTEX" class="h-11 w-auto object-contain" />
-            <span class="text-sm font-medium text-center">QUOTEX</span>
-          </div>
-          <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
-            <img src="assets/brokers/pocket-option.png" alt="POCKET OPTION" class="h-11 w-auto object-contain" />
-            <span class="text-sm font-medium text-center">POCKET OPTION</span>
-          </div>
-          <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
-            <img src="assets/brokers/polarium-broker.png" alt="POLARIUM BROKER" class="h-11 w-auto object-contain" />
-            <span class="text-sm font-medium text-center">POLARIUM BROKER</span>
-          </div>
-          <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
-            <img src="assets/brokers/expert-option.png" alt="EXPERT OPTION" class="h-11 w-auto object-contain" />
-            <span class="text-sm font-medium text-center">EXPERT OPTION</span>
-          </div>
-          <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
-            <img src="assets/brokers/binomo.png" alt="BINOMO" class="h-11 w-auto object-contain" />
-            <span class="text-sm font-medium text-center">BINOMO</span>
-          </div>
-          <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
-            <img src="assets/brokers/olymp-trade.png" alt="OLYMP TRADE" class="h-11 w-auto object-contain" />
-            <span class="text-sm font-medium text-center">OLYMP TRADE</span>
-          </div>
-          <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
-            <img src="assets/brokers/home-broker.png" alt="HOME BROKER" class="h-11 w-auto object-contain" />
-            <span class="text-sm font-medium text-center">HOME BROKER</span>
-          </div>
-          <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
-            <img src="assets/brokers/exnova.png" alt="EXNOVA" class="h-11 w-auto object-contain" />
-            <span class="text-sm font-medium text-center">EXNOVA</span>
-          </div>
-          <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
-            <img src="assets/brokers/avalon.png" alt="AVALON" class="h-11 w-auto object-contain" />
-            <span class="text-sm font-medium text-center">AVALON</span>
-          </div>
-          <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
-            <img src="assets/brokers/bullex.png" alt="BULLEX" class="h-11 w-auto object-contain" />
-            <span class="text-sm font-medium text-center">BULLEX</span>
-          </div>
-          <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
-            <img src="assets/brokers/ebinex.png" alt="EBINEX" class="h-11 w-auto object-contain" />
-            <span class="text-sm font-medium text-center">EBINEX</span>
-          </div>
+            <!-- Hard-coded list for reliability -->
+            <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
+              <img src="assets/brokers/iq-option.png" alt="IQ Option" class="h-11 w-auto object-contain" width="140" height="44" loading="lazy" decoding="async" />
+              <span class="text-sm font-medium text-center">IQ OPTION</span>
+            </div>
 
+            <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
+              <img src="assets/brokers/quotex.png" alt="QUOTEX" class="h-11 w-auto object-contain" width="140" height="44" loading="lazy" decoding="async" />
+              <span class="text-sm font-medium text-center">QUOTEX</span>
+            </div>
+
+            <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
+              <img src="assets/brokers/pocket-option.png" alt="Pocket Option" class="h-11 w-auto object-contain" width="140" height="44" loading="lazy" decoding="async" />
+              <span class="text-sm font-medium text-center">POCKET OPTION</span>
+            </div>
+
+            <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
+              <img src="assets/brokers/polarium-broker.png" alt="Polarium Broker" class="h-11 w-auto object-contain" width="140" height="44" loading="lazy" decoding="async" />
+              <span class="text-sm font-medium text-center">POLARIUM BROKER</span>
+            </div>
+
+            <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
+              <img src="assets/brokers/expert-option.png" alt="Expert Option" class="h-11 w-auto object-contain" width="140" height="44" loading="lazy" decoding="async" />
+              <span class="text-sm font-medium text-center">EXPERT OPTION</span>
+            </div>
+
+            <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
+              <img src="assets/brokers/binomo.png" alt="Binomo" class="h-11 w-auto object-contain" width="140" height="44" loading="lazy" decoding="async" />
+              <span class="text-sm font-medium text-center">BINOMO</span>
+            </div>
+
+            <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
+              <img src="assets/brokers/olymp-trade.png" alt="Olymp Trade" class="h-11 w-auto object-contain" width="140" height="44" loading="lazy" decoding="async" />
+              <span class="text-sm font-medium text-center">OLYMP TRADE</span>
+            </div>
+
+            <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
+              <img src="assets/brokers/home-broker.png" alt="Home Broker" class="h-11 w-auto object-contain" width="140" height="44" loading="lazy" decoding="async" />
+              <span class="text-sm font-medium text-center">HOME BROKER</span>
+            </div>
+
+            <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
+              <img src="assets/brokers/exnova.png" alt="Exnova" class="h-11 w-auto object-contain" width="140" height="44" loading="lazy" decoding="async" />
+              <span class="text-sm font-medium text-center">EXNOVA</span>
+            </div>
+
+            <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
+              <img src="assets/brokers/avalon.png" alt="Avalon" class="h-11 w-auto object-contain" width="140" height="44" loading="lazy" decoding="async" />
+              <span class="text-sm font-medium text-center">AVALON</span>
+            </div>
+
+            <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
+              <img src="assets/brokers/bullex.png" alt="Bullex" class="h-11 w-auto object-contain" width="140" height="44" loading="lazy" decoding="async" />
+              <span class="text-sm font-medium text-center">BULLEX</span>
+            </div>
+
+            <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
+              <img src="assets/brokers/ebinex.png" alt="Ebinex" class="h-11 w-auto object-contain" width="140" height="44" loading="lazy" decoding="async" />
+              <span class="text-sm font-medium text-center">EBINEX</span>
+            </div>
+
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </main>
 
     <!-- Footer -->
     <footer class="mt-10 border-t border-white/10">
       <p class="text-center text-sm text-white/60 py-4">© 2026 Abrox. All rights reserved.</p>
     </footer>
+
   </div>
 
-  <!-- Lucide icons -->
-  <script src="https://unpkg.com/lucide@latest/dist/lucide.min.js"></script>
-  <script> if (window.lucide) lucide.replace(); </script>
+  <!-- Lucide icons (loaded at end) -->
+  <script src="https://unpkg.com/lucide@latest/dist/lucide.min.js" defer></script>
 
-  <!-- Video toggle script -->
+  <!-- Behavior scripts - run after DOM ready -->
   <script>
-    const video = document.getElementById('demoVideo');
-    const spinner = document.getElementById('loadingSpinner');
-    const overlay = document.getElementById('playOverlay');
-    const wrapper = document.getElementById('videoWrapper');
-    const unmuteHint = document.getElementById('unmuteHint');
+    document.addEventListener('DOMContentLoaded', function () {
+      // lucide icons replacement if available
+      if (window.lucide && typeof window.lucide.replace === 'function') {
+        window.lucide.replace();
+      }
 
-    function toggleVideo() {
-      if (!video) return;
-      if (video.paused) video.play(); else video.pause();
-      if (video.muted && unmuteHint) unmuteHint.style.opacity = '1';
-      if (!video.muted && unmuteHint) unmuteHint.style.opacity = '0';
-    }
+      const video = document.getElementById('demoVideo');
+      const spinner = document.getElementById('loadingSpinner');
+      const overlay = document.getElementById('playOverlay');
+      const wrapper = document.getElementById('videoWrapper');
+      const unmuteHint = document.getElementById('unmuteHint');
 
-    if (video) {
-      video.addEventListener('canplay', () => { if (spinner) spinner.style.display = 'none'; if (wrapper) wrapper.classList.add('ready'); });
-      video.addEventListener('play', () => { if (overlay) overlay.style.opacity = '0'; if (wrapper) wrapper.classList.add('active'); if (video.muted && unmuteHint) unmuteHint.style.opacity = '1'; });
-      video.addEventListener('pause', () => { if (overlay) overlay.style.opacity = '1'; if (wrapper) wrapper.classList.remove('active'); if (unmuteHint) unmuteHint.style.opacity = '0'; });
-      video.addEventListener('volumechange', () => { if (!video.muted && unmuteHint) unmuteHint.style.opacity = '0'; });
-    }
+      // Toggle play/pause when wrapper or Enter/Space pressed
+      if (wrapper) {
+        wrapper.addEventListener('click', toggleVideo);
+        wrapper.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggleVideo();
+          }
+        });
+      }
+
+      function toggleVideo() {
+        if (!video) return;
+        if (video.paused) {
+          video.play().catch(()=>{/* Autoplay blocked — user must interact */});
+        } else {
+          video.pause();
+        }
+      }
+
+      if (video) {
+        video.addEventListener('canplay', () => {
+          if (spinner) spinner.style.display = 'none';
+          if (wrapper) wrapper.classList.add('ready');
+        });
+        video.addEventListener('play', () => {
+          if (overlay) overlay.style.opacity = '0';
+          if (video.muted && unmuteHint) unmuteHint.style.opacity = '1';
+        });
+        video.addEventListener('pause', () => {
+          if (overlay) overlay.style.opacity = '1';
+          if (unmuteHint) unmuteHint.style.opacity = '0';
+        });
+        video.addEventListener('volumechange', () => {
+          if (!video.muted && unmuteHint) unmuteHint.style.opacity = '0';
+        });
+      }
+
+      // On load, reveal fade-in elements (perceived performance)
+      window.addEventListener('load', () => {
+        document.querySelectorAll('.fade-in').forEach(el => el.classList.add('ready'));
+        setTimeout(()=>{ const s = document.getElementById('loadingSpinner'); if(s) s.style.display = 'none'; }, 1800);
+      });
+    });
   </script>
+
+  <noscript>
+    <style> .fade-in { opacity: 1 !important; } </style>
+    <div class="fixed bottom-2 left-2 right-2 bg-yellow-50 text-yellow-800 rounded p-2 text-sm text-center z-[9999]">
+      JavaScript disabled — interactive features (video overlays, icons) may not work.
+    </div>
+  </noscript>
 </body>
 </html>
