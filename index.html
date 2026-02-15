@@ -19,70 +19,43 @@
   <link rel="preload" as="image" href="assets/telegram.jpg">
 
   <style>
-    /* minimal required custom CSS: glow, broker cards, tg-icon, helpers */
+    /* base tweaks */
     html { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
     body, button, input { -webkit-tap-highlight-color: transparent; }
 
-    /* toned-down glow variables */
+    /* visual vars */
     :root{
-      --glow-color: 235,80,255;
-      --glow-alpha: 0.05;       /* reduced */
-      --glow-alpha-2: 0.03;
-      --glow-blur: 12px;        /* reduced */
-      --glow-spread: 10%;
       --card-bg: rgba(255,255,255,0.02);
       --card-bg-2: rgba(255,255,255,0.018);
       --card-shadow: 0 10px 30px rgba(2,6,23,0.45);
     }
 
-    /* logo glow (reduced intensity) */
-    .logo-glow { position: relative; display: inline-block; padding: 0.125rem; border-radius: 0.5rem; isolation: isolate; }
-    .logo-glow::before{
-      content: '';
-      position: absolute;
-      left: calc(-1 * var(--glow-spread));
-      top: calc(-1 * var(--glow-spread));
-      width: calc(100% + (var(--glow-spread) * 2));
-      height: calc(100% + (var(--glow-spread) * 2));
-      border-radius: 12px;
-      background: radial-gradient(40% 40% at 25% 20%,
-        rgba(var(--glow-color), var(--glow-alpha)) 0%,
-        rgba(var(--glow-color), calc(var(--glow-alpha) * 0.6)) 20%,
-        rgba(var(--glow-color), var(--glow-alpha-2)) 55%,
-        transparent 70%);
-      filter: blur(var(--glow-blur));
-      z-index: 0;
-      pointer-events: none;
-      opacity: .6; /* lowered */
-      animation: glowPulse 6s ease-in-out infinite;
-    }
-    @keyframes glowPulse {0%{transform:scale(1);opacity:.9}50%{transform:scale(1.02);opacity:1}100%{transform:scale(1);opacity:.9}}
+    /* remove logo glow entirely */
+    .logo-glow::before { display: none !important; }
 
-    /* telegram icon slot: circular, padded and uses contain */
+    /* telegram icon slot: circular and padded */
     .tg-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 9999px;   /* circle */
+      width: 44px;
+      height: 44px;
+      border-radius: 9999px;
       overflow: hidden;
       display:inline-flex;
       align-items:center;
       justify-content:center;
       background: rgba(255,255,255,0.02);
       padding: 6px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.18);
       flex-shrink: 0;
     }
     .tg-icon img { width:100%; height:100%; object-fit:contain; display:block; }
 
-    /* CTA focus & fade */
+    /* CTA & layout */
     .premium-cta:focus { outline: 3px solid rgba(255,255,255,0.06); outline-offset: 3px; border-radius: 0.75rem; }
-    .fade-in { opacity: 0; transition: opacity .6s ease; }
+    .fade-in { opacity: 0; transition: opacity .5s ease; }
     .fade-in.ready { opacity: 1; }
-
-    /* large button pill */
     .large-pill { border-radius: 14px; box-shadow: 0 12px 36px rgba(0,0,0,0.45); }
 
-    /* broker-card: remove heavy backdrop-filter to avoid scroll jank */
+    /* broker cards: avoid heavy backdrop-filter (mobile jank) */
     .broker-card {
       background: linear-gradient(180deg, var(--card-bg-2), var(--card-bg));
       border: 1px solid rgba(255,255,255,0.03);
@@ -98,29 +71,44 @@
       backdrop-filter: none;
       min-height: 140px;
     }
-    .broker-card:hover { transform: translateY(-6px); box-shadow: 0 18px 36px rgba(0,0,0,0.5); background: linear-gradient(180deg, rgba(255,255,255,0.028), rgba(255,255,255,0.016)); }
+    .broker-card:hover { transform: translateY(-6px); box-shadow: 0 18px 36px rgba(0,0,0,0.5); }
     .broker-logo-wrap { width: 140px; height: 56px; display:flex; align-items:center; justify-content:center; }
     .broker-logo { max-height: 56px; max-width: 100%; object-fit: contain; display:block; }
     .broker-label { color: #e6e8eb; font-weight: 600; letter-spacing: 0.02em; text-align: center; }
 
-    /* decorative noise: hidden by default to avoid repainting / white bands */
+    /* hide noise overlay (prevents white bands / repaint) */
     .pointer-noise { display:none !important; }
 
     @media (max-width: 640px) {
       .broker-card { min-height: 120px; padding: 1rem; border-radius: 12px; }
       .broker-logo-wrap { width: 110px; height: 48px; }
     }
+
+    /* small central play button so we don't block native controls */
+    .play-btn {
+      width: 84px;
+      height: 84px;
+      border-radius: 9999px;
+      background: rgba(255,255,255,0.95);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+      cursor: pointer;
+      border: none;
+    }
+    .play-btn svg { width: 36px; height: 36px; }
   </style>
 </head>
 
 <body class="min-h-screen bg-gradient-to-b from-[#03060a] via-[#050a12] to-[#020407] text-[#e6e8eb] antialiased">
 
-  <!-- subtle noise (disabled to prevent jank) -->
-  <div class="pointer-noise fixed inset-0 z-0 opacity-[0.03]" aria-hidden="true" style="background-image:url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27140%27 height=%27140%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.42%27 numOctaves=%272%27/%3E%3C/filter%3E%3Crect width=%27140%27 height=%27140%27 filter=%27url(%23n)%27/%3E%3C/svg%3E')"></div>
+  <!-- noise removed -->
+  <div class="pointer-noise fixed inset-0 z-0" aria-hidden="true"></div>
 
   <div class="relative z-10 max-w-[1100px] mx-auto px-4">
 
-    <!-- Logo -->
+    <!-- Logo: removed glow -->
     <header class="flex justify-center pt-4 pb-1">
       <div class="logo-glow w-full max-w-[360px] sm:max-w-[420px]" aria-label="Abrox logo">
         <img src="assets/logo.png" alt="Abrox Logo" width="420" height="100" loading="eager" decoding="async" class="w-full h-auto object-contain" />
@@ -138,18 +126,20 @@
     <section class="flex flex-col items-center mt-3">
       <div class="w-full max-w-[900px]">
 
-        <div id="videoWrapper" class="relative aspect-video rounded-xl overflow-hidden bg-black border border-white/10 shadow-soft-xl fade-in" tabindex="0" role="button" aria-label="Play demo video">
+        <!-- video wrapper (controls accessible) -->
+        <div id="videoWrapper" class="relative aspect-video rounded-xl overflow-hidden bg-black border border-white/10 shadow-soft-xl fade-in" tabindex="0" aria-label="Demo video container">
           <video id="demoVideo" class="w-full h-full object-cover bg-black" poster="assets/poster.jpg" controls playsinline preload="metadata" aria-label="Demo video">
             <source src="assets/demo.mp4" type="video/mp4">
             Your browser does not support HTML5 video.
           </video>
 
-          <!-- overlay: clickable (toggles play) but small and unobtrusive -->
-          <div id="playOverlay" class="absolute inset-0 flex items-center justify-center pointer-events-auto">
-            <div class="relative">
-              <div class="absolute inset-0 rounded-full bg-white/10 animate-ping"></div>
-              <div class="relative w-20 h-20 rounded-full bg-white flex items-center justify-center shadow-xl text-black text-2xl font-bold">▶</div>
-            </div>
+          <!-- small clickable play button only (won't cover native controls) -->
+          <div id="playOverlay" class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <button id="playBtn" class="play-btn pointer-events-auto" aria-label="Play demo">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M8 5v14l11-7-11-7z" fill="#000"/>
+              </svg>
+            </button>
           </div>
 
           <div id="loadingSpinner" class="absolute inset-0 flex items-center justify-center bg-black/40 hidden">
@@ -159,29 +149,27 @@
           <div id="unmuteHint" class="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/70 text-white text-xs sm:text-sm px-4 py-1.5 rounded-full opacity-0 transition-opacity pointer-events-none">🔊 Tap to unmute</div>
         </div>
 
-        <!-- Buttons: BUY full width, then Download + Telegram in one row -->
-        <div class="mt-8 w-full">
-          <!-- Big BUY button (full width) -->
-          <a id="buyBtn" href="#checkout" class="w-full large-pill inline-flex items-center justify-center px-6 py-6 rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 hover:brightness-105 transition premium-cta">
+        <!-- Buttons: vertical stack exactly like your screenshot -->
+        <div class="mt-8 flex flex-col items-center gap-5 w-full">
+          <!-- BIG BUY (full width) -->
+          <a id="buyBtn" href="#checkout" class="w-full large-pill inline-flex items-center justify-center px-6 py-6 rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 hover:brightness-105 transition premium-cta max-w-[1100px]">
             <span class="text-white font-extrabold text-3xl sm:text-4xl tracking-tight">BUY NOW — $399 LIFETIME</span>
           </a>
 
-          <!-- Row: Download (flex-grow) + Telegram (fixed width) -->
-          <div class="w-full flex gap-4 items-center justify-center mt-6">
-            <!-- Download App: lucide icon on the left, stretches -->
-            <a id="downloadBtn" href="#download" class="flex-1 inline-flex items-center justify-center gap-3 min-h-[64px] px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 hover:brightness-105 transition premium-cta max-w-[680px]">
-              <i data-lucide="smartphone" class="w-6 h-6 flex-shrink-0"></i>
-              <span class="text-white font-extrabold text-xl sm:text-2xl">Download App</span>
-            </a>
+          <!-- DOWNLOAD (purple) centered, lucide smartphone on left -->
+          <a id="downloadBtn" href="#download" class="w-3/4 sm:w-2/3 md:w-1/2 max-w-[680px] inline-flex items-center justify-center gap-4 min-h-[64px] px-6 py-4 rounded-xl bg-gradient-to-r from-purple-500 to-violet-600 hover:brightness-105 transition premium-cta shadow-md">
+            <i data-lucide="smartphone" class="w-6 h-6 flex-shrink-0"></i>
+            <span class="text-white font-extrabold text-2xl">Download App</span>
+          </a>
 
-            <!-- Telegram support: circular icon + label; narrower -->
-            <a id="telegramSupport" href="https://t.me/YOUR_TELEGRAM_USERNAME" class="inline-flex items-center justify-center gap-3 min-h-[64px] px-4 py-2 rounded-xl bg-[#0088cc] hover:brightness-105 transition premium-cta" aria-label="Telegram Support">
-              <span class="tg-icon" aria-hidden="true">
-                <img src="assets/telegram.jpg" alt="Telegram icon" width="48" height="48" loading="lazy" decoding="async">
-              </span>
-              <span class="text-white font-medium text-base">Telegram Support</span>
-            </a>
-          </div>
+          <!-- TELEGRAM support (smaller pill under Download with rounded icon) -->
+          <a id="telegramSupport" href="https://t.me/YOUR_TELEGRAM_USERNAME" class="w-2/3 sm:w-1/3 md:w-1/4 inline-flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-[#0088cc] hover:brightness-105 transition premium-cta" aria-label="Telegram Support">
+            <span class="tg-icon" aria-hidden="true">
+              <!-- Upload a square telegram.jpg (512x512) into /assets for this to fit perfectly -->
+              <img src="assets/telegram.jpg" alt="Telegram icon" width="44" height="44" loading="lazy" decoding="async">
+            </span>
+            <span class="text-white font-semibold text-lg">Telegram Support</span>
+          </a>
         </div>
 
       </div>
@@ -193,7 +181,7 @@
         <h2 class="text-center text-2xl sm:text-3xl font-bold mb-6">Compatible Brokers</h2>
 
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
-          <!-- broker cards (kept intact) -->
+          <!-- broker cards (unchanged content) -->
           <div class="broker-card">
             <div class="broker-logo-wrap">
               <img src="assets/brokers/iq-option.png" alt="IQ Option" class="broker-logo" width="140" height="44" loading="lazy" decoding="async">
@@ -291,61 +279,50 @@
   <!-- Lucide icons -->
   <script src="https://unpkg.com/lucide@latest/dist/lucide.min.js" defer></script>
 
-  <!-- Behavior scripts (DOMContentLoaded) -->
+  <!-- Behavior scripts -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       // lucide icon replacement
       if (window.lucide && typeof window.lucide.replace === 'function') window.lucide.replace();
 
       const video = document.getElementById('demoVideo');
-      const wrapper = document.getElementById('videoWrapper');
-      const overlay = document.getElementById('playOverlay');
+      const playBtn = document.getElementById('playBtn');
       const spinner = document.getElementById('loadingSpinner');
       const unmuteHint = document.getElementById('unmuteHint');
 
-      function toggleVideo() {
-        if (!video) return;
-        if (video.paused) {
-          if (spinner) spinner.classList.remove('hidden');
-          video.play().then(()=> {
-            if (spinner) spinner.classList.add('hidden');
-            if (overlay) overlay.style.opacity = '0';
-          }).catch(()=> {
-            if (spinner) spinner.classList.add('hidden');
-            if (overlay) overlay.style.opacity = '1';
-          });
-        } else {
-          video.pause();
-          if (overlay) overlay.style.opacity = '1';
-        }
-      }
-
-      // Only overlay toggles play so native controls are not blocked
-      if (overlay) {
-        overlay.addEventListener('click', function (e) {
-          // ignore clicks that target the native video controls region (if any)
-          toggleVideo();
+      // Play button toggles playback (does not block native controls)
+      if (playBtn && video) {
+        playBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (video.paused) {
+            if (spinner) spinner.classList.remove('hidden');
+            video.play().then(()=> {
+              if (spinner) spinner.classList.add('hidden');
+              playBtn.style.opacity = '0';
+            }).catch(()=> {
+              if (spinner) spinner.classList.add('hidden');
+              playBtn.style.opacity = '1';
+            });
+          } else {
+            video.pause();
+            playBtn.style.opacity = '1';
+          }
         });
-        // allow keyboard activation via wrapper for accessibility
-        if (wrapper) {
-          wrapper.addEventListener('keydown', (e)=> { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleVideo(); }});
-        }
       }
 
       if (video) {
-        video.addEventListener('canplay', ()=> { if (spinner) spinner.classList.add('hidden'); if (overlay && !video.paused) overlay.style.opacity = '0'; });
-        video.addEventListener('play', ()=> { if (overlay) overlay.style.opacity = '0'; if (video.muted && unmuteHint) unmuteHint.style.opacity = '1'; });
-        video.addEventListener('pause', ()=> { if (overlay) overlay.style.opacity = '1'; if (unmuteHint) unmuteHint.style.opacity = '0'; });
+        video.addEventListener('canplay', ()=> { if (spinner) spinner.classList.add('hidden'); if (!video.paused) { const b = document.getElementById('playBtn'); if(b) b.style.opacity='0'; }});
+        video.addEventListener('play', ()=> { const b = document.getElementById('playBtn'); if(b) b.style.opacity='0'; if (video.muted && unmuteHint) unmuteHint.style.opacity = '1'; });
+        video.addEventListener('pause', ()=> { const b = document.getElementById('playBtn'); if(b) b.style.opacity='1'; if (unmuteHint) unmuteHint.style.opacity = '0'; });
         video.addEventListener('volumechange', ()=> { if (!video.muted && unmuteHint) unmuteHint.style.opacity = '0'; });
       }
 
-      // reveal fade-ins & hide spinner after load
       window.addEventListener('load', ()=> {
         document.querySelectorAll('.fade-in').forEach(el => el.classList.add('ready'));
-        setTimeout(()=>{ const s = document.getElementById('loadingSpinner'); if(s) s.classList.add('hidden'); }, 1400);
+        setTimeout(()=>{ if(spinner) spinner.classList.add('hidden'); }, 1200);
       });
 
-      // removed automatic HEAD checks (they caused extra network/CORS noise)
+      // removed automatic HEAD checks (no extra network noise)
     });
   </script>
 
