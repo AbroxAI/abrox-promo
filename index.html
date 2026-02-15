@@ -1,97 +1,111 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Abrox</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Abrox</title>
 
-<!-- Tailwind CSS: prebuilt for faster load -->
-<link rel="stylesheet" href="assets/tailwind.min.css" />
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { bgDark: '#05070a' },
+          boxShadow: {
+            'soft-xl': '0 20px 60px rgba(0,0,0,0.55), inset 0 -4px 20px rgba(0,0,0,0.2)'
+          }
+        }
+      }
+    }
+  </script>
 
-<style>
-  :root{
-    --glow-color: 235,80,255;
-    --glow-alpha: 0.22;
-    --glow-alpha-2: 0.08;
-    --glow-blur: 36px;
-    --glow-spread: 18%;
-  }
+  <style>
+    :root{
+      --glow-color: 235,80,255;
+      --glow-alpha: 0.22;
+      --glow-alpha-2: 0.08;
+      --glow-blur: 36px;
+      --glow-spread: 18%;
+    }
 
-  .logo-glow { position: relative; display: inline-block; padding: 0.125rem; border-radius: 0.5rem; isolation: isolate; }
-  .logo-glow::before{
-    content: '';
-    position: absolute;
-    left: calc(-1 * var(--glow-spread));
-    top: calc(-1 * var(--glow-spread));
-    width: calc(100% + (var(--glow-spread) * 2));
-    height: calc(100% + (var(--glow-spread) * 2));
-    border-radius: 14px;
-    background: radial-gradient(40% 40% at 25% 20%, rgba(var(--glow-color), var(--glow-alpha)) 0%, rgba(var(--glow-color), calc(var(--glow-alpha) * 0.6)) 20%, rgba(var(--glow-color), var(--glow-alpha-2)) 55%, transparent 70%);
-    filter: blur(var(--glow-blur));
-    z-index: 0;
-    pointer-events: none;
-    opacity: .92;
-    animation: glowPulse 3.6s ease-in-out infinite;
-  }
-  .logo-glow::after{
-    content: '';
-    position: absolute;
-    left: -40%;
-    top: -10%;
-    width: 180%;
-    height: 120%;
-    background: linear-gradient(120deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0.06) 100%);
-    transform: rotate(-18deg) translateX(-10%);
-    mix-blend-mode: overlay;
-    filter: blur(6px);
-    opacity: 0;
-    z-index: 1;
-    pointer-events: none;
-    animation: sheenMove 4.5s linear infinite;
-  }
-  .logo-glow img { position: relative; z-index: 10; display: block; background: transparent; border-radius: 0; width: 100%; height: auto; object-fit: contain; }
+    .logo-glow { position: relative; display: inline-block; padding: 0.125rem; border-radius: 0.5rem; isolation: isolate; }
+    .logo-glow::before{
+      content: '';
+      position: absolute;
+      left: calc(-1 * var(--glow-spread));
+      top: calc(-1 * var(--glow-spread));
+      width: calc(100% + (var(--glow-spread) * 2));
+      height: calc(100% + (var(--glow-spread) * 2));
+      border-radius: 14px;
+      background: radial-gradient(40% 40% at 25% 20%,
+        rgba(var(--glow-color), var(--glow-alpha)) 0%,
+        rgba(var(--glow-color), calc(var(--glow-alpha) * 0.6)) 20%,
+        rgba(var(--glow-color), var(--glow-alpha-2)) 55%,
+        transparent 70%);
+      filter: blur(var(--glow-blur));
+      z-index: 0;
+      pointer-events: none;
+      opacity: .92;
+      animation: glowPulse 3.6s ease-in-out infinite;
+    }
+    .logo-glow::after{
+      content: '';
+      position: absolute;
+      left: -40%;
+      top: -10%;
+      width: 180%;
+      height: 120%;
+      background: linear-gradient(120deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0.06) 100%);
+      transform: rotate(-18deg) translateX(-10%);
+      mix-blend-mode: overlay;
+      filter: blur(6px);
+      opacity: 0;
+      z-index: 1;
+      pointer-events: none;
+      animation: sheenMove 4.5s linear infinite;
+    }
+    .logo-glow img { position: relative; z-index: 10; display: block; background: transparent; border-radius: 0; width: 100%; height: auto; object-fit: contain; }
 
-  @keyframes glowPulse {0% {transform: scale(.995); opacity: .86;} 50% {transform: scale(1.04); opacity: 1;} 100% {transform: scale(.995); opacity: .86;}}
-  @keyframes sheenMove {0% {transform: rotate(-18deg) translateX(-30%); opacity: 0;} 15% {opacity: .16;} 50% {transform: rotate(-18deg) translateX(0%); opacity: .34;} 85% {opacity: .06;} 100% {transform: rotate(-18deg) translateX(30%); opacity: 0;}}
+    @keyframes glowPulse {0% {transform: scale(.995); opacity: .86;} 50% {transform: scale(1.04); opacity: 1;} 100% {transform: scale(.995); opacity: .86;}}
+    @keyframes sheenMove {0% {transform: rotate(-18deg) translateX(-30%); opacity: 0;} 15% {opacity: .16;} 50% {transform: rotate(-18deg) translateX(0%); opacity: .34;} 85% {opacity: .06;} 100% {transform: rotate(-18deg) translateX(30%); opacity: 0;}}
 
-  @media (max-width:420px){
-    :root { --glow-blur: 24px; --glow-spread: 12%; --glow-alpha: 0.18; } 
-    .logo-glow::before { border-radius: 12px; }
-  }
+    @media (max-width:420px){:root { --glow-blur: 24px; --glow-spread: 12%; --glow-alpha: 0.18; } .logo-glow::before { border-radius: 12px; } }
 
-  .premium-cta { transition: transform .12s ease, box-shadow .18s ease, filter .12s ease; box-shadow: 0 8px 22px rgba(2,6,23,0.55), inset 0 -2px 6px rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.035); will-change: transform, box-shadow;}
-  .premium-cta:hover { transform: translateY(-3px) scale(1.002); box-shadow: 0 18px 48px rgba(2,6,23,0.65), inset 0 -2px 6px rgba(255,255,255,0.02); }
-  .fade-in { opacity: 0; transition: opacity .6s ease; }
-  .fade-in.ready { opacity: 1; }
-</style>
+    .premium-cta { transition: transform .12s ease, box-shadow .18s ease, filter .12s ease; box-shadow: 0 8px 22px rgba(2,6,23,0.55), inset 0 -2px 6px rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.035); will-change: transform, box-shadow;}
+    .premium-cta:hover { transform: translateY(-3px) scale(1.002); box-shadow: 0 18px 48px rgba(2,6,23,0.65), inset 0 -2px 6px rgba(255,255,255,0.02); }
+
+    .fade-in { opacity: 0; transition: opacity .6s ease; }
+    .fade-in.ready { opacity: 1; }
+  </style>
 </head>
 
 <body class="min-h-screen bg-gradient-to-b from-[#03060a] via-[#050a12] to-[#020407] text-[#e6e8eb] font-sans">
 
-  <!-- Noise Background -->
-  <div class="pointer-events-none fixed inset-0 z-0 opacity-[0.025] bg-[url('assets/noise.png')]"></div>
+  <!-- Noise -->
+  <div class="pointer-events-none fixed inset-0 z-0 opacity-[0.025]" style="background-image:url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27140%27 height=%27140%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.8%27 numOctaves=%274%27/%3E%3C/filter%3E%3Crect width=%27140%27 height=%27140%27 filter=%27url(%23n)%27/%3E%3C/svg%3E')"></div>
 
   <div class="relative z-10">
 
     <!-- Logo -->
     <header class="flex justify-center pt-3 pb-1 px-4">
       <div class="logo-glow w-full max-w-[320px] sm:max-w-[380px]">
-        <img src="assets/logo.webp" alt="Abrox Logo" loading="eager" />
+        <img src="assets/logo.png" alt="Abrox Logo" loading="eager" />
       </div>
     </header>
 
     <!-- Hero -->
     <section class="flex justify-center px-4">
       <div class="w-full max-w-[32rem] md:max-w-5xl xl:max-w-6xl mb-2">
-        <img src="assets/hero.webp" alt="Abrox Hero" class="w-full h-auto object-contain" loading="lazy" />
+        <img src="assets/hero.png" alt="Abrox Hero" class="w-full h-auto object-contain" loading="lazy" />
       </div>
     </section>
 
-    <!-- Video Section -->
+    <!-- Video -->
     <section class="flex justify-center px-3 sm:px-4 mt-2">
       <div class="w-full max-w-[1024px]">
         <div id="videoWrapper" class="relative aspect-video rounded-xl overflow-hidden bg-black border border-white/10 shadow-[0_14px_40px_rgba(0,0,0,0.5)] cursor-pointer fade-in" onclick="toggleVideo()">
-          <video id="demoVideo" poster="assets/poster.webp" muted playsinline controls preload="metadata" class="w-full h-full object-contain"></video>
+          <video id="demoVideo" src="assets/demo.mp4" poster="assets/poster.jpg" muted playsinline controls preload="auto" class="w-full h-full object-contain"></video>
           <div id="loadingSpinner" class="absolute inset-0 flex items-center justify-center bg-black/60">
             <div class="w-10 h-10 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
           </div>
@@ -117,7 +131,7 @@
 
           <a href="https://t.me/YOUR_TELEGRAM_USERNAME" class="w-full inline-flex items-center justify-center gap-3 min-h-[40px] px-4 py-2 rounded-xl bg-[#0088cc] hover:brightness-110 transition shadow-md active:scale-[0.99] premium-cta">
             <div class="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center">
-              <img src="assets/telegram.webp" alt="Telegram" class="w-full h-full object-contain" />
+              <img src="assets/telegram.jpg" alt="Telegram" class="w-full h-full object-contain" />
             </div>
             <span class="font-medium text-sm sm:text-base">Telegram Support</span>
           </a>
@@ -125,20 +139,61 @@
       </div>
     </section>
 
-    <!-- Brokers -->
+    <!-- Brokers Section -->
     <section class="mt-10 sm:mt-14 px-3 sm:px-4">
       <div class="max-w-[1024px] mx-auto">
         <h2 class="text-center text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">Compatible Brokers</h2>
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-5">
 
-          <!-- All broker cards -->
+          <!-- All 12 brokers -->
           <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
-            <img data-src="assets/brokers/iq-option.webp" alt="IQ Option" class="h-11 w-auto object-contain lazyload" />
+            <img src="assets/brokers/iq-option.png" alt="IQ Option" class="h-11 w-auto object-contain" />
             <span class="text-sm font-medium text-center">IQ OPTION</span>
           </div>
-
-          <!-- Repeat for all other brokers using the same lazyload pattern -->
-          <!-- e.g., quotex, pocket-option, polarium-broker, expert-option, binomo, olymp-trade, home-broker, exnova, avalon, bullex, ebinex -->
+          <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
+            <img src="assets/brokers/quotex.png" alt="QUOTEX" class="h-11 w-auto object-contain" />
+            <span class="text-sm font-medium text-center">QUOTEX</span>
+          </div>
+          <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
+            <img src="assets/brokers/pocket-option.png" alt="POCKET OPTION" class="h-11 w-auto object-contain" />
+            <span class="text-sm font-medium text-center">POCKET OPTION</span>
+          </div>
+          <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
+            <img src="assets/brokers/polarium-broker.png" alt="POLARIUM BROKER" class="h-11 w-auto object-contain" />
+            <span class="text-sm font-medium text-center">POLARIUM BROKER</span>
+          </div>
+          <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
+            <img src="assets/brokers/expert-option.png" alt="EXPERT OPTION" class="h-11 w-auto object-contain" />
+            <span class="text-sm font-medium text-center">EXPERT OPTION</span>
+          </div>
+          <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
+            <img src="assets/brokers/binomo.png" alt="BINOMO" class="h-11 w-auto object-contain" />
+            <span class="text-sm font-medium text-center">BINOMO</span>
+          </div>
+          <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
+            <img src="assets/brokers/olymp-trade.png" alt="OLYMP TRADE" class="h-11 w-auto object-contain" />
+            <span class="text-sm font-medium text-center">OLYMP TRADE</span>
+          </div>
+          <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
+            <img src="assets/brokers/home-broker.png" alt="HOME BROKER" class="h-11 w-auto object-contain" />
+            <span class="text-sm font-medium text-center">HOME BROKER</span>
+          </div>
+          <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
+            <img src="assets/brokers/exnova.png" alt="EXNOVA" class="h-11 w-auto object-contain" />
+            <span class="text-sm font-medium text-center">EXNOVA</span>
+          </div>
+          <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
+            <img src="assets/brokers/avalon.png" alt="AVALON" class="h-11 w-auto object-contain" />
+            <span class="text-sm font-medium text-center">AVALON</span>
+          </div>
+          <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
+            <img src="assets/brokers/bullex.png" alt="BULLEX" class="h-11 w-auto object-contain" />
+            <span class="text-sm font-medium text-center">BULLEX</span>
+          </div>
+          <div class="flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-white/10 bg-white/2 hover:bg-white/4 transition transform hover:-translate-y-1">
+            <img src="assets/brokers/ebinex.png" alt="EBINEX" class="h-11 w-auto object-contain" />
+            <span class="text-sm font-medium text-center">EBINEX</span>
+          </div>
 
         </div>
       </div>
@@ -154,10 +209,7 @@
   <script src="https://unpkg.com/lucide@latest/dist/lucide.min.js"></script>
   <script> if (window.lucide) lucide.replace(); </script>
 
-  <!-- LazyLoad images -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js" async></script>
-
-  <!-- Video toggle -->
+  <!-- Video toggle script -->
   <script>
     const video = document.getElementById('demoVideo');
     const spinner = document.getElementById('loadingSpinner');
