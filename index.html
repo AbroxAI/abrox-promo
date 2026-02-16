@@ -23,13 +23,10 @@
   }
 
   /* ---------- Logo / Hero balance ---------- */
-  /* Logo must be smaller than hero */
   .site-logo { max-width: 220px; transition: transform .22s ease, opacity .22s ease; opacity:.95; display:block; margin:0 auto; }
   @media (min-width:640px){ .site-logo { max-width: 360px; } }
-  /* hero image stays large and dominant */
   .hero-img { max-width:960px; display:block; margin:0 auto; }
 
-  /* remove any old glow */
   .logo-glow::before { display:none !important; }
 
   /* ---------- Video (single pulsing play overlay) ---------- */
@@ -43,17 +40,13 @@
   .video-overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; }
   .video-overlay .play-btn { pointer-events:auto; }
 
-  /* Hide big browser overlay play in many WebKit/Chrome builds */
   video::-webkit-media-controls-overlay-play-button { display:none !important; -webkit-appearance:none; }
   video::-webkit-media-controls-start-playback-button { display:none !important; -webkit-appearance:none; }
 
-  /* make sure native bottom controls still visible */
   video { width:100%; height:100%; display:block; }
 
-  /* small hint */
   .unmute-hint { position:absolute; left:50%; transform:translateX(-50%); bottom:12px; background:rgba(0,0,0,0.7); color:#fff; padding:.4rem .75rem; border-radius:999px; font-size:.85rem; opacity:0; transition:opacity .18s; pointer-events:none; }
 
-  /* spinner */
   .spinner { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background: rgba(0,0,0,0.45); }
 
   /* ---------- CTA exact sizing ---------- */
@@ -67,7 +60,6 @@
     text-decoration:none; color:#fff;
     background: linear-gradient(90deg,#16a34a,#059669);
   }
-  /* responsive fallback to ensure single-line on tiny screens */
   @media (max-width:380px){ .buy-btn{ min-height:84px; font-size:22px; padding:0 12px; } }
 
   /* DOWNLOAD medium */
@@ -76,36 +68,62 @@
     display:inline-flex; align-items:center; justify-content:center; gap:14px; font-weight:800;
     font-size:22px; white-space:nowrap; text-decoration:none; color:#fff;
     background: linear-gradient(90deg,#7c3aed,#8b5cf6);
-    /* ensure inline svgs inherit color */
-    color: #fff;
+    color: #fff; /* ensures inline svgs inherit the button color */
   }
-  .phone-icon{ width:28px; height:28px; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; }
 
-  /* Make inline SVG phone use button color (no black fill) */
-  .phone-icon svg { width:20px; height:20px; stroke: currentColor; fill: none; stroke-linecap:round; stroke-linejoin:round; stroke-width:1.6; }
+  /* PHONE icon container: slightly larger so icon can be bolder/readable */
+  .phone-icon{
+    width:36px;
+    height:36px;
+    flex-shrink:0;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  /* Bolder phone SVG (stroke uses currentColor) */
+  .phone-icon svg {
+    width:22px;
+    height:22px;
+    stroke: currentColor;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2.4;
+  }
+  .phone-icon svg circle { fill: currentColor; }
 
   @media (max-width:380px){ .download-btn{ min-height:68px; font-size:18px; width:68%; } }
 
   /* SUPPORT small */
-  /* Keep the visible circle and ensure label stays within the pill.
-     Icon is positioned left while label stays centered (prevents overflow on narrow screens). */
+  /* left-positioned circular icon + centered label */
   .support-btn{
     width:44%; max-width:340px; min-height:56px; padding:0 16px; border-radius:12px;
     display:inline-flex; align-items:center; justify-content:center; gap:12px; font-weight:700;
     font-size:18px; white-space:nowrap; text-decoration:none; color:#fff; background:#0088cc;
-    position:relative; padding-left:66px; /* space for the circular icon on the left */
+    position:relative; padding-left:66px; /* reserve space for icon on left */
   }
+
   .cta-icon{
-    width:44px; height:44px; border-radius:9999px; overflow:hidden; display:inline-flex; align-items:center; justify-content:center; padding:6px; background:rgba(255,255,255,0.03); flex-shrink:0;
+    width:40px; height:40px; border-radius:9999px; overflow:hidden; display:inline-flex; align-items:center; justify-content:center; padding:6px; background:rgba(255,255,255,0.03); flex-shrink:0;
     position:absolute; left:10px; top:50%; transform:translateY(-50%);
   }
-  /* clip the JPG into a perfect circle and crop any white corners */
-  .cta-icon img{ width:110%; height:110%; object-fit:cover; display:block; transform: translateZ(0); }
+
+  /* clip the JPG into a perfect circle and make inner image slightly smaller so it reads like a badge */
+  .cta-icon img{
+    width:86%;
+    height:86%;
+    object-fit:cover;
+    display:block;
+    transform: translateZ(0);
+  }
 
   @media (max-width:380px){
     .support-btn{ min-height:52px; font-size:16px; width:56%; padding-left:56px; }
-    .cta-icon{ width:40px; height:40px; left:8px; top:50%; transform:translateY(-50%); }
-    .cta-icon img{ width:120%; height:120%; }
+    .cta-icon{ width:36px; height:36px; left:8px; top:50%; transform:translateY(-50%); }
+    .cta-icon img{ width:100%; height:100%; }
+    .phone-icon{ width:32px; height:32px; }
+    .phone-icon svg{ width:20px; height:20px; stroke-width:2.0; }
   }
 
   /* ---------- Brokers: circular badges ---------- */
@@ -162,11 +180,11 @@
     <a id="buyBtn" class="buy-btn" href="#checkout">BUY NOW — $399 LIFETIME</a>
 
     <a id="downloadBtn" class="download-btn" href="#download" aria-label="Download App">
-      <!-- phone inline SVG (guaranteed to show) - uses currentColor for stroke -->
+      <!-- phone inline SVG (bolder, uses currentColor) -->
       <span class="phone-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="28" height="28" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <rect x="7" y="2" width="10" height="20" rx="2" stroke="currentColor" stroke-width="1.6" fill="none" />
-          <circle cx="12" cy="18.5" r="0.5" fill="currentColor" />
+        <svg viewBox="0 0 24 24" width="28" height="28" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" focusable="false">
+          <rect x="6" y="2" width="12" height="20" rx="2" stroke="currentColor" stroke-width="2.4" fill="none" />
+          <circle cx="12" cy="18.2" r="1.6" fill="currentColor" />
         </svg>
       </span>
       <span>Download App</span>
@@ -213,7 +231,7 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    // lucide replace (optional) - download button uses inline svg fallback, so lucide not required
+    // lucide replace (optional)
     if (window.lucide && typeof window.lucide.replace === 'function') window.lucide.replace();
 
     const video = document.getElementById('demoVideo');
@@ -228,7 +246,6 @@
       overlay.style.pointerEvents = show ? 'auto' : 'none';
     }
 
-    // when user clicks custom play button
     if (playBtn && video){
       playBtn.addEventListener('click', function (e) {
         e.stopPropagation();
@@ -239,7 +256,6 @@
             showOverlay(false);
           }).catch(()=> {
             if (spinner) spinner.classList.add('hidden');
-            // leave overlay visible
           });
         } else {
           video.pause();
@@ -248,7 +264,6 @@
       });
     }
 
-    // sync overlay with playback
     if (video){
       video.addEventListener('play', ()=>{ showOverlay(false); if(video.muted && unmuteHint) unmuteHint.style.opacity='1'; });
       video.addEventListener('pause', ()=>{ showOverlay(true); if(unmuteHint) unmuteHint.style.opacity='0'; });
@@ -256,12 +271,10 @@
       video.addEventListener('volumechange', ()=>{ if(!video.muted && unmuteHint) unmuteHint.style.opacity='0'; });
     }
 
-    // initial state: show overlay if paused
     setTimeout(()=> {
       if (video && video.paused) showOverlay(true);
     }, 300);
 
-    // small spinner animation keyframe fallback
     const style = document.createElement('style');
     style.innerHTML = '@keyframes spin{to{transform:rotate(360deg)}}';
     document.head.appendChild(style);
