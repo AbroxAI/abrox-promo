@@ -1,471 +1,250 @@
+
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Abrox</title>
 
-  <!-- Tailwind CDN -->
-  <script>
-    tailwind = window.tailwind || {};
-    tailwind.config = { theme: { extend: { boxShadow: { 'soft-xl': '0 20px 60px rgba(0,0,0,0.55), inset 0 -4px 20px rgba(0,0,0,0.2)' } } } };
-  </script>
-  <script src="https://cdn.tailwindcss.com"></script>
+<html lang="en">  
+<head>  
+<meta charset="utf-8" />  
+<meta name="viewport" content="width=device-width,initial-scale=1" />  
+<title>Abrox</title>  <!-- Tailwind CDN -->  <script>  
+  tailwind = window.tailwind || {};  
+  tailwind.config = { theme: { extend: { boxShadow: { 'soft-xl': '0 20px 60px rgba(0,0,0,0.55), inset 0 -4px 20px rgba(0,0,0,0.2)' } } } };  
+</script>  <script src="https://cdn.tailwindcss.com"></script>  <style>  
+  /* ---------- Base ---------- */  
+  html { -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; }  
+  body, button, input { -webkit-tap-highlight-color: transparent; }  
+  :root{  
+    --card-bg: rgba(255,255,255,0.02);  
+    --card-bg-2: rgba(255,255,255,0.018);  
+    --card-shadow: 0 10px 30px rgba(2,6,23,0.45);  
+  }  
+  
+  /* ---------- Logo / Hero balance ---------- */  
+  .site-logo { max-width: 220px; transition: transform .22s ease, opacity .22s ease; opacity:.95; display:block; margin:0 auto; }  
+  @media (min-width:640px){ .site-logo { max-width: 360px; } }  
+  .hero-img { max-width:960px; display:block; margin:0 auto; }  
+  
+  .logo-glow::before { display:none !important; }  
+  
+  /* ---------- Video (single pulsing play overlay) ---------- */  
+  .video-card { position: relative; border-radius: .75rem; overflow: hidden; background: #000; border: 1px solid rgba(255,255,255,0.06); box-shadow: var(--card-shadow); }  
+  .play-btn {  
+    width:84px; height:84px; border-radius:9999px; display:flex; align-items:center; justify-content:center;  
+    background: rgba(255,255,255,0.96); box-shadow: 0 12px 30px rgba(0,0,0,0.45); cursor:pointer; border:none;  
+    animation: pulseScale 2.6s ease-in-out infinite;  
+  }  
+  @keyframes pulseScale { 0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)} }  
+  .video-overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; }  
+  .video-overlay .play-btn { pointer-events:auto; }  
+  
+  video::-webkit-media-controls-overlay-play-button { display:none !important; -webkit-appearance:none; }  
+  video::-webkit-media-controls-start-playback-button { display:none !important; -webkit-appearance:none; }  
+  
+  video { width:100%; height:100%; display:block; }  
+  
+  .unmute-hint { position:absolute; left:50%; transform:translateX(-50%); bottom:12px; background:rgba(0,0,0,0.7); color:#fff; padding:.4rem .75rem; border-radius:999px; font-size:.85rem; opacity:0; transition:opacity .18s; pointer-events:none; }  
+  
+  .spinner { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background: rgba(0,0,0,0.45); }  
+  
+  /* ---------- CTA exact sizing ---------- */  
+  .cta-wrap { width:100%; display:flex; flex-direction:column; align-items:center; gap:22px; margin-top:1.5rem; }  
+  
+  /* BUY large full-width */  
+  .buy-btn {  
+    width:100%; max-width:1100px; min-height:96px; padding:0 22px; border-radius:16px;  
+    display:inline-flex; align-items:center; justify-content:center; font-weight:800;  
+    font-size:28px; line-height:1; white-space:nowrap; box-shadow:0 12px 36px rgba(0,0,0,0.45);  
+    text-decoration:none; color:#fff;  
+    background: linear-gradient(90deg,#16a34a,#059669);  
+  }  
+  @media (max-width:380px){ .buy-btn{ min-height:84px; font-size:22px; padding:0 12px; } }  
+  
+  /* DOWNLOAD medium */  
+  .download-btn {  
+    width:62%; max-width:680px; min-height:76px; padding:0 22px; border-radius:14px;  
+    display:inline-flex; align-items:center; justify-content:center; gap:14px; font-weight:800;  
+    font-size:22px; white-space:nowrap; text-decoration:none; color:#fff;  
+    background: linear-gradient(90deg,#7c3aed,#8b5cf6);  
+    color: #fff; /* ensures inline svgs inherit the button color */  
+  }  
+  
+  /* PHONE icon container: slightly larger so icon can be bolder/readable */  
+  .phone-icon{  
+    width:36px;  
+    height:36px;  
+    flex-shrink:0;  
+    display:inline-flex;  
+    align-items:center;  
+    justify-content:center;  
+  }  
+  
+  /* Bolder phone SVG (stroke uses currentColor) */  
+  .phone-icon svg {  
+    width:22px;  
+    height:22px;  
+    stroke: currentColor;  
+    fill: none;  
+    stroke-linecap: round;  
+    stroke-linejoin: round;  
+    stroke-width: 2.4;  
+  }  
+  .phone-icon svg circle { fill: currentColor; }  
+  
+  @media (max-width:380px){ .download-btn{ min-height:68px; font-size:18px; width:68%; } }  
+  
+  /* SUPPORT small */  
+  /* left-positioned circular icon + centered label */  
+  .support-btn{  
+    width:44%; max-width:340px; min-height:56px; padding:0 16px; border-radius:12px;  
+    display:inline-flex; align-items:center; justify-content:center; gap:12px; font-weight:700;  
+    font-size:18px; white-space:nowrap; text-decoration:none; color:#fff; background:#0088cc;  
+    position:relative; padding-left:66px; /* reserve space for icon on left */  
+  }  
+  
+  .cta-icon{  
+    width:40px; height:40px; border-radius:9999px; overflow:hidden; display:inline-flex; align-items:center; justify-content:center; padding:6px; background:rgba(255,255,255,0.03); flex-shrink:0;  
+    position:absolute; left:10px; top:50%; transform:translateY(-50%);  
+  }  
+  
+  /* clip the JPG into a perfect circle and make inner image slightly smaller so it reads like a badge */  
+  .cta-icon img{  
+    width:86%;  
+    height:86%;  
+    object-fit:cover;  
+    display:block;  
+    transform: translateZ(0);  
+  }  
+  
+  @media (max-width:380px){  
+    .support-btn{ min-height:52px; font-size:16px; width:56%; padding-left:56px; }  
+    .cta-icon{ width:36px; height:36px; left:8px; top:50%; transform:translateY(-50%); }  
+    .cta-icon img{ width:100%; height:100%; }  
+    .phone-icon{ width:32px; height:32px; }  
+    .phone-icon svg{ width:20px; height:20px; stroke-width:2.0; }  
+  }  
+  
+  /* ---------- Brokers: circular badges ---------- */  
+  .broker-logo-wrap{ width:76px; height:76px; border-radius:9999px; overflow:hidden; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.02); }  
+  .broker-logo{ width:70%; height:70%; object-fit:contain; display:block; }  
+  .broker-card{ background:linear-gradient(180deg,var(--card-bg-2),var(--card-bg)); border:1px solid rgba(255,255,255,0.03); box-shadow:var(--card-shadow); border-radius:14px; padding:1rem; display:flex; flex-direction:column; align-items:center; gap:.75rem; min-height:130px; }  
+  
+  /* hide noise if present */  
+  .pointer-noise{ display:none !important; }  
+</style>  </head>  
+<body class="min-h-screen bg-gradient-to-b from-[#03060a] via-[#050a12] to-[#020407] text-[#e6e8eb] antialiased">  <div class="relative z-10 max-w-[1100px] mx-auto px-4">    <!-- Logo (smaller than hero) -->    <header class="flex justify-center pt-4 pb-1">  
+    <div class="w-full flex justify-center">  
+      <img src="assets/logo.png" alt="Abrox Logo" class="site-logo object-contain" loading="eager" decoding="async">  
+    </div>  
+  </header>    <!-- Hero -->    <section class="flex justify-center hero">  
+    <div class="w-full max-w-[960px] my-3">  
+      <img src="assets/hero.png" alt="Hero" class="hero-img w-full rounded-xl object-contain" width="1200" height="560" loading="lazy" decoding="async">  
+    </div>  
+  </section>    <!-- Video -->    <section class="flex justify-center">  
+    <div class="w-full max-w-[900px]">  
+      <div class="video-card aspect-video">  
+        <video id="demoVideo" controls playsinline preload="metadata" poster="assets/poster.jpg" class="w-full h-full" aria-label="Demo video">  
+          <source src="assets/demo.mp4" type="video/mp4">  
+          Your browser does not support HTML5 video.  
+        </video>  <!-- custom overlay play (single pulsing play) -->  
+    <div class="video-overlay" id="videoOverlay" aria-hidden="true">  
+      <button id="playBtn" class="play-btn" aria-label="Play demo">  
+        <svg viewBox="0 0 24 24" width="36" height="36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 5v14l11-7-11-7z" fill="#000"/></svg>  
+      </button>  
+    </div>  
 
-  <style>
-    /* ---------- Base ---------- */
-    html { -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; }
-    body, button, input { -webkit-tap-highlight-color: transparent; }
-    :root{
-      --card-bg: rgba(255,255,255,0.02);
-      --card-bg-2: rgba(255,255,255,0.018);
-      --card-shadow: 0 10px 30px rgba(2,6,23,0.45);
-    }
-
-    .site-logo { max-width: 220px; transition: transform .22s ease, opacity .22s ease; opacity:.95; display:block; margin:0 auto; }
-    @media (min-width:640px){ .site-logo { max-width: 360px; } }
-    .hero-img { max-width:960px; display:block; margin:0 auto; }
-
-    .logo-glow::before { display:none !important; }
-
-    /* ---------- Video (player + big pulsing play) ---------- */
-    .video-card { position: relative; border-radius: .75rem; overflow: hidden; background: #000; border: 1px solid rgba(255,255,255,0.06); box-shadow: var(--card-shadow); }
-    .video-overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; z-index:18; }
-
-    /* big pulsing center play (restored) */
-    .big-play {
-      width:96px; height:96px; border-radius:9999px; display:flex; align-items:center; justify-content:center;
-      background: rgba(255,255,255,0.96); box-shadow: 0 18px 40px rgba(0,0,0,0.5); cursor:pointer; border:none;
-      animation: bigPulse 2.6s ease-in-out infinite;
-      transition: opacity .36s ease, transform .24s ease;
-      pointer-events:auto; /* allow clicks */
-      z-index:19;
-    }
-    @keyframes bigPulse {
-      0% { transform: scale(1); box-shadow: 0 18px 40px rgba(0,0,0,0.5); }
-      50% { transform: scale(1.06); box-shadow: 0 26px 60px rgba(0,0,0,0.55); }
-      100% { transform: scale(1); box-shadow: 0 18px 40px rgba(0,0,0,0.5); }
-    }
-    .big-play.minimize { opacity: 0; transform: scale(.92); pointer-events: none; }
-
-    /* subtle instruction hint is optional (kept but low-key) */
-    .hint {
-      position: absolute;
-      inset: auto 12px 12px 12px;
-      display:inline-block;
-      background: rgba(0,0,0,0.45);
-      color: #fff;
-      font-size: 13px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      text-align:center;
-      opacity: .96;
-      pointer-events: none;
-      z-index: 26;
-      backdrop-filter: blur(4px);
-    }
-
-    video { width:100%; height:100%; display:block; background: #000; }
-
-    .unmute-hint { position:absolute; left:50%; transform:translateX(-50%); bottom:46px; background:rgba(0,0,0,0.65); color:#fff; padding:.4rem .75rem; border-radius:999px; font-size:.85rem; opacity:0; transition:opacity .18s; pointer-events:none; z-index:30; }
-
-    .spinner { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background: rgba(0,0,0,0.45); z-index:22; }
-
-    /* ---------- CTA and other styling (unchanged) ---------- */
-    .cta-wrap { width:100%; display:flex; flex-direction:column; align-items:center; gap:22px; margin-top:1.5rem; }
-    .buy-btn { width:100%; max-width:1100px; min-height:96px; padding:0 22px; border-radius:16px; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:28px; line-height:1; white-space:nowrap; box-shadow:0 12px 36px rgba(0,0,0,0.45); text-decoration:none; color:#fff; background: linear-gradient(90deg,#16a34a,#059669); }
-    @media (max-width:380px){ .buy-btn{ min-height:84px; font-size:22px; padding:0 12px; } }
-
-    .download-btn { width:62%; max-width:680px; min-height:76px; padding:0 22px; border-radius:14px; display:inline-flex; align-items:center; justify-content:center; gap:14px; font-weight:800; font-size:22px; white-space:nowrap; text-decoration:none; color:#fff; background: linear-gradient(90deg,#7c3aed,#8b5cf6); color: #fff; }
-    .phone-icon{ width:36px; height:36px; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; }
-    .phone-icon svg { width:22px; height:22px; stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.4; }
-    .phone-icon svg circle { fill: currentColor; }
-
-    .support-btn{ width:44%; max-width:340px; min-height:56px; padding:0 16px; border-radius:12px; display:inline-flex; align-items:center; justify-content:center; gap:12px; font-weight:700; font-size:18px; white-space:nowrap; text-decoration:none; color:#fff; background:#0088cc; position:relative; padding-left:66px; }
-    .cta-icon{ width:40px; height:40px; border-radius:9999px; overflow:hidden; display:inline-flex; align-items:center; justify-content:center; padding:6px; background:rgba(255,255,255,0.03); flex-shrink:0; position:absolute; left:10px; top:50%; transform:translateY(-50%); }
-    .cta-icon img{ width:86%; height:86%; object-fit:cover; display:block; transform: translateZ(0); }
-    @media (max-width:380px){ .support-btn{ min-height:52px; font-size:16px; width:56%; padding-left:56px; } .cta-icon{ width:36px; height:36px; left:8px; top:50%; transform:translateY(-50%); } .cta-icon img{ width:100%; height:100%; } .phone-icon{ width:32px; height:32px; } .phone-icon svg{ width:20px; height:20px; stroke-width:2.0; } }
-
-    .broker-logo-wrap{ width:76px; height:76px; border-radius:9999px; overflow:hidden; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.02); }
-    .broker-logo{ width:70%; height:70%; object-fit:contain; display:block; }
-    .broker-card{ background:linear-gradient(180deg,var(--card-bg-2),var(--card-bg)); border:1px solid rgba(255,255,255,0.03); box-shadow:var(--card-shadow); border-radius:14px; padding:1rem; display:flex; flex-direction:column; align-items:center; gap:.75rem; min-height:130px; }
-
-    .pointer-noise{ display:none !important; }
-
-    /* ---------- Custom control bar (unobtrusive + auto-hide) ---------- */
-    .custom-controls { position: absolute; left: 12px; right: 12px; bottom: 12px; display:flex; gap:10px; align-items:center; padding:8px 10px; background: rgba(8,12,18,0.22); border-radius: 12px; backdrop-filter: blur(6px) saturate(1.05); box-shadow: 0 6px 18px rgba(0,0,0,0.35); color: #e6e8eb; transform: translateY(6px); opacity: 0; pointer-events: none; transition: opacity .28s ease, transform .28s ease; font-size: 13px; z-index:20; }
-    .custom-controls.visible { opacity: 0.94; transform: translateY(0); pointer-events: auto; }
-    .custom-controls.hidden { display:none; }
-
-    .ctrl { background: rgba(255,255,255,0.92); color: #000; border: none; height: 40px; min-width: 40px; border-radius: 999px; display:flex; align-items:center; justify-content:center; font-size: 15px; cursor:pointer; box-shadow: 0 6px 20px rgba(0,0,0,0.35); transition: transform .12s ease, opacity .12s; }
-    .ctrl:active { transform: scale(.98); }
-    .play-small { width:42px; height:42px; border-radius:999px; display:flex; align-items:center; justify-content:center; background: rgba(255,255,255,0.95); color:#000; font-size:18px; }
-
-    .timeline-wrap { flex:1; }
-    #progress { width:100%; appearance:none; height:6px; border-radius:999px; background: rgba(255,255,255,0.10); }
-    #progress::-webkit-slider-thumb { -webkit-appearance:none; width:12px; height:12px; border-radius:50%; background:#fff; box-shadow:0 3px 8px rgba(0,0,0,0.45); cursor:pointer; }
-
-    .time-labels { opacity: .9; margin-left:6px; margin-right:6px; color: #e6e8ebcc; font-variant-numeric: tabular-nums; }
-
-    select#playbackRate { background:rgba(255,255,255,0.06); color:#fff; border-radius:6px; padding:6px; border:1px solid rgba(255,255,255,0.04); }
-
-    @media (max-width:640px){ .ctrl{ height:44px; min-width:44px; } }
-
-    /* watermark styling (visible, low-contrast) */
-    .watermark { position: absolute; top: 12px; left: 12px; font-size: 13px; font-weight: 700; opacity: 0.12; color: #fff; pointer-events: none; z-index: 25; user-select: none; }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-  </style>
-</head>
-<body class="min-h-screen bg-gradient-to-b from-[#03060a] via-[#050a12] to-[#020407] text-[#e6e8eb] antialiased">
-
-<div class="relative z-10 max-w-[1100px] mx-auto px-4">
-
-  <!-- Logo -->
-  <header class="flex justify-center pt-4 pb-1">
-    <div class="w-full flex justify-center">
-      <img src="assets/logo.png" alt="Abrox Logo" class="site-logo object-contain" loading="eager" decoding="async">
-    </div>
-  </header>
-
-  <!-- Hero -->
-  <section class="flex justify-center hero">
-    <div class="w-full max-w-[960px] my-3">
-      <img src="assets/hero.png" alt="Hero" class="hero-img w-full rounded-xl object-contain" width="1200" height="560" loading="lazy" decoding="async">
-    </div>
-  </section>
-
-  <!-- Video -->
-  <section class="flex justify-center">
-    <div class="w-full max-w-[900px]">
-      <div class="video-card aspect-video" id="playerCard">
-        <!-- video element: no native controls shown, hide download but allow fullscreen via custom control -->
-        <video id="demoVideo"
-               playsinline
-               preload="metadata"
-               poster="assets/poster.jpg"
-               class="w-full h-full"
-               aria-label="Demo video"
-               controlsList="nodownload noremoteplayback"  <!-- nofullscreen removed so fullscreen allowed -->
-               disablePictureInPicture
-               tabindex="0">
-          <source src="assets/demo.mp4" type="video/mp4">
-          Your browser does not support HTML5 video.
-        </video>
-
-        <!-- watermark -->
-        <div id="watermark" class="watermark">customer@example.com</div>
-
-        <!-- big pulsing central play -->
-        <div class="video-overlay" id="videoOverlay" aria-hidden="true">
-          <button id="bigPlay" class="big-play" aria-label="Play demo">
-            <svg viewBox="0 0 24 24" width="44" height="44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 5v14l11-7-11-7z" fill="#000"/></svg>
-          </button>
-        </div>
-
-        <!-- subtle hint -->
-        <div class="hint" id="hint">Tap to play · Double-tap to skip</div>
-
-        <!-- spinner & unmute -->
-        <div class="spinner hidden" id="loadingSpinner"><div style="width:40px;height:40px;border:3px solid rgba(255,255,255,0.25);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite"></div></div>
-        <div class="unmute-hint" id="unmuteHint">🔊 Tap to unmute</div>
-
-        <!-- CUSTOM CONTROLS -->
-        <div class="custom-controls hidden" id="customControls" aria-hidden="false">
-          <button class="ctrl play-small" id="ctrlPlay" aria-label="Play/Pause">►</button>
-
-          <div class="timeline-wrap" id="timelineWrap" aria-label="Timeline">
-            <input type="range" id="progress" min="0" max="100" value="0" step="0.1" aria-label="Seek bar">
-          </div>
-
-          <div class="time-labels">
-            <span id="currentTime">0:00</span> / <span id="duration">0:00</span>
-          </div>
-
-          <button class="ctrl" id="ctrlMute" aria-label="Mute/Unmute">🔊</button>
-
-          <select id="playbackRate" title="Playback speed" aria-label="Playback speed">
-            <option value="0.75">0.75×</option>
-            <option value="1" selected>1×</option>
-            <option value="1.25">1.25×</option>
-            <option value="1.5">1.5×</option>
-            <option value="2">2×</option>
-          </select>
-
-          <!-- fullscreen control -->
-          <button class="ctrl" id="ctrlFull" aria-label="Enter fullscreen">⤢</button>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- CTAs -->
-  <div class="cta-wrap">
-    <a id="buyBtn" class="buy-btn" href="#checkout">BUY NOW — $399 LIFETIME</a>
-
-    <!-- Download App kept exactly as requested -->
-    <a id="downloadBtn" class="download-btn" href="#download" aria-label="Download App">
-      <span class="phone-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="28" height="28" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" focusable="false">
-          <rect x="6" y="2" width="12" height="20" rx="2" stroke="currentColor" stroke-width="2.4" fill="none" />
-          <circle cx="12" cy="18.2" r="1.6" fill="currentColor" />
-        </svg>
-      </span>
-      <span>Download App</span>
-    </a>
-
-    <a id="telegramSupport" class="support-btn" href="https://t.me/YOUR_TELEGRAM_USERNAME" aria-label="Telegram Support">
-      <span class="cta-icon" aria-hidden="true"><img src="assets/telegram.jpg" alt="Telegram"></span>
-      <span>Telegram Support</span>
-    </a>
-  </div>
-
-  <!-- Brokers -->
-  <section class="mt-12 px-2 w-full">
-    <div class="max-w-[1024px] mx-auto">
-      <h2 class="text-center text-2xl sm:text-3xl font-bold mb-6">Compatible Brokers</h2>
-
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
-        <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/iq-option.png" alt="IQ Option" class="broker-logo"></div><div class="broker-label">IQ OPTION</div></div>
-        <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/quotex.png" alt="QUOTEX" class="broker-logo"></div><div class="broker-label">QUOTEX</div></div>
-        <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/pocket-option.png" alt="Pocket Option" class="broker-logo"></div><div class="broker-label">POCKET OPTION</div></div>
-        <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/polarium-broker.png" alt="Polarium Broker" class="broker-logo"></div><div class="broker-label">POLARIUM BROKER</div></div>
-
-        <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/expert-option.png" alt="Expert Option" class="broker-logo"></div><div class="broker-label">EXPERT OPTION</div></div>
-        <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/binomo.png" alt="Binomo" class="broker-logo"></div><div class="broker-label">BINOMO</div></div>
-        <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/olymp-trade.png" alt="Olymp Trade" class="broker-logo"></div><div class="broker-label">OLYMP TRADE</div></div>
-        <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/home-broker.png" alt="Home Broker" class="broker-logo"></div><div class="broker-label">HOME BROKER</div></div>
-
-        <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/exnova.png" alt="Exnova" class="broker-logo"></div><div class="broker-label">EXNOVA</div></div>
-        <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/avalon.png" alt="Avalon" class="broker-logo"></div><div class="broker-label">AVALON</div></div>
-        <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/bullex.png" alt="Bullex" class="broker-logo"></div><div class="broker-label">BULLEX</div></div>
-        <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/ebinex.png" alt="Ebinex" class="broker-logo"></div><div class="broker-label">EBINEX</div></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="mt-12 border-t border-white/10"><p class="text-center text-sm text-white/60 py-6">© 2026 Abrox. All rights reserved.</p></footer>
+    <div class="spinner hidden" id="loadingSpinner"><div style="width:40px;height:40px;border:3px solid rgba(255,255,255,0.25);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite"></div></div>  
+    <div class="unmute-hint" id="unmuteHint">🔊 Tap to unmute</div>  
+  </div>  
 </div>
 
-<!-- Lucide (optional) -->
-<script src="https://unpkg.com/lucide@latest/dist/lucide.min.js" defer></script>
+  </section>    <!-- CTAs -->    <div class="cta-wrap">  
+    <a id="buyBtn" class="buy-btn" href="#checkout">BUY NOW — $399 LIFETIME</a>  <a id="downloadBtn" class="download-btn" href="#download" aria-label="Download App">  
+  <!-- phone inline SVG (bolder, uses currentColor) -->  
+  <span class="phone-icon" aria-hidden="true">  
+    <svg viewBox="0 0 24 24" width="28" height="28" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" focusable="false">  
+      <rect x="6" y="2" width="12" height="20" rx="2" stroke="currentColor" stroke-width="2.4" fill="none" />  
+      <circle cx="12" cy="18.2" r="1.6" fill="currentColor" />  
+    </svg>  
+  </span>  
+  <span>Download App</span>  
+</a>  
 
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    if (window.lucide && typeof window.lucide.replace === 'function') window.lucide.replace();
+<a id="telegramSupport" class="support-btn" href="https://t.me/YOUR_TELEGRAM_USERNAME" aria-label="Telegram Support">  
+  <!-- circle-only fix: the image is clipped to a perfect circle and slightly zoomed so white square corners are hidden -->  
+  <span class="cta-icon" aria-hidden="true"><img src="assets/telegram.jpg" alt="Telegram"></span>  
+  <span>Telegram Support</span>  
+</a>
 
-    const video = document.getElementById('demoVideo');
-    const playerCard = document.getElementById('playerCard');
-    const bigPlay = document.getElementById('bigPlay');
-    const hint = document.getElementById('hint');
-    const spinner = document.getElementById('loadingSpinner');
-    const unmuteHint = document.getElementById('unmuteHint');
-    const customControls = document.getElementById('customControls');
-    const ctrlPlay = document.getElementById('ctrlPlay');
-    const progress = document.getElementById('progress');
-    const currentTime = document.getElementById('currentTime');
-    const durationEl = document.getElementById('duration');
-    const ctrlMute = document.getElementById('ctrlMute');
-    const playbackRate = document.getElementById('playbackRate');
-    const ctrlFull = document.getElementById('ctrlFull');
-    const watermark = document.getElementById('watermark');
+  </div>    <!-- Brokers -->    <section class="mt-12 px-2 w-full">  
+    <div class="max-w-[1024px] mx-auto">  
+      <h2 class="text-center text-2xl sm:text-3xl font-bold mb-6">Compatible Brokers</h2>  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">  
+    <!-- add your broker images into assets/brokers/ (square PNG/SVG recommended) -->  
+    <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/iq-option.png" alt="IQ Option" class="broker-logo"></div><div class="broker-label">IQ OPTION</div></div>  
+    <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/quotex.png" alt="QUOTEX" class="broker-logo"></div><div class="broker-label">QUOTEX</div></div>  
+    <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/pocket-option.png" alt="Pocket Option" class="broker-logo"></div><div class="broker-label">POCKET OPTION</div></div>  
+    <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/polarium-broker.png" alt="Polarium Broker" class="broker-logo"></div><div class="broker-label">POLARIUM BROKER</div></div>  
 
-    // Keep the Download App CTA intact (unchanged).
+    <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/expert-option.png" alt="Expert Option" class="broker-logo"></div><div class="broker-label">EXPERT OPTION</div></div>  
+    <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/binomo.png" alt="Binomo" class="broker-logo"></div><div class="broker-label">BINOMO</div></div>  
+    <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/olymp-trade.png" alt="Olymp Trade" class="broker-logo"></div><div class="broker-label">OLYMP TRADE</div></div>  
+    <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/home-broker.png" alt="Home Broker" class="broker-logo"></div><div class="broker-label">HOME BROKER</div></div>  
 
-    // Anti-download & fallback
-    try { video.removeAttribute('controls'); video.controls = false; } catch(e){}
-    video.addEventListener('contextmenu', function(e){ e.preventDefault(); });
-    try { video.disablePictureInPicture = true; } catch (e){}
-    // Hide native WebKit controls (fallback)
-    const style = document.createElement('style');
-    style.innerHTML = `
-      video::-webkit-media-controls-enclosure { display: none !important; }
-      video::-webkit-media-controls-panel { display:none !important; }
-      video::-webkit-media-controls-overlay-play-button { display:none !important; }
-    `;
-    document.head.appendChild(style);
+    <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/exnova.png" alt="Exnova" class="broker-logo"></div><div class="broker-label">EXNOVA</div></div>  
+    <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/avalon.png" alt="Avalon" class="broker-logo"></div><div class="broker-label">AVALON</div></div>  
+    <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/bullex.png" alt="Bullex" class="broker-logo"></div><div class="broker-label">BULLEX</div></div>  
+    <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/ebinex.png" alt="Ebinex" class="broker-logo"></div><div class="broker-label">EBINEX</div></div>  
+  </div>  
+</div>
 
-    // small helpers
-    function formatTime(s){
-      s = Math.floor(s || 0);
-      const m = Math.floor(s/60);
-      const sec = s % 60;
-      return `${m}:${sec.toString().padStart(2,'0')}`;
-    }
-    function showSpinner(show){ if (!spinner) return; spinner.classList.toggle('hidden', !show); }
-
-    // ensure custom controls available
-    if (customControls) customControls.classList.remove('hidden');
-
-    // update play icon
-    function updatePlayButtons(){
-      const isPaused = video.paused;
-      if (ctrlPlay) ctrlPlay.textContent = isPaused ? '►' : '❚❚';
-      if (bigPlay) {
-        if (!isPaused) bigPlay.classList.add('minimize'); else bigPlay.classList.remove('minimize');
-      }
-    }
-
-    // big play click
-    if (bigPlay) {
-      bigPlay.addEventListener('click', function(e){
-        e.stopPropagation();
-        if (!video) return;
-        if (video.paused) {
-          showSpinner(true);
-          video.play().then(()=> { showSpinner(false); }).catch(()=> { showSpinner(false); });
-        } else {
-          video.pause();
-        }
-        // hide hint when they interact
-        if (hint) { hint.style.opacity = '0'; hint.style.transform = 'translateY(6px)'; }
-        showControls();
-      });
-    }
-
-    // clicking/tapping player toggles play unless clicking a control
-    function clickTogglesPlay(e){
-      if (e.target.closest('.ctrl') || e.target.closest('input') || e.target.closest('select') || e.target.closest('.timeline-wrap')) return;
-      if (!video) return;
-      if (video.paused) {
-        showSpinner(true);
-        video.play().then(()=> { showSpinner(false); }).catch(()=> { showSpinner(false); });
-      } else {
-        video.pause();
-      }
-      showControls();
-    }
-    if (playerCard) playerCard.addEventListener('click', clickTogglesPlay);
-
-    // Video events
-    if (video){
-      setTimeout(()=> { if (video.paused) { if (bigPlay) bigPlay.classList.remove('minimize'); } }, 300);
-
-      video.addEventListener('play', ()=>{ updatePlayButtons(); if(video.muted && unmuteHint) unmuteHint.style.opacity='1'; });
-      video.addEventListener('pause', ()=>{ updatePlayButtons(); if(unmuteHint) unmuteHint.style.opacity='0'; });
-      video.addEventListener('canplay', ()=>{ if (spinner) spinner.classList.add('hidden'); });
-
-      video.addEventListener('loadedmetadata', ()=> {
-        if (durationEl) durationEl.textContent = formatTime(video.duration || 0);
-        if (progress) progress.max = Math.floor(video.duration || 0);
-      });
-      video.addEventListener('timeupdate', ()=> {
-        if (progress && !progress.matches(':active')) progress.value = Math.floor(video.currentTime || 0);
-        if (currentTime) currentTime.textContent = formatTime(video.currentTime || 0);
-      });
-
-      // keyboard accessibility
-      video.addEventListener('keydown', (e) => {
-        if(e.code === 'Space'){ e.preventDefault(); if(video.paused) video.play(); else video.pause(); }
-        if(e.code === 'ArrowLeft'){ video.currentTime = Math.max(0, video.currentTime - 5); }
-        if(e.code === 'ArrowRight'){ video.currentTime = Math.min(video.duration || 0, video.currentTime + 5); }
-      });
-    }
-
-    // progress control
-    if (progress){
-      progress.addEventListener('input', () => { if (currentTime) currentTime.textContent = formatTime(progress.value); });
-      progress.addEventListener('change', () => { if (video) video.currentTime = Number(progress.value); });
-    }
-
-    // mute
-    if (ctrlMute){
-      ctrlMute.addEventListener('click', () => {
-        if (!video) return;
-        video.muted = !video.muted;
-        ctrlMute.textContent = video.muted ? '🔈' : '🔊';
-        if (!video.muted && unmuteHint) unmuteHint.style.opacity = '0';
-      });
-    }
-
-    // playback rate
-    if (playbackRate) playbackRate.addEventListener('change', (e) => { if (video) video.playbackRate = parseFloat(e.target.value); });
-
-    // AUTO-HIDE controls & show-on-interaction
-    let hideTimer = null;
-    const HIDE_DELAY = 2200;
-    function showControls(timeout = HIDE_DELAY){
-      if(!customControls) return;
-      customControls.classList.add('visible');
-      if (hideTimer) clearTimeout(hideTimer);
-      if (video && !video.paused) hideTimer = setTimeout(()=> { customControls.classList.remove('visible'); }, timeout);
-      if (hint) { hint.style.opacity = '0'; hint.style.transform = 'translateY(6px)'; }
-    }
-    function hideControls(){
-      if(!customControls) return;
-      customControls.classList.remove('visible');
-      if (hideTimer) clearTimeout(hideTimer);
-    }
-    ['mousemove','mousedown','touchstart','touchmove','keydown'].forEach(evt => {
-      document.addEventListener(evt, ()=> { showControls(); }, { passive: true });
-    });
-    if (playerCard) {
-      playerCard.addEventListener('mouseleave', () => { if (video && !video.paused) hideControls(); });
-      playerCard.addEventListener('mouseenter', () => showControls(0));
-    }
-    // initial hint + show controls briefly
-    setTimeout(()=> { if (video && video.paused) showControls(1600); }, 300);
-    setTimeout(()=> { if (hint) { hint.style.opacity = '0'; hint.style.transform = 'translateY(6px)'; } }, 2000);
-
-    // Mobile: double-tap skip
-    let lastTap = 0;
-    if (playerCard) {
-      playerCard.addEventListener('touchend', (e) => {
-        const now = Date.now();
-        const dt = now - lastTap;
-        lastTap = now;
-        if (dt < 350) {
-          const touch = (e.changedTouches && e.changedTouches[0]) || {};
-          const rect = playerCard.getBoundingClientRect();
-          const x = touch.clientX || (rect.left + rect.width/2);
-          const half = (x - rect.left) < (rect.width / 2) ? 'left' : 'right';
-          if (video) {
-            if (half === 'left') video.currentTime = Math.max(0, video.currentTime - 10);
-            else video.currentTime = Math.min(video.duration || 0, video.currentTime + 10);
-          }
-          showControls(HIDE_DELAY);
-        } else {
-          // single tap handled by click listener
-        }
-      }, { passive: true });
-    }
-
-    // Fullscreen toggle (custom button)
-    async function toggleFullscreen() {
-      try {
-        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-          // prefer playerCard so controls + overlay go fullscreen
-          if (playerCard.requestFullscreen) await playerCard.requestFullscreen();
-          else if (playerCard.webkitRequestFullscreen) playerCard.webkitRequestFullscreen();
-          else if (video.webkitEnterFullscreen) video.webkitEnterFullscreen(); // iOS Safari older API
-          if (ctrlFull) ctrlFull.textContent = '⤡';
-        } else {
-          if (document.exitFullscreen) await document.exitFullscreen();
-          else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-          if (ctrlFull) ctrlFull.textContent = '⤢';
-        }
-      } catch (err) {
-        // fallback: try video-specific fullscreen on some mobile browsers
-        try { if (video.webkitEnterFullscreen) video.webkitEnterFullscreen(); } catch(e){}
-      }
-    }
-    if (ctrlFull) ctrlFull.addEventListener('click', (e) => { e.stopPropagation(); toggleFullscreen(); });
-
-    // Update fullscreen button state on change
-    document.addEventListener('fullscreenchange', ()=> { if (ctrlFull) ctrlFull.textContent = document.fullscreenElement ? '⤡' : '⤢'; });
-    document.addEventListener('webkitfullscreenchange', ()=> { if (ctrlFull) ctrlFull.textContent = document.webkitFullscreenElement ? '⤡' : '⤢'; });
-
-    // disable context menu on video
-    if (video) video.addEventListener('contextmenu', (e) => e.preventDefault());
-
-    // watermark placeholder (server should set real value)
-    if (watermark) {
-      // watermark.textContent = "buyer@example.com";
-    }
-  });
-</script>
-
-</body>
+  </section>    <!-- Footer -->    <footer class="mt-12 border-t border-white/10"><p class="text-center text-sm text-white/60 py-6">© 2026 Abrox. All rights reserved.</p></footer>  
+</div>  <!-- Lucide (optional) -->  <script src="https://unpkg.com/lucide@latest/dist/lucide.min.js" defer></script>  <script>  
+  document.addEventListener('DOMContentLoaded', function () {  
+    // lucide replace (optional)  
+    if (window.lucide && typeof window.lucide.replace === 'function') window.lucide.replace();  
+  
+    const video = document.getElementById('demoVideo');  
+    const playBtn = document.getElementById('playBtn');  
+    const overlay = document.getElementById('videoOverlay');  
+    const spinner = document.getElementById('loadingSpinner');  
+    const unmuteHint = document.getElementById('unmuteHint');  
+  
+    function showOverlay(show){  
+      if(!overlay) return;  
+      overlay.style.opacity = show ? '1' : '0';  
+      overlay.style.pointerEvents = show ? 'auto' : 'none';  
+    }  
+  
+    if (playBtn && video){  
+      playBtn.addEventListener('click', function (e) {  
+        e.stopPropagation();  
+        if (video.paused){  
+          if (spinner) spinner.classList.remove('hidden');  
+          video.play().then(()=> {  
+            if (spinner) spinner.classList.add('hidden');  
+            showOverlay(false);  
+          }).catch(()=> {  
+            if (spinner) spinner.classList.add('hidden');  
+          });  
+        } else {  
+          video.pause();  
+          showOverlay(true);  
+        }  
+      });  
+    }  
+  
+    if (video){  
+      video.addEventListener('play', ()=>{ showOverlay(false); if(video.muted && unmuteHint) unmuteHint.style.opacity='1'; });  
+      video.addEventListener('pause', ()=>{ showOverlay(true); if(unmuteHint) unmuteHint.style.opacity='0'; });  
+      video.addEventListener('canplay', ()=>{ if (spinner) spinner.classList.add('hidden'); if(!video.paused) showOverlay(false); });  
+      video.addEventListener('volumechange', ()=>{ if(!video.muted && unmuteHint) unmuteHint.style.opacity='0'; });  
+    }  
+  
+    setTimeout(()=> {  
+      if (video && video.paused) showOverlay(true);  
+    }, 300);  
+  
+    const style = document.createElement('style');  
+    style.innerHTML = '@keyframes spin{to{transform:rotate(360deg)}}';  
+    document.head.appendChild(style);  
+  });  
+</script>  </body>  
 </html>
