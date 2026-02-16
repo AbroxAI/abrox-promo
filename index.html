@@ -76,21 +76,37 @@
     display:inline-flex; align-items:center; justify-content:center; gap:14px; font-weight:800;
     font-size:22px; white-space:nowrap; text-decoration:none; color:#fff;
     background: linear-gradient(90deg,#7c3aed,#8b5cf6);
+    /* ensure inline svgs inherit color */
+    color: #fff;
   }
   .phone-icon{ width:28px; height:28px; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; }
+
+  /* Make inline SVG phone use button color (no black fill) */
+  .phone-icon svg { width:20px; height:20px; stroke: currentColor; fill: none; stroke-linecap:round; stroke-linejoin:round; stroke-width:1.6; }
 
   @media (max-width:380px){ .download-btn{ min-height:68px; font-size:18px; width:68%; } }
 
   /* SUPPORT small */
+  /* Keep the visible circle and ensure label stays within the pill.
+     Icon is positioned left while label stays centered (prevents overflow on narrow screens). */
   .support-btn{
     width:44%; max-width:340px; min-height:56px; padding:0 16px; border-radius:12px;
-    display:inline-flex; align-items:center; justify-content:flex-start; gap:12px; font-weight:700;
+    display:inline-flex; align-items:center; justify-content:center; gap:12px; font-weight:700;
     font-size:18px; white-space:nowrap; text-decoration:none; color:#fff; background:#0088cc;
+    position:relative; padding-left:66px; /* space for the circular icon on the left */
   }
-  .cta-icon{ width:44px; height:44px; border-radius:9999px; overflow:hidden; display:inline-flex; align-items:center; justify-content:center; padding:6px; background:rgba(255,255,255,0.03); flex-shrink:0; }
-  .cta-icon img{ width:100%; height:100%; object-fit:contain; display:block; }
+  .cta-icon{
+    width:44px; height:44px; border-radius:9999px; overflow:hidden; display:inline-flex; align-items:center; justify-content:center; padding:6px; background:rgba(255,255,255,0.03); flex-shrink:0;
+    position:absolute; left:10px; top:50%; transform:translateY(-50%);
+  }
+  /* clip the JPG into a perfect circle and crop any white corners */
+  .cta-icon img{ width:110%; height:110%; object-fit:cover; display:block; transform: translateZ(0); }
 
-  @media (max-width:380px){ .support-btn{ min-height:52px; font-size:16px; width:56%; } }
+  @media (max-width:380px){
+    .support-btn{ min-height:52px; font-size:16px; width:56%; padding-left:56px; }
+    .cta-icon{ width:40px; height:40px; left:8px; top:50%; transform:translateY(-50%); }
+    .cta-icon img{ width:120%; height:120%; }
+  }
 
   /* ---------- Brokers: circular badges ---------- */
   .broker-logo-wrap{ width:76px; height:76px; border-radius:9999px; overflow:hidden; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.02); }
@@ -146,15 +162,19 @@
     <a id="buyBtn" class="buy-btn" href="#checkout">BUY NOW — $399 LIFETIME</a>
 
     <a id="downloadBtn" class="download-btn" href="#download" aria-label="Download App">
-      <!-- phone inline SVG (guaranteed to show) -->
+      <!-- phone inline SVG (guaranteed to show) - uses currentColor for stroke -->
       <span class="phone-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="28" height="28" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7 2h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="14.5" cy="19.5" r="0.5" fill="#fff"/></svg>
+        <svg viewBox="0 0 24 24" width="28" height="28" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="7" y="2" width="10" height="20" rx="2" stroke="currentColor" stroke-width="1.6" fill="none" />
+          <circle cx="12" cy="18.5" r="0.5" fill="currentColor" />
+        </svg>
       </span>
       <span>Download App</span>
     </a>
 
     <a id="telegramSupport" class="support-btn" href="https://t.me/YOUR_TELEGRAM_USERNAME" aria-label="Telegram Support">
-      <span class="cta-icon" aria-hidden="true"><img src="assets/telegram.jpg" alt="Telegram" width="44" height="44"></span>
+      <!-- circle-only fix: the image is clipped to a perfect circle and slightly zoomed so white square corners are hidden -->
+      <span class="cta-icon" aria-hidden="true"><img src="assets/telegram.jpg" alt="Telegram"></span>
       <span>Telegram Support</span>
     </a>
   </div>
