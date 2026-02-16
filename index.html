@@ -1,4 +1,3 @@
-
 <!doctype html>
 
 <html lang="en">  
@@ -141,7 +140,12 @@
   </section>    <!-- Video -->    <section class="flex justify-center">  
     <div class="w-full max-w-[900px]">  
       <div class="video-card aspect-video">  
-        <video id="demoVideo" controls playsinline preload="metadata" poster="assets/poster.jpg" class="w-full h-full" aria-label="Demo video">  
+        <!--
+          controlsList="nodownload noremoteplayback" hides the "download" option in browsers that support it.
+          disablePictureInPicture blocks picture-in-picture (optional).
+          oncontextmenu="return false;" prevents native right-click menu on many devices.
+        -->
+        <video id="demoVideo" controls playsinline preload="metadata" poster="assets/poster.jpg" class="w-full h-full" aria-label="Demo video" controlsList="nodownload noremoteplayback" disablePictureInPicture oncontextmenu="return false;">
           <source src="assets/demo.mp4" type="video/mp4">  
           Your browser does not support HTML5 video.  
         </video>  <!-- custom overlay play (single pulsing play) -->  
@@ -244,7 +248,46 @@
   
     const style = document.createElement('style');  
     style.innerHTML = '@keyframes spin{to{transform:rotate(360deg)}}';  
-    document.head.appendChild(style);  
+    document.head.appendChild(style);
+
+    /* -------------------------
+       Anti-download / anti-steal helpers
+       - controlsList on the <video> hides the browser "download" option in supported browsers.
+       - The listeners below block right-click/long-press context menu, drag, and common save shortcuts.
+       NOTE: Nothing here is bulletproof. For strong protection use tokenized streaming and DRM on the server.
+       ------------------------- */
+
+    // Prevent native context menu (right click / long-press)
+    if (video) {
+      video.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+      // Prevent dragging the video
+      video.addEventListener('dragstart', function (e) { e.preventDefault(); });
+      // Prevent some mobile long-press context menus that emit "contextmenu" event
+      video.addEventListener('touchstart', function (e) { /* allow normal touch; contextmenu listener blocks long-press */ }, { passive: true });
+    }
+
+    // Block common "save" keyboard shortcuts (Ctrl/Cmd + S)
+    document.addEventListener('keydown', function(e){
+      if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+        e.preventDefault();
+      }
+      // Optionally block Ctrl+Shift+I / F12 (devtools) attempts - note: this is only an annoyance,
+      // it does not stop a determined user and can be disabled by the browser.
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'i')) {
+        e.preventDefault();
+      }
+    });
+
+    // Optional: intercept contextmenu at document level as well (be careful — this disables right-click globally)
+    document.addEventListener('contextmenu', function(e){
+      // If you want to allow right-click elsewhere, only prevent when target is the video or inside video card.
+      if (e.target && (e.target.closest && e.target.closest('.video-card'))) {
+        e.preventDefault();
+      }
+    });
+
+    // END anti-download helpers
+
   });  
 </script>  </body>  
 </html>
