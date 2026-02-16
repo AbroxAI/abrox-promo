@@ -1,139 +1,211 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Abrox</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Abrox</title>
 
-<!-- Tailwind CDN -->
-<script>
-  tailwind = window.tailwind || {};
-  tailwind.config = { theme: { extend: { boxShadow: { 'soft-xl': '0 20px 60px rgba(0,0,0,0.55), inset 0 -4px 20px rgba(0,0,0,0.2)' } } } };
-</script>
-<script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind CDN -->
+  <script>
+    tailwind = window.tailwind || {};
+    tailwind.config = { theme: { extend: { boxShadow: { 'soft-xl': '0 20px 60px rgba(0,0,0,0.55), inset 0 -4px 20px rgba(0,0,0,0.2)' } } } };
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
 
-<style>
-  /* ---------- Base ---------- */
-  html { -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; }
-  body, button, input { -webkit-tap-highlight-color: transparent; }
-  :root{
-    --card-bg: rgba(255,255,255,0.02);
-    --card-bg-2: rgba(255,255,255,0.018);
-    --card-shadow: 0 10px 30px rgba(2,6,23,0.45);
-  }
+  <style>
+    /* ---------- Base (from your original) ---------- */
+    html { -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; }
+    body, button, input { -webkit-tap-highlight-color: transparent; }
+    :root{
+      --card-bg: rgba(255,255,255,0.02);
+      --card-bg-2: rgba(255,255,255,0.018);
+      --card-shadow: 0 10px 30px rgba(2,6,23,0.45);
+    }
 
-  /* ---------- Logo / Hero balance ---------- */
-  .site-logo { max-width: 220px; transition: transform .22s ease, opacity .22s ease; opacity:.95; display:block; margin:0 auto; }
-  @media (min-width:640px){ .site-logo { max-width: 360px; } }
-  .hero-img { max-width:960px; display:block; margin:0 auto; }
+    .site-logo { max-width: 220px; transition: transform .22s ease, opacity .22s ease; opacity:.95; display:block; margin:0 auto; }
+    @media (min-width:640px){ .site-logo { max-width: 360px; } }
+    .hero-img { max-width:960px; display:block; margin:0 auto; }
 
-  .logo-glow::before { display:none !important; }
+    .logo-glow::before { display:none !important; }
 
-  /* ---------- Video (single pulsing play overlay) ---------- */
-  .video-card { position: relative; border-radius: .75rem; overflow: hidden; background: #000; border: 1px solid rgba(255,255,255,0.06); box-shadow: var(--card-shadow); }
-  .play-btn {
-    width:84px; height:84px; border-radius:9999px; display:flex; align-items:center; justify-content:center;
-    background: rgba(255,255,255,0.96); box-shadow: 0 12px 30px rgba(0,0,0,0.45); cursor:pointer; border:none;
-    animation: pulseScale 2.6s ease-in-out infinite;
-  }
-  @keyframes pulseScale { 0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)} }
-  .video-overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; }
-  .video-overlay .play-btn { pointer-events:auto; }
+    /* ---------- Video (single pulsing play overlay) ---------- */
+    .video-card { position: relative; border-radius: .75rem; overflow: hidden; background: #000; border: 1px solid rgba(255,255,255,0.06); box-shadow: var(--card-shadow); }
+    .play-btn {
+      width:84px; height:84px; border-radius:9999px; display:flex; align-items:center; justify-content:center;
+      background: rgba(255,255,255,0.96); box-shadow: 0 12px 30px rgba(0,0,0,0.45); cursor:pointer; border:none;
+      animation: pulseScale 2.6s ease-in-out infinite;
+      transition: opacity .36s ease, transform .24s ease;
+    }
+    @keyframes pulseScale { 0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)} }
+    .video-overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; z-index:18; }
+    .video-overlay .play-btn { pointer-events:auto; }
 
-  video::-webkit-media-controls-overlay-play-button { display:none !important; -webkit-appearance:none; }
-  video::-webkit-media-controls-start-playback-button { display:none !important; -webkit-appearance:none; }
+    video::-webkit-media-controls-overlay-play-button { display:none !important; -webkit-appearance:none; }
+    video::-webkit-media-controls-start-playback-button { display:none !important; -webkit-appearance:none; }
 
-  video { width:100%; height:100%; display:block; }
+    video { width:100%; height:100%; display:block; background: #000; }
 
-  .unmute-hint { position:absolute; left:50%; transform:translateX(-50%); bottom:12px; background:rgba(0,0,0,0.7); color:#fff; padding:.4rem .75rem; border-radius:999px; font-size:.85rem; opacity:0; transition:opacity .18s; pointer-events:none; }
+    .unmute-hint { position:absolute; left:50%; transform:translateX(-50%); bottom:12px; background:rgba(0,0,0,0.65); color:#fff; padding:.4rem .75rem; border-radius:999px; font-size:.85rem; opacity:0; transition:opacity .18s; pointer-events:none; z-index:30; }
 
-  .spinner { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background: rgba(0,0,0,0.45); }
+    .spinner { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background: rgba(0,0,0,0.45); z-index:22; }
 
-  /* ---------- CTA exact sizing ---------- */
-  .cta-wrap { width:100%; display:flex; flex-direction:column; align-items:center; gap:22px; margin-top:1.5rem; }
+    /* ---------- CTA exact sizing (keep unchanged) ---------- */
+    .cta-wrap { width:100%; display:flex; flex-direction:column; align-items:center; gap:22px; margin-top:1.5rem; }
 
-  /* BUY large full-width */
-  .buy-btn {
-    width:100%; max-width:1100px; min-height:96px; padding:0 22px; border-radius:16px;
-    display:inline-flex; align-items:center; justify-content:center; font-weight:800;
-    font-size:28px; line-height:1; white-space:nowrap; box-shadow:0 12px 36px rgba(0,0,0,0.45);
-    text-decoration:none; color:#fff;
-    background: linear-gradient(90deg,#16a34a,#059669);
-  }
-  @media (max-width:380px){ .buy-btn{ min-height:84px; font-size:22px; padding:0 12px; } }
+    .buy-btn {
+      width:100%; max-width:1100px; min-height:96px; padding:0 22px; border-radius:16px;
+      display:inline-flex; align-items:center; justify-content:center; font-weight:800;
+      font-size:28px; line-height:1; white-space:nowrap; box-shadow:0 12px 36px rgba(0,0,0,0.45);
+      text-decoration:none; color:#fff;
+      background: linear-gradient(90deg,#16a34a,#059669);
+    }
+    @media (max-width:380px){ .buy-btn{ min-height:84px; font-size:22px; padding:0 12px; } }
 
-  /* DOWNLOAD medium */
-  .download-btn {
-    width:62%; max-width:680px; min-height:76px; padding:0 22px; border-radius:14px;
-    display:inline-flex; align-items:center; justify-content:center; gap:14px; font-weight:800;
-    font-size:22px; white-space:nowrap; text-decoration:none; color:#fff;
-    background: linear-gradient(90deg,#7c3aed,#8b5cf6);
-    color: #fff; /* ensures inline svgs inherit the button color */
-  }
+    .download-btn {
+      width:62%; max-width:680px; min-height:76px; padding:0 22px; border-radius:14px;
+      display:inline-flex; align-items:center; justify-content:center; gap:14px; font-weight:800;
+      font-size:22px; white-space:nowrap; text-decoration:none; color:#fff;
+      background: linear-gradient(90deg,#7c3aed,#8b5cf6);
+      color: #fff;
+    }
 
-  /* PHONE icon container: slightly larger so icon can be bolder/readable */
-  .phone-icon{
-    width:36px;
-    height:36px;
-    flex-shrink:0;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-  }
+    .phone-icon{
+      width:36px;
+      height:36px;
+      flex-shrink:0;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+    }
 
-  /* Bolder phone SVG (stroke uses currentColor) */
-  .phone-icon svg {
-    width:22px;
-    height:22px;
-    stroke: currentColor;
-    fill: none;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-width: 2.4;
-  }
-  .phone-icon svg circle { fill: currentColor; }
+    .phone-icon svg {
+      width:22px;
+      height:22px;
+      stroke: currentColor;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 2.4;
+    }
+    .phone-icon svg circle { fill: currentColor; }
 
-  @media (max-width:380px){ .download-btn{ min-height:68px; font-size:18px; width:68%; } }
+    @media (max-width:380px){ .download-btn{ min-height:68px; font-size:18px; width:68%; } }
 
-  /* SUPPORT small */
-  /* left-positioned circular icon + centered label */
-  .support-btn{
-    width:44%; max-width:340px; min-height:56px; padding:0 16px; border-radius:12px;
-    display:inline-flex; align-items:center; justify-content:center; gap:12px; font-weight:700;
-    font-size:18px; white-space:nowrap; text-decoration:none; color:#fff; background:#0088cc;
-    position:relative; padding-left:66px; /* reserve space for icon on left */
-  }
+    .support-btn{
+      width:44%; max-width:340px; min-height:56px; padding:0 16px; border-radius:12px;
+      display:inline-flex; align-items:center; justify-content:center; gap:12px; font-weight:700;
+      font-size:18px; white-space:nowrap; text-decoration:none; color:#fff; background:#0088cc;
+      position:relative; padding-left:66px;
+    }
 
-  .cta-icon{
-    width:40px; height:40px; border-radius:9999px; overflow:hidden; display:inline-flex; align-items:center; justify-content:center; padding:6px; background:rgba(255,255,255,0.03); flex-shrink:0;
-    position:absolute; left:10px; top:50%; transform:translateY(-50%);
-  }
+    .cta-icon{
+      width:40px; height:40px; border-radius:9999px; overflow:hidden; display:inline-flex; align-items:center; justify-content:center; padding:6px; background:rgba(255,255,255,0.03); flex-shrink:0;
+      position:absolute; left:10px; top:50%; transform:translateY(-50%);
+    }
 
-  /* clip the JPG into a perfect circle and make inner image slightly smaller so it reads like a badge */
-  .cta-icon img{
-    width:86%;
-    height:86%;
-    object-fit:cover;
-    display:block;
-    transform: translateZ(0);
-  }
+    .cta-icon img{
+      width:86%;
+      height:86%;
+      object-fit:cover;
+      display:block;
+      transform: translateZ(0);
+    }
 
-  @media (max-width:380px){
-    .support-btn{ min-height:52px; font-size:16px; width:56%; padding-left:56px; }
-    .cta-icon{ width:36px; height:36px; left:8px; top:50%; transform:translateY(-50%); }
-    .cta-icon img{ width:100%; height:100%; }
-    .phone-icon{ width:32px; height:32px; }
-    .phone-icon svg{ width:20px; height:20px; stroke-width:2.0; }
-  }
+    @media (max-width:380px){
+      .support-btn{ min-height:52px; font-size:16px; width:56%; padding-left:56px; }
+      .cta-icon{ width:36px; height:36px; left:8px; top:50%; transform:translateY(-50%); }
+      .cta-icon img{ width:100%; height:100%; }
+      .phone-icon{ width:32px; height:32px; }
+      .phone-icon svg{ width:20px; height:20px; stroke-width:2.0; }
+    }
 
-  /* ---------- Brokers: circular badges ---------- */
-  .broker-logo-wrap{ width:76px; height:76px; border-radius:9999px; overflow:hidden; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.02); }
-  .broker-logo{ width:70%; height:70%; object-fit:contain; display:block; }
-  .broker-card{ background:linear-gradient(180deg,var(--card-bg-2),var(--card-bg)); border:1px solid rgba(255,255,255,0.03); box-shadow:var(--card-shadow); border-radius:14px; padding:1rem; display:flex; flex-direction:column; align-items:center; gap:.75rem; min-height:130px; }
+    .broker-logo-wrap{ width:76px; height:76px; border-radius:9999px; overflow:hidden; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.02); }
+    .broker-logo{ width:70%; height:70%; object-fit:contain; display:block; }
+    .broker-card{ background:linear-gradient(180deg,var(--card-bg-2),var(--card-bg)); border:1px solid rgba(255,255,255,0.03); box-shadow:var(--card-shadow); border-radius:14px; padding:1rem; display:flex; flex-direction:column; align-items:center; gap:.75rem; min-height:130px; }
 
-  /* hide noise if present */
-  .pointer-noise{ display:none !important; }
-</style>
+    .pointer-noise{ display:none !important; }
+
+    /* ---------- Custom control bar (unobtrusive + auto-hide) ---------- */
+    .custom-controls {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      padding:8px 10px;
+      background: rgba(8,12,18,0.22);            /* very translucent */
+      border-radius: 12px;
+      backdrop-filter: blur(6px) saturate(1.05);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+      color: #e6e8eb;
+      transform: translateY(6px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .28s ease, transform .28s ease;
+      font-size: 13px;
+      z-index:20;
+    }
+    .custom-controls.visible {
+      opacity: 0.94;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .custom-controls.hidden { display:none; } /* used initially if needed */
+
+    .ctrl {
+      background: rgba(255,255,255,0.92);
+      color: #000;
+      border: none;
+      height: 40px;
+      min-width: 40px;
+      border-radius: 999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 15px;
+      cursor:pointer;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+      transition: transform .12s ease, opacity .12s;
+    }
+    .ctrl:active { transform: scale(.98); }
+    .play-small { width:42px; height:42px; border-radius:999px; display:flex; align-items:center; justify-content:center; background: rgba(255,255,255,0.95); color:#000; font-size:18px; }
+
+    .timeline-wrap { flex:1; }
+    #progress { width:100%; appearance:none; height:6px; border-radius:999px; background: rgba(255,255,255,0.10); }
+    #progress::-webkit-slider-thumb { -webkit-appearance:none; width:12px; height:12px; border-radius:50%; background:#fff; box-shadow:0 3px 8px rgba(0,0,0,0.45); cursor:pointer; }
+
+    .time-labels { opacity: .9; margin-left:6px; margin-right:6px; color: #e6e8ebcc; font-variant-numeric: tabular-nums; }
+
+    select#playbackRate { background:rgba(255,255,255,0.06); color:#fff; border-radius:6px; padding:6px; border:1px solid rgba(255,255,255,0.04); }
+
+    /* center play small fade (minimized after play) */
+    .video-overlay .play-btn.minimize { opacity: 0; transform: scale(.92); pointer-events: none; transition: opacity .36s ease, transform .24s ease; }
+
+    @media (max-width:640px){
+      .ctrl{ height:44px; min-width:44px; }
+      .video-overlay .play-btn{ width:80px; height:80px; }
+    }
+
+    /* watermark styling (visible, low-contrast) */
+    .watermark {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      opacity: 0.12;
+      color: #fff;
+      pointer-events: none;
+      z-index: 25;
+      user-select: none;
+    }
+
+    /* spinner animation */
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
 </head>
 <body class="min-h-screen bg-gradient-to-b from-[#03060a] via-[#050a12] to-[#020407] text-[#e6e8eb] antialiased">
 
@@ -156,11 +228,24 @@
   <!-- Video -->
   <section class="flex justify-center">
     <div class="w-full max-w-[900px]">
-      <div class="video-card aspect-video">
-        <video id="demoVideo" controls playsinline preload="metadata" poster="assets/poster.jpg" class="w-full h-full" aria-label="Demo video">
+      <div class="video-card aspect-video" id="playerCard">
+        <!-- video element: no native controls, hides PiP/download where supported -->
+        <video id="demoVideo"
+               playsinline
+               preload="metadata"
+               poster="assets/poster.jpg"
+               class="w-full h-full"
+               aria-label="Demo video"
+               controlsList="nodownload nofullscreen noremoteplayback"
+               disablePictureInPicture
+               tabindex="0">
           <source src="assets/demo.mp4" type="video/mp4">
           Your browser does not support HTML5 video.
         </video>
+
+        <!-- watermark (server should inject actual buyer info here) -->
+        <!-- Example: server-side replace `customer@example.com` with the real email -->
+        <div id="watermark" class="watermark">customer@example.com</div>
 
         <!-- custom overlay play (single pulsing play) -->
         <div class="video-overlay" id="videoOverlay" aria-hidden="true">
@@ -169,8 +254,33 @@
           </button>
         </div>
 
+        <!-- spinner & unmute hint -->
         <div class="spinner hidden" id="loadingSpinner"><div style="width:40px;height:40px;border:3px solid rgba(255,255,255,0.25);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite"></div></div>
         <div class="unmute-hint" id="unmuteHint">🔊 Tap to unmute</div>
+
+        <!-- CUSTOM CONTROLS (inside the player, unobtrusive + auto-hide) -->
+        <div class="custom-controls hidden" id="customControls" aria-hidden="false">
+          <button class="ctrl play-small" id="ctrlPlay" aria-label="Play/Pause">►</button>
+
+          <div class="timeline-wrap" id="timelineWrap" aria-label="Timeline">
+            <input type="range" id="progress" min="0" max="100" value="0" step="0.1" aria-label="Seek bar">
+          </div>
+
+          <div class="time-labels">
+            <span id="currentTime">0:00</span> / <span id="duration">0:00</span>
+          </div>
+
+          <button class="ctrl" id="ctrlMute" aria-label="Mute/Unmute">🔊</button>
+
+          <select id="playbackRate" title="Playback speed" aria-label="Playback speed">
+            <option value="0.75">0.75×</option>
+            <option value="1" selected>1×</option>
+            <option value="1.25">1.25×</option>
+            <option value="1.5">1.5×</option>
+            <option value="2">2×</option>
+          </select>
+        </div>
+
       </div>
     </div>
   </section>
@@ -179,8 +289,8 @@
   <div class="cta-wrap">
     <a id="buyBtn" class="buy-btn" href="#checkout">BUY NOW — $399 LIFETIME</a>
 
+    <!-- YOU SAID: keep this button intact, so I didn't change it -->
     <a id="downloadBtn" class="download-btn" href="#download" aria-label="Download App">
-      <!-- phone inline SVG (bolder, uses currentColor) -->
       <span class="phone-icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" width="28" height="28" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" focusable="false">
           <rect x="6" y="2" width="12" height="20" rx="2" stroke="currentColor" stroke-width="2.4" fill="none" />
@@ -191,7 +301,6 @@
     </a>
 
     <a id="telegramSupport" class="support-btn" href="https://t.me/YOUR_TELEGRAM_USERNAME" aria-label="Telegram Support">
-      <!-- circle-only fix: the image is clipped to a perfect circle and slightly zoomed so white square corners are hidden -->
       <span class="cta-icon" aria-hidden="true"><img src="assets/telegram.jpg" alt="Telegram"></span>
       <span>Telegram Support</span>
     </a>
@@ -203,7 +312,6 @@
       <h2 class="text-center text-2xl sm:text-3xl font-bold mb-6">Compatible Brokers</h2>
 
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
-        <!-- add your broker images into assets/brokers/ (square PNG/SVG recommended) -->
         <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/iq-option.png" alt="IQ Option" class="broker-logo"></div><div class="broker-label">IQ OPTION</div></div>
         <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/quotex.png" alt="QUOTEX" class="broker-logo"></div><div class="broker-label">QUOTEX</div></div>
         <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/pocket-option.png" alt="Pocket Option" class="broker-logo"></div><div class="broker-label">POCKET OPTION</div></div>
@@ -239,45 +347,194 @@
     const overlay = document.getElementById('videoOverlay');
     const spinner = document.getElementById('loadingSpinner');
     const unmuteHint = document.getElementById('unmuteHint');
+    const customControls = document.getElementById('customControls');
+    const ctrlPlay = document.getElementById('ctrlPlay');
+    const progress = document.getElementById('progress');
+    const currentTime = document.getElementById('currentTime');
+    const durationEl = document.getElementById('duration');
+    const ctrlMute = document.getElementById('ctrlMute');
+    const playbackRate = document.getElementById('playbackRate');
+    const playerCard = document.getElementById('playerCard');
+    const watermark = document.getElementById('watermark');
 
+    // If server-side, replace watermark text dynamically:
+    // Example: watermark.textContent = "user@example.com";
+
+    // small helper
     function showOverlay(show){
       if(!overlay) return;
       overlay.style.opacity = show ? '1' : '0';
       overlay.style.pointerEvents = show ? 'auto' : 'none';
     }
 
-    if (playBtn && video){
+    // minimal anti-download tweaks (non-invasive):
+    try { video.removeAttribute('controls'); video.controls = false; } catch(e){}
+    video.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+    try { video.disablePictureInPicture = true; } catch (e){}
+    // hide native WebKit controls if any
+    const style = document.createElement('style');
+    style.innerHTML = `
+      video::-webkit-media-controls-enclosure { display: none !important; }
+      video::-webkit-media-controls-panel { display:none !important; }
+      video::-webkit-media-controls-overlay-play-button { display:none !important; }
+    `;
+    document.head.appendChild(style);
+
+    // custom control / UX logic
+    function formatTime(s){
+      s = Math.floor(s || 0);
+      const m = Math.floor(s/60);
+      const sec = s % 60;
+      return `${m}:${sec.toString().padStart(2,'0')}`;
+    }
+
+    // Make sure custom controls are revealed and usable
+    if (customControls) customControls.classList.remove('hidden');
+
+    // update play icons
+    function updatePlayButtons(){
+      const isPaused = video.paused;
+      ctrlPlay.textContent = isPaused ? '►' : '❚❚';
+      if (!isPaused) {
+        playBtn.classList.add('minimize');
+      } else {
+        playBtn.classList.remove('minimize');
+      }
+    }
+
+    // spinner helpers
+    function showSpinner(show){
+      if (!spinner) return;
+      spinner.classList.toggle('hidden', !show);
+    }
+
+    // initial states
+    if (video){
+      // show overlay when paused initially
+      setTimeout(()=> { if (video.paused) showOverlay(true); }, 300);
+
+      // event wiring
       playBtn.addEventListener('click', function (e) {
         e.stopPropagation();
         if (video.paused){
-          if (spinner) spinner.classList.remove('hidden');
+          showSpinner(true);
           video.play().then(()=> {
-            if (spinner) spinner.classList.add('hidden');
+            showSpinner(false);
             showOverlay(false);
-          }).catch(()=> {
-            if (spinner) spinner.classList.add('hidden');
-          });
+          }).catch(()=> { showSpinner(false); });
         } else {
           video.pause();
           showOverlay(true);
         }
       });
-    }
 
-    if (video){
-      video.addEventListener('play', ()=>{ showOverlay(false); if(video.muted && unmuteHint) unmuteHint.style.opacity='1'; });
-      video.addEventListener('pause', ()=>{ showOverlay(true); if(unmuteHint) unmuteHint.style.opacity='0'; });
+      ctrlPlay.addEventListener('click', ()=> { video.paused ? video.play() : video.pause(); });
+
+      video.addEventListener('play', ()=>{ updatePlayButtons(); if(video.muted && unmuteHint) unmuteHint.style.opacity='1'; });
+      video.addEventListener('pause', ()=>{ updatePlayButtons(); if(unmuteHint) unmuteHint.style.opacity='0'; });
       video.addEventListener('canplay', ()=>{ if (spinner) spinner.classList.add('hidden'); if(!video.paused) showOverlay(false); });
-      video.addEventListener('volumechange', ()=>{ if(!video.muted && unmuteHint) unmuteHint.style.opacity='0'; });
+
+      video.addEventListener('loadedmetadata', ()=> {
+        durationEl.textContent = formatTime(video.duration || 0);
+        progress.max = Math.floor(video.duration || 0);
+      });
+      video.addEventListener('timeupdate', ()=> {
+        if (!progress.matches(':active')) progress.value = Math.floor(video.currentTime || 0);
+        currentTime.textContent = formatTime(video.currentTime);
+      });
+
+      // progress input handling
+      progress.addEventListener('input', () => {
+        currentTime.textContent = formatTime(progress.value);
+      });
+      progress.addEventListener('change', () => {
+        video.currentTime = Number(progress.value);
+      });
+
+      // mute toggle
+      ctrlMute.addEventListener('click', () => {
+        video.muted = !video.muted;
+        ctrlMute.textContent = video.muted ? '🔈' : '🔊';
+        if (!video.muted && unmuteHint) unmuteHint.style.opacity = '0';
+      });
+
+      playbackRate.addEventListener('change', (e) => {
+        video.playbackRate = parseFloat(e.target.value);
+      });
+
+      // keyboard accessibility
+      video.addEventListener('keydown', (e) => {
+        if(e.code === 'Space'){ e.preventDefault(); if(video.paused) video.play(); else video.pause(); }
+        if(e.code === 'ArrowLeft'){ video.currentTime = Math.max(0, video.currentTime - 5); }
+        if(e.code === 'ArrowRight'){ video.currentTime = Math.min(video.duration || 0, video.currentTime + 5); }
+      });
+
+      // disable context menu on video (remove "save as" context)
+      video.addEventListener('contextmenu', (e) => e.preventDefault());
     }
 
+    // AUTO-HIDE controls & show-on-interaction
+    let hideTimer = null;
+    const HIDE_DELAY = 2200; // ms
+
+    function showControls(timeout = HIDE_DELAY){
+      if(!customControls) return;
+      customControls.classList.add('visible');
+      if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+      if (!video.paused) {
+        hideTimer = setTimeout(()=> { customControls.classList.remove('visible'); }, timeout);
+      }
+    }
+    function hideControls(){
+      if(!customControls) return;
+      customControls.classList.remove('visible');
+      if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+    }
+
+    // show controls on pointer/keyboard interaction
+    ['mousemove','mousedown','touchstart','touchmove','keydown'].forEach(evt => {
+      document.addEventListener(evt, (e) => { showControls(); }, { passive: true });
+    });
+
+    if (playerCard) {
+      playerCard.addEventListener('mouseleave', () => { if (!video.paused) hideControls(); });
+      playerCard.addEventListener('mouseenter', () => showControls(0));
+    }
+
+    // Mobile: single tap = toggle play & show controls; double-tap left/right = seek 10s
+    let lastTap = 0;
+    if (playerCard) {
+      playerCard.addEventListener('touchend', (e) => {
+        const now = Date.now();
+        const dt = now - lastTap;
+        lastTap = now;
+        if (dt < 350) {
+          // double-tap
+          const touch = (e.changedTouches && e.changedTouches[0]) || {};
+          const rect = playerCard.getBoundingClientRect();
+          const x = touch.clientX || (rect.left + rect.width/2);
+          const half = (x - rect.left) < (rect.width / 2) ? 'left' : 'right';
+          if (half === 'left') video.currentTime = Math.max(0, video.currentTime - 10);
+          else video.currentTime = Math.min(video.duration || 0, video.currentTime + 10);
+          showControls(HIDE_DELAY);
+        } else {
+          // single tap
+          if (video.paused) video.play(); else video.pause();
+          showControls(HIDE_DELAY);
+        }
+      }, { passive: true });
+    }
+
+    // initial UX: show small controls briefly
     setTimeout(()=> {
-      if (video && video.paused) showOverlay(true);
+      if (video && video.paused) showControls(1600);
     }, 300);
 
-    const style = document.createElement('style');
-    style.innerHTML = '@keyframes spin{to{transform:rotate(360deg)}}';
-    document.head.appendChild(style);
+    // small accessibility and fallback: ensure watermark is readable on small screens (server may set it)
+    if (watermark) {
+      // if you want dynamic watermarking from JS (instead of server), uncomment:
+      // watermark.textContent = "user@example.com";
+    }
   });
 </script>
 
