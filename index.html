@@ -347,6 +347,36 @@
     @media (max-width:520px) {
       .big-glass { padding: 18px; border-radius: 14px; }
     }
+
+    /* ================== TESTIMONIAL STYLES (merged) ================== */
+    /* scoped testimonial styles so they don't clash */
+    .testimonials-section { display:flex; justify-content:center; padding:36px 16px 36px; }
+    .testimonials-shell { width:100%; max-width:1100px; border-radius:18px; background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006)); padding:22px; box-shadow: 0 28px 60px rgba(2,6,23,0.56); border:1px solid rgba(255,255,255,0.03); }
+    .testimonials-header { text-align:center; margin: 6px 0 16px; padding-bottom:10px; }
+    .testimonials-header h2 { font-size: clamp(1.6rem, 3.8vw, 2.6rem); margin:0; font-weight:900; letter-spacing:-0.5px; color:#fff; }
+    .testimonials-header .subtitle { margin-top:10px; color:rgba(255,255,255,0.58); font-weight:700; font-size:1rem; }
+
+    .testimonial-outer { position:relative; margin-top:18px; display:flex; align-items:center; gap:12px; }
+    .testimonial-track { display:flex; gap:18px; overflow:hidden; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; padding: 18px 22px; align-items: stretch; width:100%; position: relative; scroll-behavior: smooth; border-radius: 14px; }
+    .testimonial-card { scroll-snap-align: center; min-width: 86%; max-width: 92%; background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006)); border: 1px solid rgba(255,255,255,0.03); border-radius: 14px; padding: 18px; box-shadow: 0 20px 40px rgba(2,6,23,0.6); display:flex; gap:14px; align-items:flex-start; transition: transform .8s cubic-bezier(.2,.9,.3,1), box-shadow .8s ease; position: relative; flex-shrink: 0; opacity: .98; color:#fff; }
+    .testimonial-card.active { transform: translateY(-8px) scale(1.02); box-shadow: 0 34px 80px rgba(2,8,23,0.66); opacity: 1; }
+    .testimonial-avatar { width:64px; height:64px; border-radius:999px; overflow:hidden; flex-shrink:0; border: 2px solid rgba(255,255,255,0.04); display:flex; align-items:center; justify-content:center; background: rgba(255,255,255,0.02); }
+    .testimonial-avatar img { width:100%; height:100%; object-fit:cover; display:block; }
+    .testimonial-body { flex:1; display:flex; flex-direction:column; gap:8px; }
+    .testimonial-head { display:flex; align-items:center; gap:12px; justify-content:space-between; }
+    .testimonial-name { font-weight:800; font-size:1.02rem; color:#fff; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    .testimonial-handle { color: rgba(255,255,255,0.58); font-weight:700; font-size:.9rem; opacity:.95; }
+    .testimonial-text { color: rgba(255,255,255,0.92); line-height:1.45; margin-top:4px; font-size:1rem; }
+    .testimonial-meta { display:flex; gap:10px; align-items:center; color: rgba(255,255,255,0.58); font-size:.9rem; margin-top:6px; flex-wrap:wrap; }
+    .stars { display:flex; gap:4px; align-items:center; color: #f59e0b; font-weight:800; letter-spacing:0.6px; }
+    .testimonial-nav { position:absolute; top:50%; transform: translateY(-50%); width:44px; height:44px; border-radius:999px; display:flex; align-items:center; justify-content:center; background: linear-gradient(180deg, rgba(0,0,0,0.36), rgba(255,255,255,0.02)); border: 1px solid rgba(255,255,255,0.04); color: #fff; font-size: 22px; cursor:pointer; box-shadow: 0 8px 24px rgba(2,6,23,0.48); z-index: 40; }
+    .testimonial-nav.left { left: 6px; }
+    .testimonial-nav.right { right: 6px; }
+    @media (min-width:980px) { .testimonial-card { min-width: 44%; max-width: 46%; } .testimonial-track { gap: 22px; padding: 22px; } .testimonial-nav { width:50px; height:50px; font-size:24px; } }
+    @media (max-width:520px) { .testimonial-card { padding:14px; gap:12px; min-width:92%; max-width:96%; } .testimonial-avatar { width:56px; height:56px; } .testimonials-shell { padding:18px; border-radius:14px; } }
+
+    /* small helpers */
+    .pill-flag { font-size:1.02rem; margin-right:4px; }
   </style>
 </head>
 <body class="min-h-screen bg-gradient-to-b from-[#03060a] via-[#050a12] to-[#020407] text-[#e6e8eb] antialiased">
@@ -598,6 +628,25 @@
     </section>
     <!-- ========== end ADDITIONAL PRICING block ========== -->
 
+    <!-- ========== TESTIMONIALS (inserted here, before footer) ========== -->
+    <section class="testimonials-section" aria-label="Customer testimonials">
+      <div class="testimonials-shell">
+        <header class="testimonials-header">
+          <h2>What Our Users Say</h2>
+          <p class="subtitle">Real reviews from real traders</p>
+        </header>
+
+        <div class="testimonial-outer">
+          <button id="prevTestimonial" class="testimonial-nav left" aria-label="Previous testimonial">‹</button>
+
+          <div id="testimonialTrack" class="testimonial-track" role="list" tabindex="0"></div>
+
+          <button id="nextTestimonial" class="testimonial-nav right" aria-label="Next testimonial">›</button>
+        </div>
+      </div>
+    </section>
+    <!-- ========== END TESTIMONIALS ========== -->
+
     <!-- Footer -->
     <footer class="mt-12 border-t border-white/10"><p class="text-center text-sm text-white/60 py-6">© 2026 Abrox. All rights reserved.</p></footer>
   </div>
@@ -709,16 +758,12 @@
 
       // Generate smoothed realistic accuracy values for 7 days
       function generateSmoothedValues(baseMean = 83, volatility = 3.2) {
-        // baseMean around 75-90; volatility controls daily variation
         const values = [];
-        // Start near baseMean with a small random offset
         let prev = baseMean + randRange(-1.6, 1.6);
         for (let i = 0; i < 7; i++) {
-          // small AR(1)-like smoothing: next = prev*alpha + noise
-          const alpha = 0.6 + Math.random() * 0.25; // 0.6-0.85 smoothing
+          const alpha = 0.6 + Math.random() * 0.25;
           const noise = randRange(-volatility, volatility);
           const next = prev * alpha + (baseMean * (1 - alpha)) + noise * (1 - alpha * 0.5);
-          // clamp between 60 and 98
           const clamped = Math.max(60, Math.min(98, Math.round(next * 10) / 10));
           values.push(clamped);
           prev = clamped;
@@ -729,9 +774,9 @@
       // Create gradient for chart area
       function createGradient(ctx, chartArea) {
         const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-        gradient.addColorStop(0, 'rgba(20,184,166,0.16)'); // light green top
+        gradient.addColorStop(0, 'rgba(20,184,166,0.16)');
         gradient.addColorStop(0.45, 'rgba(20,184,166,0.08)');
-        gradient.addColorStop(1, 'rgba(20,184,166,0.00)'); // transparent bottom
+        gradient.addColorStop(1, 'rgba(20,184,166,0.00)');
         return gradient;
       }
 
@@ -742,13 +787,11 @@
       function renderChart(labels, values) {
         const ctx = document.getElementById('accuracyChart').getContext('2d');
 
-        // compute suggested bounds
         const minVal = Math.min(...values);
         const maxVal = Math.max(...values);
         const suggestedMin = Math.max(60, Math.floor(minVal - 3));
         const suggestedMax = Math.min(100, Math.ceil(maxVal + 3));
 
-        // if chart exists, update dataset and re-create gradient after layout
         if (accuracyChart) {
           accuracyChart.data.labels = labels;
           accuracyChart.data.datasets[0].data = values;
@@ -758,7 +801,6 @@
           return;
         }
 
-        // create chart
         accuracyChart = new Chart(ctx, {
           type: 'line',
           data: {
@@ -766,14 +808,14 @@
             datasets: [{
               label: 'Accuracy',
               data: values,
-              tension: 0.28, // smooth curve
+              tension: 0.28,
               borderWidth: 3,
-              borderColor: '#10b981', // green
+              borderColor: '#10b981',
               pointBackgroundColor: '#34d399',
               pointBorderColor: '#093927',
               pointRadius: 6,
               pointHoverRadius: 8,
-              fill: true, // area fill
+              fill: true,
               backgroundColor: function(context) {
                 const chart = context.chart;
                 const { ctx, chartArea } = chart;
@@ -813,16 +855,11 @@
             },
             scales: {
               x: {
-                grid: {
-                  display: false,
-                },
+                grid: { display: false },
                 ticks: {
                   color: 'rgba(255,255,255,0.6)',
                   font: { size: 12 },
-                  callback: function(value, index, values) {
-                    // labels already include newline
-                    return this.getLabelForValue(index);
-                  }
+                  callback: function(value, index, values) { return this.getLabelForValue(index); }
                 }
               },
               y: {
@@ -830,15 +867,11 @@
                 suggestedMin: suggestedMin,
                 suggestedMax: suggestedMax,
                 grid: {
-                  color: function(context) {
-                    // dotted horizontal grid
-                    return 'rgba(255,255,255,0.03)';
-                  },
+                  color: function(context) { return 'rgba(255,255,255,0.03)'; },
                   borderDash: [4, 6],
                 },
                 ticks: {
                   color: 'rgba(255,255,255,0.42)',
-                  // show percent ticks every ~5
                   stepSize: 5,
                   callback: function(val) { return val + '%'; }
                 }
@@ -848,10 +881,7 @@
               duration: (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) ? 0 : 800,
               easing: 'easeOutCubic'
             },
-            interaction: {
-              mode: 'nearest',
-              intersect: false
-            },
+            interaction: { mode: 'nearest', intersect: false },
             responsive: true,
             maintainAspectRatio: false
           }
@@ -863,11 +893,9 @@
         const avg = values.reduce((s, v) => s + v, 0) / values.length;
         const avgText = formatOneDecimal(avg) + '%';
         document.getElementById('avgPercent').innerText = avgText;
-        // realistic sample count between 800 and 1600 (varies by broker)
         const ops = Math.floor(randRange(800, 1600));
         document.getElementById('opsCount').innerText = 'Based on ' + ops.toLocaleString() + ' operations of 1 minute';
 
-        // Update textual fallback for screen readers
         const labels = getLast7DayLabels().map(l => l.replace('\n', ' '));
         const fallbackItems = labels.map((lab, i) => lab + ': ' + values[i] + '%').join('; ');
         const fallbackEl = document.getElementById('chartFallback');
@@ -877,18 +905,14 @@
       // Hook up broker select -> generate data & render
       const brokerSelect = document.getElementById('brokerSelect');
       function onBrokerChange() {
-        // create a baseMean based on a pseudo-random function influenced by broker name (so different brokers vary)
-        const brokerName = brokerSelect.value || 'IQ OPTION';
-        // use char codes to produce a seed-ish value (not deterministic across visits, but provides variety)
         let seed = 0;
+        const brokerName = brokerSelect.value || 'IQ OPTION';
         for (let i = 0; i < brokerName.length; i++) seed += brokerName.charCodeAt(i);
-        // produce base mean in 78..88 influenced by seed and time
-        const baseMean = 78 + ((seed % 12) + (new Date().getDate() % 5)) * 0.8; // yields realistic spread around 78-88
-        const volatility = 3.3; // day-to-day variance
+        const baseMean = 78 + ((seed % 12) + (new Date().getDate() % 5)) * 0.8;
+        const volatility = 3.3;
         const values = generateSmoothedValues(baseMean, volatility);
 
         const labels = getLast7DayLabels();
-        // reformat labels to be Chart-friendly (with newline) - already done by getLast7DayLabels()
         renderChart(labels, values);
         updateStatCard(values);
       }
@@ -910,6 +934,268 @@
 
       // END accuracy logic
     });
+  </script>
+
+  <!-- =================== TESTIMONIAL JS (merged) =================== -->
+  <script>
+    (function(){
+      const COUNT = 12; // how many cards to generate
+      const AUTOPLAY_DELAY = 20000;
+      const TRACK = document.getElementById('testimonialTrack');
+
+      const experienceSnippets = [
+        "Signals are structured and easy to follow.",
+        "I like how it doesn’t overtrade.",
+        "Support actually responds fast.",
+        "Risk management is what makes the difference.",
+        "Entries are clean and not rushed.",
+        "Much better than the other bots I tried.",
+        "Feels disciplined, not hype-based.",
+        "Good for people who work full time.",
+        "Alerts are clear and simple.",
+        "Finally something consistent."
+      ];
+
+      const realismSnippets = [
+        "Consistency matters — small wins add up over time.",
+        "Takes discipline, but it works when you follow the rules.",
+        "It’s not magic — structured trading and patience win out.",
+        "As long as you manage position sizes, the results compound.",
+        "Best used with sensible risk sizing and discipline."
+      ];
+
+      const socialSnippets = [
+        "I recommended it to two friends who also saw gains.",
+        "Community tips helped me tweak risk settings for better results."
+      ];
+
+      const profitTemplates = [
+        "Started with ${start} and made about ${profit} in ${period}.",
+        "Made ${profit} in ${period} — withdrew part and kept compounding.",
+        "Grew ${start} to ${end} in ${period}, took partial profits."
+      ];
+
+      function randBetween(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+      function pickStartAmount() { const choices = [200,250,300,400,500,750,1000]; return choices[Math.floor(Math.random()*choices.length)]; }
+      function formatDollar(n) { return '$' + n; }
+
+      function genProfitSnippet() {
+        const useDays = Math.random() < 0.45;
+        let period;
+        if (useDays) {
+          const days = randBetween(3, 14);
+          period = days === 1 ? '1 day' : `${days} days`;
+        } else {
+          const weeks = randBetween(1, 6);
+          period = weeks === 1 ? '1 week' : `${weeks} weeks`;
+        }
+        const start = pickStartAmount();
+        const profitMin = Math.max(120, Math.round(start * 0.4));
+        const profitMax = Math.max(3000, Math.round(start * 3.5));
+        const profit = Math.round(randBetween(profitMin, Math.min(profitMax, 2300)) / 10) * 10;
+        const end = start + profit;
+        const tpl = profitTemplates[Math.floor(Math.random()*profitTemplates.length)];
+        return tpl.replace('${start}', formatDollar(start)).replace('${profit}', formatDollar(profit)).replace('${end}', formatDollar(end)).replace('${period}', period);
+      }
+
+      function generateTestimonial() {
+        const includeProfit = Math.random() < 0.62;
+        const includeRealism = Math.random() < 0.32;
+        const includeSocial = Math.random() < 0.18;
+        const parts = [];
+        if (includeProfit) parts.push(genProfitSnippet());
+        parts.push(experienceSnippets[Math.floor(Math.random() * experienceSnippets.length)]);
+        if (includeRealism) parts.push(realismSnippets[Math.floor(Math.random()*realismSnippets.length)]);
+        if (includeSocial) parts.push(socialSnippets[Math.floor(Math.random()*socialSnippets.length)]);
+        return parts.join(" ");
+      }
+
+      const NATS = ['US','GB','BR','NG','FR','ES','IT','DE','CA','AU','NL','SE','CH','DK','IE'];
+      function countryCodeToEmoji(code) {
+        if (!code) return '';
+        const cc = code.slice(0,2).toUpperCase();
+        const OFFSET = 0x1F1E6 - 'A'.charCodeAt(0);
+        return Array.from(cc).map(c => String.fromCodePoint(c.charCodeAt(0) + OFFSET)).join('');
+      }
+      function formatDaysAgo(days) {
+        if (days <= 0) return 'today';
+        if (days === 1) return '1 day ago';
+        if (days < 7) return days + ' days ago';
+        if (days < 14) return '1 week ago';
+        if (days < 30) return Math.floor(days/7) + ' weeks ago';
+        if (days < 60) return '1 month ago';
+        if (days < 365) return Math.round(days/30) + ' months ago';
+        const yrs = Math.floor(days/365);
+        return yrs + (yrs === 1 ? ' year ago' : ' years ago');
+      }
+      function makeHandle(first) {
+        const suffixes = ['X','Coin','Node','Dex','Trader','Swap','Chain'];
+        if (Math.random() < 0.42) {
+          if (Math.random() < 0.28) {
+            const hex = Math.random().toString(16).slice(2,10);
+            return '0x' + hex;
+          }
+          return '@' + first.toLowerCase() + suffixes[Math.floor(Math.random()*suffixes.length)];
+        } else {
+          return '@' + first.toLowerCase() + (Math.random() < 0.25 ? '_' + Math.floor(Math.random()*999) : '');
+        }
+      }
+      function sampleRating() { return 5; }
+      function renderStars(rating) {
+        let html = `<span class="stars" role="img" aria-label="${rating} out of 5 stars">`;
+        for (let i=1;i<=5;i++){ html += i <= rating ? '★' : '☆'; if (i < 5) html += ' '; }
+        html += `</span> <span style="margin-left:8px;color:rgba(255,255,255,0.58);font-weight:700;font-size:.95rem" aria-hidden="true">${rating}.0</span>`;
+        return html;
+      }
+
+      function buildCard(person, message, daysAgo) {
+        const first = person.name.first;
+        const last = person.name.last;
+        const fullName = `${first} ${last}`;
+        const countryEmoji = countryCodeToEmoji(person.nat || '');
+        const handle = makeHandle(first);
+        const daysText = formatDaysAgo(daysAgo);
+        const rating = sampleRating();
+        const card = document.createElement('article');
+        card.className = 'testimonial-card';
+        card.setAttribute('role','listitem');
+        card.innerHTML = `
+          <div class="testimonial-avatar" aria-hidden="true">
+            <img loading="lazy" src="${person.picture.medium}" alt="${fullName} avatar">
+          </div>
+          <div class="testimonial-body">
+            <div class="testimonial-head">
+              <div>
+                <div class="testimonial-name">${fullName} <span class="testimonial-handle">${handle}</span></div>
+                <div class="testimonial-meta"><span class="pill-flag">${countryEmoji}</span><span style="margin-left:6px;">${person.location.country}</span></div>
+              </div>
+              <div>${renderStars(rating)}</div>
+            </div>
+
+            <div class="testimonial-text">${message}</div>
+
+            <div class="testimonial-meta" aria-hidden="true">
+              <span>${daysText}</span>
+              <span>•</span>
+              <span class="muted">Verified community member</span>
+            </div>
+          </div>
+        `;
+        return card;
+      }
+
+      function scrollToIndex(index) {
+        const cards = Array.from(TRACK.children);
+        if (!cards[index]) return;
+        const card = cards[index];
+        const left = card.offsetLeft - (TRACK.clientWidth - card.clientWidth)/2;
+        TRACK.scrollTo({left, behavior:'smooth'});
+        cards.forEach((c,i) => c.classList.toggle('active', i === index));
+      }
+
+      function sampleDaysAgo() {
+        const r = Math.random();
+        if (r < 0.40) return Math.floor(Math.random()*4);
+        if (r < 0.70) return 4 + Math.floor(Math.random()*11);
+        if (r < 0.88) return 15 + Math.floor(Math.random()*46);
+        if (r < 0.98) return 61 + Math.floor(Math.random()*305);
+        return 366 + Math.floor(Math.random()*534);
+      }
+
+      let index = 0;
+      let autoplayTimer = null;
+      function startAutoplay(delay = AUTOPLAY_DELAY) { stopAutoplay(); autoplayTimer = setInterval(()=> {
+        const cards = TRACK.children.length;
+        index = (index + 1) % cards;
+        scrollToIndex(index);
+      }, delay); }
+      function stopAutoplay(){ if (autoplayTimer){ clearInterval(autoplayTimer); autoplayTimer = null; } }
+
+      function setupControls() {
+        document.getElementById('prevTestimonial').addEventListener('click', ()=> {
+          index = Math.max(0, index-1);
+          scrollToIndex(index);
+          stopAutoplay(); startAutoplay(AUTOPLAY_DELAY + 2000);
+        });
+        document.getElementById('nextTestimonial').addEventListener('click', ()=> {
+          index = (index + 1) % TRACK.children.length;
+          scrollToIndex(index);
+          stopAutoplay(); startAutoplay(AUTOPLAY_DELAY + 2000);
+        });
+
+        TRACK.addEventListener('mouseenter', stopAutoplay);
+        TRACK.addEventListener('mouseleave', ()=> startAutoplay(AUTOPLAY_DELAY));
+        TRACK.addEventListener('focusin', stopAutoplay);
+        TRACK.addEventListener('focusout', ()=> startAutoplay(AUTOPLAY_DELAY));
+
+        TRACK.addEventListener('keydown', (ev)=> {
+          if (ev.key === 'ArrowRight') document.getElementById('nextTestimonial').click();
+          if (ev.key === 'ArrowLeft') document.getElementById('prevTestimonial').click();
+        });
+
+        window.addEventListener('resize', ()=> scrollToIndex(index));
+      }
+
+      function trackActiveCard() {
+        const obs = new IntersectionObserver(entries => {
+          entries.forEach(en => {
+            if (en.isIntersecting) {
+              const nodes = Array.from(TRACK.children);
+              const idx = nodes.indexOf(en.target);
+              if (idx >= 0) index = idx;
+              TRACK.children && Array.from(TRACK.children).forEach((c,i) => c.classList.toggle('active', i === idx));
+            }
+          });
+        }, { root: TRACK, threshold: 0.6 });
+        Array.from(TRACK.children).forEach(card => obs.observe(card));
+      }
+
+      async function fetchUsers(n) {
+        const natString = NATS.join(',');
+        const url = `https://randomuser.me/api/?results=${n}&nat=${natString}&inc=name,location,picture,nat&noinfo`;
+        try {
+          const r = await fetch(url);
+          const j = await r.json();
+          return j.results || [];
+        } catch(err) {
+          console.warn('RandomUser fetch failed, returning fallback list', err);
+          return [
+            { name:{first:'Alex',last:'Morgan'}, picture:{medium:'https://randomuser.me/api/portraits/men/32.jpg'}, nat:'US', location:{country:'United States'} },
+            { name:{first:'Ana',last:'Silva'}, picture:{medium:'https://randomuser.me/api/portraits/women/55.jpg'}, nat:'BR', location:{country:'Brazil'} }
+          ];
+        }
+      }
+
+      (async function mount(){
+        const people = await fetchUsers(COUNT);
+        while (people.length < COUNT && people.length > 0) {
+          people.push(people[Math.floor(Math.random()*people.length)]);
+        }
+        if (people.length === 0) {
+          for (let i=0;i<COUNT;i++){
+            people.push({ name:{first:'User'+(i+1),last:'Demo'}, picture:{medium:`https://robohash.org/demo${i}.png?size=120x120`}, nat:'US', location:{country:'United States'} });
+          }
+        }
+
+        for (let i=0; i<Math.min(COUNT, people.length); i++){
+          const p = people[i];
+          const msg = generateTestimonial();
+          const days = sampleDaysAgo();
+          const card = buildCard(p, msg, days);
+          TRACK.appendChild(card);
+        }
+
+        if (TRACK.children.length > 0) {
+          index = 0;
+          setTimeout(()=> scrollToIndex(0), 120);
+        }
+
+        setupControls();
+        trackActiveCard();
+        startAutoplay(AUTOPLAY_DELAY);
+      })();
+
+    })();
   </script>
 </body>
 </html>
