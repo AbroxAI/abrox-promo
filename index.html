@@ -306,6 +306,93 @@
     /* flag image tiny helper */
     .flag-img { display:inline-block; width:24px; height:18px; vertical-align:middle; border-radius:2px; margin-right:6px; }
   </style>
+
+  <!-- ====== OVERRIDE: TESTIMONIAL FIXES (drop-in) ====== -->
+  <style>
+    /* ---------- TESTIMONIAL FIXES (drop-in override) ---------- */
+
+    /* make track explicitly allow visible overflow for transformed/shifted cards
+       while preserving horizontal scroll behaviour */
+    .testimonial-track {
+      overflow-x: auto;      /* horizontal scroll kept */
+      overflow-y: visible;   /* allow card content to overflow vertically if needed */
+      -webkit-overflow-scrolling: touch;
+      padding-inline: 22px;  /* keep your existing padding */
+    }
+
+    /* slightly smaller card footprint for large phones so shadows don't clash on some widths */
+    .testimonial-card {
+      flex: 0 0 86%;
+      min-width: 86%;
+      max-width: 90%;
+      padding: 16px 22px;
+      box-sizing: border-box;
+      z-index: 1;
+    }
+
+    /* Active card still lifts above neighbors */
+    .testimonial-card.active {
+      transform: translateY(-8px) scale(1.02);
+      z-index: 8;
+    }
+
+    /* reduce avatar a touch so it doesn't push text wide */
+    .testimonial-avatar {
+      width: 56px; height: 56px; flex-basis: 56px;
+      border-radius: 999px;
+      flex-shrink: 0;
+    }
+
+    /* ensure heading area can shrink and text wraps correctly */
+    .testimonial-body, .testimonial-head, .testimonial-name {
+      min-width: 0;   /* critical for truncation to work inside flex containers */
+    }
+
+    /* make name area able to truncate, don't let it force stars out */
+    .testimonial-name { display: flex; gap: 8px; align-items: center; min-width: 0; }
+    .testimonial-name > * { min-width: 0; }
+
+    /* keep stars grouped and prevent them from shrinking into the text area */
+    .stars { display:flex; gap:6px; align-items:center; justify-content:flex-end; flex: 0 0 auto; margin-left: 10px; }
+
+    /* allow testimonial text to scale and wrap, slightly smaller on narrow screens */
+    .testimonial-text {
+      font-size: clamp(0.95rem, 2.2vw, 1.04rem);
+      line-height: 1.5;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      hyphens: auto;
+      margin-top: 6px;
+    }
+
+    /* extra right padding to avoid decorative shadows or rating overflow being clipped */
+    .testimonial-card::after { content: ""; display:block; width:6px; }
+
+    /* ---------- NEW: Single-card-per-view on mobile/tablet ---------- */
+    /* Force a single-card visible on viewports smaller than 980px (no neighbors shown) */
+    @media (max-width: 979px) {
+      .testimonial-card {
+        flex: 0 0 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        padding: 14px 18px !important;
+      }
+      .testimonial-avatar { width: 56px; height:56px; flex-basis:56px; }
+      .testimonial-track { gap: 12px; padding: 12px 8px; }
+      /* keep the active lift but ensure shadow doesn't cause visual clipping */
+      .testimonial-card.active { transform: translateY(-6px) scale(1.01); box-shadow: 0 28px 64px rgba(2,8,23,0.62); }
+    }
+
+    /* optional: smaller on very small phones */
+    @media (max-width:420px) {
+      .testimonial-avatar { width: 48px; height:48px; flex-basis:48px; }
+      .testimonial-card { padding: 12px 14px !important; }
+      .testimonial-text { font-size: 0.98rem; }
+    }
+
+    /* optional: if you want to cap the text with "read more" later, you can enable clamping */
+    /* .testimonial-text { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 6; overflow: hidden; } */
+  </style>
 </head>
 <body class="min-h-screen bg-gradient-to-b from-[#03060a] via-[#050a12] to-[#020407] text-[#e6e8eb] antialiased">
   <div class="relative z-10 max-w-[1100px] mx-auto px-4">
