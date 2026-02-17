@@ -70,7 +70,6 @@
       color:#fff;
       background: linear-gradient(90deg,#25b86a,#059669);
       border: 1px solid rgba(255,255,255,0.02);
-      /* default subtle transform to enable smooth animation */
       transform: translateZ(0) scale(1);
     }
     @media (max-width:480px){
@@ -116,7 +115,7 @@
       .download-btn { width:68%; min-height:64px; font-size:18px; padding:0 16px; }
     }
 
-    /* PHONE icon container: slightly larger so icon can be bolder/readable */
+    /* PHONE icon container */
     .phone-icon{
       width:36px;
       height:36px;
@@ -126,7 +125,6 @@
       justify-content:center;
     }
 
-    /* Bolder phone SVG (stroke uses currentColor) */
     .phone-icon svg {
       width:22px;
       height:22px;
@@ -140,42 +138,10 @@
 
     @media (max-width:380px){ .download-btn{ min-height:68px; font-size:18px; width:68%; } }
 
-    /* SUPPORT small (kept for styles even though button removed) */
-    .support-btn{
-      width:44%; max-width:340px; min-height:56px; padding:0 16px; border-radius:12px;
-      display:inline-flex; align-items:center; justify-content:center; gap:12px; font-weight:700;
-      font-size:18px; white-space:nowrap; text-decoration:none; color:#fff; background:#0088cc;
-      position:relative; padding-left:66px;
-    }
-
-    .cta-icon{
-      width:40px; height:40px; border-radius:9999px; overflow:hidden; display:inline-flex; align-items:center; justify-content:center; padding:6px; background:rgba(255,255,255,0.03); flex-shrink:0;
-      position:absolute; left:10px; top:50%; transform:translateY(-50%);
-    }
-
-    .cta-icon img{
-      width:86%;
-      height:86%;
-      object-fit:cover;
-      display:block;
-      transform: translateZ(0);
-    }
-
-    @media (max-width:380px){
-      .support-btn{ min-height:52px; font-size:16px; width:56%; padding-left:56px; }
-      .cta-icon{ width:36px; height:36px; left:8px; top:50%; transform:translateY(-50%); }
-      .cta-icon img{ width:100%; height:100%; }
-      .phone-icon{ width:32px; height:32px; }
-      .phone-icon svg{ width:20px; height:20px; stroke-width:2.0; }
-    }
-
     /* ---------- Brokers: circular badges ---------- */
     .broker-logo-wrap{ width:76px; height:76px; border-radius:9999px; overflow:hidden; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.02); }
     .broker-logo{ width:70%; height:70%; object-fit:contain; display:block; }
     .broker-card{ background:linear-gradient(180deg,var(--card-bg-2),var(--card-bg)); border:1px solid rgba(255,255,255,0.03); box-shadow:var(--card-shadow); border-radius:14px; padding:1rem; display:flex; flex-direction:column; align-items:center; gap:.75rem; min-height:130px; }
-
-    /* hide noise if present */
-    .pointer-noise{ display:none !important; }
 
     /* ===== Pricing card custom styles (added) ===== */
     .pricing-card {
@@ -185,114 +151,51 @@
       border-radius: 16px;
     }
 
-    /* thicker visible strikethrough for regular price */
     .strike {
       text-decoration: line-through;
       text-decoration-thickness: 3px;
       text-decoration-color: rgba(255,255,255,0.18);
     }
 
-    /* limited pill gradient & small shadow */
-    .limited-pill {
-      background: linear-gradient(90deg,#ff6b5f,#e0443a);
-      box-shadow: 0 8px 28px rgba(224,68,58,0.16);
-    }
+    .limited-pill { background: linear-gradient(90deg,#ff6b5f,#e0443a); box-shadow: 0 8px 28px rgba(224,68,58,0.16); }
 
-    /* NEW: outlined red pill (matches screenshot red rectangle) - improved visibility & alignment */
     .limited-pill-outline {
-      /* slightly stronger, taller, and rounder */
       background: linear-gradient(180deg, rgba(224,68,58,0.085), rgba(224,68,58,0.05));
-      border: 1px solid rgba(255,122,114,0.42); /* brighter coral border */
-      color: #ff7a72;                         /* stronger coral text */
+      border: 1px solid rgba(255,122,114,0.42);
+      color: #ff7a72;
       box-shadow: 0 10px 30px rgba(0,0,0,0.32), inset 0 1px 0 rgba(255,255,255,0.02);
-      padding: 1.1rem 1.75rem;                /* taller pill */
+      padding: 1.1rem 1.75rem;
       font-weight: 900;
-      border-radius: 22px;                   /* larger radius to match screenshot */
-      font-size: 1.12rem;                    /* slightly larger text */
+      border-radius: 22px;
+      font-size: 1.12rem;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 12px;
-      min-height: 78px;                      /* comfortable vertical size */
+      min-height: 78px;
       line-height: 1;
       text-shadow: 0 1px 0 rgba(0,0,0,0.25);
     }
 
-    /* clearer text inside pill */
-    .limited-pill-outline .pill-text {
-      font-weight: 900;
-      color: #ff7a72;
-      font-size: 1.12rem;
-      letter-spacing: 0.3px;
-      display: inline-block;
-      text-align: center;
-      line-height: 1.02;
-    }
+    .limited-pill-outline .pill-text { font-weight: 900; color: #ff7a72; font-size: 1.12rem; letter-spacing: 0.3px; display: inline-block; text-align: center; line-height: 1.02; }
 
-    /* Flame: bigger, vertically aligned and a soft drop shadow so it stays visible on dark glass */
-    .flame-emoji {
-      display: inline-block;
-      transform-origin: center;
-      animation: flamePulse 1.6s ease-in-out infinite;
-      will-change: transform, filter, opacity;
-      font-size: 26px;                         /* larger flame for prominence */
-      line-height: 1;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      filter: drop-shadow(0 8px 16px rgba(255,122,114,0.18));
-      margin-top: 0;                           /* neutral vertical alignment */
-    }
+    .flame-emoji { display: inline-block; transform-origin: center; animation: flamePulse 1.6s ease-in-out infinite; will-change: transform, filter, opacity; font-size: 26px; line-height: 1; display: inline-flex; align-items: center; justify-content: center; filter: drop-shadow(0 8px 16px rgba(255,122,114,0.18)); margin-top: 0; }
+    @keyframes flamePulse { 0% { transform: scale(1); opacity: 1; } 45% { transform: scale(1.08) translateY(-1%); opacity: 0.98; } 100% { transform: scale(1); opacity: 1; } }
 
-    @keyframes flamePulse {
-      0% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 0 rgba(255,85,0,0)); }
-      45% { transform: scale(1.08) translateY(-1%); opacity: 0.98; filter: drop-shadow(0 6px 12px rgba(255,85,0,0.12)); }
-      100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 0 rgba(255,85,0,0)); }
-    }
-
-    /* subtle pointer + focus styles for accessibility */
     .pricing-cta:focus { outline: none; box-shadow: 0 0 0 4px rgba(34,197,94,0.18); border-radius: 14px; }
     .limited-pill:focus { outline: none; box-shadow: 0 0 0 4px rgba(234,88,12,0.12); border-radius: 10px; }
 
-    /* CTA tweaks to match screenshot: larger, taller, more rounded */
-    .pricing-cta {
-      border-radius: 26px !important;
-      padding-top: 1.25rem !important;
-      padding-bottom: 1.25rem !important;
-      font-size: 28px !important; /* larger CTA text */
-      letter-spacing: 0.6px;
-      box-shadow: 0 18px 42px rgba(6,95,70,0.16) !important;
-      min-height: 116px;
-    }
+    .pricing-cta { border-radius: 26px !important; padding-top: 1.25rem !important; padding-bottom: 1.25rem !important; font-size: 28px !important; letter-spacing: 0.6px; box-shadow: 0 18px 42px rgba(6,95,70,0.16) !important; min-height: 116px; }
 
-    /* ========== NEW: secure button pulse animation ========== */
-    .secure-pulse {
-      animation: securePulse 2400ms cubic-bezier(.2,.9,.25,1) infinite;
-      will-change: transform, box-shadow, filter;
-    }
+    .secure-pulse { animation: securePulse 2400ms cubic-bezier(.2,.9,.25,1) infinite; will-change: transform, box-shadow, filter; }
+    @keyframes securePulse { 0%   { transform: translateY(0) scale(1); } 45%  { transform: translateY(-4px) scale(1.035); } 70%  { transform: translateY(-2px) scale(1.02); } 100% { transform: translateY(0) scale(1); } }
 
-    @keyframes securePulse {
-      0%   { transform: translateY(0) scale(1); box-shadow: 0 10px 26px rgba(16,185,129,0.14); }
-      45%  { transform: translateY(-4px) scale(1.035); box-shadow: 0 36px 84px rgba(16,185,129,0.22); }
-      70%  { transform: translateY(-2px) scale(1.02); box-shadow: 0 26px 60px rgba(16,185,129,0.18); }
-      100% { transform: translateY(0) scale(1); box-shadow: 0 10px 26px rgba(16,185,129,0.14); }
-    }
-
-    /* stronger hover/active affordance */
-    .pricing-cta.secure-pulse:hover, .pricing-cta.secure-pulse:focus {
-      transform: translateY(-3px) scale(1.045);
-      box-shadow: 0 44px 100px rgba(16,185,129,0.28) !important;
-      transition: transform 180ms ease, box-shadow 180ms ease;
-    }
-
-    /* Respect reduced motion */
     @media (prefers-reduced-motion: reduce) {
       .secure-pulse { animation: none !important; transform: none !important; box-shadow: 0 12px 36px rgba(6,95,70,0.08) !important; }
       .flame-emoji { animation: none; }
       .buy-pulse { animation: none; }
     }
 
-    /* responsive tweak: stack columns at very small widths */
     @media (max-width:420px) {
       .pricing-columns { flex-direction: column; gap: 12px; }
       .pricing-divider { display: none; }
@@ -304,52 +207,20 @@
     }
 
     /* ===== Stat card + chart card styles (new) ===== */
-    .stat-card {
-      background: linear-gradient(180deg, rgba(10,70,46,0.96), rgba(7,48,33,0.96));
-      border-radius: 14px;
-      padding: 20px;
-      border: 1px solid rgba(255,255,255,0.03);
-      box-shadow: var(--card-shadow);
-      position: relative;
-    }
-
-    .chart-card {
-      border-radius: 14px;
-      padding: 18px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.006));
-      border: 1px solid rgba(255,255,255,0.03);
-      box-shadow: var(--card-shadow);
-    }
-
+    .stat-card { background: linear-gradient(180deg, rgba(10,70,46,0.96), rgba(7,48,33,0.96)); border-radius: 14px; padding: 20px; border: 1px solid rgba(255,255,255,0.03); box-shadow: var(--card-shadow); position: relative; }
+    .chart-card { border-radius: 14px; padding: 18px; background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.006)); border: 1px solid rgba(255,255,255,0.03); box-shadow: var(--card-shadow); }
     .legend-square { width:18px; height:18px; border-radius:6px; background: linear-gradient(90deg,#16a34a,#34d399); box-shadow: 0 6px 16px rgba(16,185,129,0.12); display:inline-block; }
 
-    /* small muted helper text */
     .muted { color: rgba(255,255,255,0.58); }
-
-    /* small dotted grid line look */
     .dotted-grid { border-top: 1px dotted rgba(255,255,255,0.03); }
-
-    /* ensure chart canvas fills container and keeps aspect */
     .chart-canvas { width:100%; height:260px; }
     @media (max-width:480px) { .chart-canvas { height:220px; } }
 
-    /* ---------- NEW: Big glass wrapper (the “big glass card” you asked for) ---------- */
-    .big-glass {
-      background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006));
-      border-radius: 18px;
-      padding: 26px;
-      border: 1px solid rgba(255,255,255,0.035);
-      box-shadow: 0 28px 60px rgba(2,6,23,0.56), inset 0 1px 0 rgba(255,255,255,0.01);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      margin-bottom: 18px;
-    }
-    @media (max-width:520px) {
-      .big-glass { padding: 18px; border-radius: 14px; }
-    }
+    /* ---------- NEW: Big glass wrapper (the “big glass card”) ---------- */
+    .big-glass { background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006)); border-radius: 18px; padding: 26px; border: 1px solid rgba(255,255,255,0.035); box-shadow: 0 28px 60px rgba(2,6,23,0.56), inset 0 1px 0 rgba(255,255,255,0.01); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); margin-bottom: 18px; }
+    @media (max-width:520px) { .big-glass { padding: 18px; border-radius: 14px; } }
 
-    /* ================== TESTIMONIAL STYLES (merged) ================== */
-    /* scoped testimonial styles so they don't clash */
+    /* ================== TESTIMONIAL STYLES (final) ================== */
     .testimonials-section { display:flex; justify-content:center; padding:36px 16px 36px; }
     .testimonials-shell { width:100%; max-width:1100px; border-radius:18px; background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006)); padding:22px; box-shadow: 0 28px 60px rgba(2,6,23,0.56); border:1px solid rgba(255,255,255,0.03); }
     .testimonials-header { text-align:center; margin: 6px 0 16px; padding-bottom:10px; }
@@ -357,26 +228,54 @@
     .testimonials-header .subtitle { margin-top:10px; color:rgba(255,255,255,0.58); font-weight:700; font-size:1rem; }
 
     .testimonial-outer { position:relative; margin-top:18px; display:flex; align-items:center; gap:12px; }
-    .testimonial-track { display:flex; gap:18px; overflow:hidden; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; padding: 18px 22px; align-items: stretch; width:100%; position: relative; scroll-behavior: smooth; border-radius: 14px; }
-    .testimonial-card { scroll-snap-align: center; min-width: 86%; max-width: 92%; background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006)); border: 1px solid rgba(255,255,255,0.03); border-radius: 14px; padding: 18px; box-shadow: 0 20px 40px rgba(2,6,23,0.6); display:flex; gap:14px; align-items:flex-start; transition: transform .8s cubic-bezier(.2,.9,.3,1), box-shadow .8s ease; position: relative; flex-shrink: 0; opacity: .98; color:#fff; }
+    .testimonial-track { display:flex; gap:18px; overflow-x:auto; overflow-y:visible; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; padding: 18px 22px; align-items: stretch; width:100%; position: relative; scroll-behavior: smooth; border-radius: 14px; }
+
+    .testimonial-card {
+      scroll-snap-align: center;
+      min-width: 92%;
+      max-width: 94%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006));
+      border: 1px solid rgba(255,255,255,0.03);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 20px 40px rgba(2,6,23,0.6);
+      display:flex;
+      gap:16px;
+      align-items:flex-start;
+      transition: transform .45s cubic-bezier(.2,.9,.3,1), box-shadow .45s ease, opacity .45s ease;
+      position: relative;
+      flex-shrink: 0;
+      opacity: .98;
+      color:#fff;
+    }
+
     .testimonial-card.active { transform: translateY(-8px) scale(1.02); box-shadow: 0 34px 80px rgba(2,8,23,0.66); opacity: 1; }
-    .testimonial-avatar { width:64px; height:64px; border-radius:999px; overflow:hidden; flex-shrink:0; border: 2px solid rgba(255,255,255,0.04); display:flex; align-items:center; justify-content:center; background: rgba(255,255,255,0.02); }
+
+    .testimonial-avatar { width:72px; height:72px; border-radius:999px; overflow:hidden; flex-shrink:0; border: 2px solid rgba(255,255,255,0.04); display:flex; align-items:center; justify-content:center; background: rgba(255,255,255,0.02); flex-basis:72px; }
     .testimonial-avatar img { width:100%; height:100%; object-fit:cover; display:block; }
+
     .testimonial-body { flex:1; display:flex; flex-direction:column; gap:8px; }
-    .testimonial-head { display:flex; align-items:center; gap:12px; justify-content:space-between; }
+    .testimonial-head { display:flex; align-items:flex-start; gap:12px; justify-content:space-between; }
     .testimonial-name { font-weight:800; font-size:1.02rem; color:#fff; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
     .testimonial-handle { color: rgba(255,255,255,0.58); font-weight:700; font-size:.9rem; opacity:.95; }
-    .testimonial-text { color: rgba(255,255,255,0.92); line-height:1.45; margin-top:4px; font-size:1rem; }
+
+    .testimonial-text { color: rgba(255,255,255,0.94); line-height:1.6; margin-top:4px; font-size:1.06rem; word-break:break-word; }
     .testimonial-meta { display:flex; gap:10px; align-items:center; color: rgba(255,255,255,0.58); font-size:.9rem; margin-top:6px; flex-wrap:wrap; }
-    .stars { display:flex; gap:4px; align-items:center; color: #f59e0b; font-weight:800; letter-spacing:0.6px; }
+
+    .stars { display:flex; gap:6px; align-items:center; justify-content:flex-end; }
+    .stars svg { width:18px; height:18px; display:block; flex-shrink:0; }
+
     .testimonial-nav { position:absolute; top:50%; transform: translateY(-50%); width:44px; height:44px; border-radius:999px; display:flex; align-items:center; justify-content:center; background: linear-gradient(180deg, rgba(0,0,0,0.36), rgba(255,255,255,0.02)); border: 1px solid rgba(255,255,255,0.04); color: #fff; font-size: 22px; cursor:pointer; box-shadow: 0 8px 24px rgba(2,6,23,0.48); z-index: 40; }
     .testimonial-nav.left { left: 6px; }
     .testimonial-nav.right { right: 6px; }
-    @media (min-width:980px) { .testimonial-card { min-width: 44%; max-width: 46%; } .testimonial-track { gap: 22px; padding: 22px; } .testimonial-nav { width:50px; height:50px; font-size:24px; } }
-    @media (max-width:520px) { .testimonial-card { padding:14px; gap:12px; min-width:92%; max-width:96%; } .testimonial-avatar { width:56px; height:56px; } .testimonials-shell { padding:18px; border-radius:14px; } }
 
-    /* small helpers */
-    .pill-flag { font-size:1.02rem; margin-right:4px; }
+    @media (min-width:980px) { .testimonial-card { min-width: 44%; max-width: 46%; } .testimonial-track { gap: 22px; padding: 22px; } .testimonial-nav { width:50px; height:50px; font-size:24px; } }
+    @media (max-width:520px) { .testimonial-card { padding:14px; gap:12px; min-width:92%; max-width:96%; } .testimonial-avatar { width:64px; height:64px; } .testimonials-shell { padding:18px; border-radius:14px; } }
+
+    .pill-flag { font-size:1.02rem; margin-right:6px; }
+
+    /* flag image tiny helper */
+    .flag-img { display:inline-block; width:24px; height:18px; vertical-align:middle; border-radius:2px; margin-right:6px; }
   </style>
 </head>
 <body class="min-h-screen bg-gradient-to-b from-[#03060a] via-[#050a12] to-[#020407] text-[#e6e8eb] antialiased">
@@ -440,7 +339,6 @@
       <div class="max-w-[1024px] mx-auto">
         <h2 class="text-center text-2xl sm:text-3xl font-bold mb-6">Compatible Brokers</h2>
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
-          <!-- add your broker images into assets/brokers/ (square PNG/SVG recommended) -->
           <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/iq-option.png" alt="IQ Option" class="broker-logo"></div><div class="broker-label">IQ OPTION</div></div>
           <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/quotex.png" alt="QUOTEX" class="broker-logo"></div><div class="broker-label">QUOTEX</div></div>
           <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/pocket-option.png" alt="Pocket Option" class="broker-logo"></div><div class="broker-label">POCKET OPTION</div></div>
@@ -465,7 +363,6 @@
 
       <div class="pricing-card p-6 md:p-8">
         <div class="flex items-center pricing-columns gap-6">
-          <!-- Left: Regular price -->
           <div class="w-1/3 min-w-[130px] flex flex-col items-center justify-center text-center">
             <div class="text-sm text-white/60 uppercase">Regular Price:</div>
             <div class="mt-3">
@@ -473,18 +370,13 @@
             </div>
           </div>
 
-          <!-- Divider -->
           <div class="pricing-divider h-20 border-r border-white/6"></div>
 
-          <!-- Right: Black Friday Price & LIFETIME ACCESS -->
           <div class="flex-1 price-display pl-3">
             <div class="text-sm md:text-base font-extrabold uppercase text-green-400">BLACK FRIDAY SPECIAL:</div>
-
-            <!-- Single-line price so $ sits level with digits -->
             <div class="mt-2">
               <span class="text-[48px] md:text-[64px] font-extrabold text-green-500 leading-none">$399</span>
             </div>
-
             <div class="mt-3 uppercase text-lg md:text-xl font-semibold tracking-wide">
               <div>LIFETIME</div>
               <div>ACCESS</div>
@@ -492,10 +384,8 @@
           </div>
         </div>
 
-        <!-- Limited time pill + big buy CTA -->
         <div class="mt-6 flex flex-col items-center gap-4">
           <button type="button" class="limited-pill inline-flex items-center gap-3 text-white font-semibold rounded-full px-5 py-3 text-base" aria-hidden="false" aria-label="Limited time offer">
-            <!-- animated emoji with class -->
             <span class="flame-emoji" aria-hidden="true">🔥</span>
             <span>LIMITED TIME OFFER</span>
           </button>
@@ -508,20 +398,16 @@
         </div>
       </div>
     </section>
-    <!-- ========== end PRICING block ========== -->
 
     <!-- === EUR/USD Accuracy Rate section (dynamic last 7 days) === -->
     <section id="accuracy" class="mt-8 px-4 w-full max-w-[1024px] mx-auto" aria-labelledby="accuracy-title">
-      <!-- WRAPPED IN BIG GLASS CARD (only structural change) -->
       <div class="big-glass">
         <h2 id="accuracy-title" class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center leading-tight">EUR/USD Accuracy Rate</h2>
         <p class="text-center muted mt-2 mb-4">Last 7 days performance</p>
 
-        <!-- Broker select row (kept exactly) -->
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
           <label for="brokerSelect" class="font-semibold mr-2">Broker:</label>
           <select id="brokerSelect" class="bg-[#0b1220] rounded-xl px-4 py-3 border border-white/6 text-white/90 min-w-[200px]">
-            <!-- matches your broker list -->
             <option>IQ OPTION</option>
             <option>QUOTEX</option>
             <option>POCKET OPTION</option>
@@ -537,7 +423,6 @@
           </select>
         </div>
 
-        <!-- Stat card (green) - UNTOUCHED -->
         <div class="stat-card mb-6">
           <div class="flex items-center justify-between gap-4">
             <div>
@@ -546,36 +431,28 @@
               <div id="opsCount" class="muted mt-3">Based on — operations of 1 minute</div>
             </div>
 
-            <!-- optional PCI or badge area -->
             <div class="hidden md:block ml-4">
-              <!-- If you have a PCI badge, place it here: -->
               <img src="assets/pci-badge.png" alt="" style="width:94px;height:auto;opacity:0.98;">
             </div>
           </div>
         </div>
 
-        <!-- Chart card - UNTOUCHED -->
         <div class="chart-card">
           <canvas id="accuracyChart" class="chart-canvas" role="img" aria-label="Accuracy chart for last 7 days"></canvas>
-          <!-- x-axis labels are rendered by Chart.js; we provide a textual fallback for screen readers -->
           <div id="chartFallback" class="sr-only" aria-hidden="false"></div>
         </div>
 
-        <!-- Legend -->
         <div class="mt-6 flex items-center justify-center gap-3">
           <span class="legend-square" aria-hidden="true"></span>
           <span class="muted">Accuracy Rate</span>
         </div>
       </div>
-      <!-- END big glass wrapper -->
     </section>
-    <!-- === end accuracy section === -->
 
-    <!-- ========== ADDITIONAL PRICING block (glass-styled) - inserted AFTER accuracy, kept all intact elsewhere ========== -->
+    <!-- ========== ADDITIONAL PRICING block (glass-styled) ========== -->
     <section class="mt-6 px-4 w-full max-w-[1024px] mx-auto" role="region" aria-labelledby="pricing-title-2">
       <h2 id="pricing-title-2" class="sr-only">Black Friday Pricing - Additional</h2>
 
-      <!-- Wrap pricing in big-glass so it visually sits in the same style as accuracy -->
       <div class="big-glass pricing-card p-6 md:p-8">
         <div class="text-center">
           <h3 class="text-3xl sm:text-4xl font-extrabold leading-tight">Don't Miss This Opportunity</h3>
@@ -583,7 +460,6 @@
         </div>
 
         <div class="mt-4 flex items-center justify-center pricing-columns gap-6">
-          <!-- Left: Regular price (struck) -->
           <div class="w-1/3 min-w-[130px] flex flex-col items-center justify-center text-center">
             <div class="mt-3">
               <span class="strike text-2xl md:text-3xl font-bold text-white/60">$500</span>
@@ -591,10 +467,8 @@
             </div>
           </div>
 
-          <!-- Divider -->
           <div class="pricing-divider h-20 border-r border-white/6"></div>
 
-          <!-- Right: Black Friday Price & LIFETIME ACCESS -->
           <div class="flex-1 price-display pl-3">
             <div class="text-sm md:text-base font-extrabold uppercase text-green-400">BLACK FRIDAY SPECIAL</div>
 
@@ -609,15 +483,12 @@
           </div>
         </div>
 
-        <!-- Limited time pill + big CTA -->
         <div class="mt-6 flex flex-col items-center gap-4">
-          <!-- UPDATED: show the red outlined pill with "🔥 20% OFF - Limited Time Only" -->
           <button type="button" class="limited-pill-outline" aria-hidden="false" aria-label="20% off limited time">
             <span class="flame-emoji" aria-hidden="true">🔥</span>
             <span class="pill-text">20% OFF - Limited Time Only</span>
           </button>
 
-          <!-- UNIQUE CTA: use flex-col + text-center so multi-line text centers perfectly -->
           <a id="secureSpot" href="#checkout" class="pricing-cta secure-pulse w-full max-w-[640px] flex flex-col items-center justify-center text-center rounded-2xl py-6 px-6 bg-gradient-to-r from-green-600 to-green-500 text-white font-extrabold text-2xl shadow-[0_12px_36px_rgba(0,0,0,0.45)] leading-tight" aria-label="Secure my spot — lifetime access for $399">
             SECURE MY<br/>SPOT NOW
           </a>
@@ -626,7 +497,6 @@
         </div>
       </div>
     </section>
-    <!-- ========== end ADDITIONAL PRICING block ========== -->
 
     <!-- ========== TESTIMONIALS (inserted here, before footer) ========== -->
     <section class="testimonials-section" aria-label="Customer testimonials">
@@ -645,7 +515,6 @@
         </div>
       </div>
     </section>
-    <!-- ========== END TESTIMONIALS ========== -->
 
     <!-- Footer -->
     <footer class="mt-12 border-t border-white/10"><p class="text-center text-sm text-white/60 py-6">© 2026 Abrox. All rights reserved.</p></footer>
@@ -733,16 +602,13 @@
 
       // === ACCURACY CHART LOGIC ===
 
-      // Register datalabels plugin
       if (window.Chart && window.Chart.register) {
         Chart.register(ChartDataLabels);
       }
 
-      // Utilities
       function formatOneDecimal(n) { return (Math.round(n * 10) / 10).toFixed(1); }
       function randRange(min, max) { return Math.random() * (max - min) + min; }
 
-      // Generate last 7 days labels (e.g., "Feb\n11")
       function getLast7DayLabels() {
         const labels = [];
         const now = new Date();
@@ -756,7 +622,6 @@
         return labels;
       }
 
-      // Generate smoothed realistic accuracy values for 7 days
       function generateSmoothedValues(baseMean = 83, volatility = 3.2) {
         const values = [];
         let prev = baseMean + randRange(-1.6, 1.6);
@@ -771,7 +636,6 @@
         return values;
       }
 
-      // Create gradient for chart area
       function createGradient(ctx, chartArea) {
         const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
         gradient.addColorStop(0, 'rgba(20,184,166,0.16)');
@@ -780,13 +644,10 @@
         return gradient;
       }
 
-      // Chart instance variable
       let accuracyChart = null;
 
-      // Build or update the chart with new data
       function renderChart(labels, values) {
         const ctx = document.getElementById('accuracyChart').getContext('2d');
-
         const minVal = Math.min(...values);
         const maxVal = Math.max(...values);
         const suggestedMin = Math.max(60, Math.floor(minVal - 3));
@@ -819,9 +680,7 @@
               backgroundColor: function(context) {
                 const chart = context.chart;
                 const { ctx, chartArea } = chart;
-                if (!chartArea) {
-                  return null;
-                }
+                if (!chartArea) return null;
                 return createGradient(ctx, chartArea);
               },
             }]
@@ -836,9 +695,7 @@
                 titleColor: '#fff',
                 bodyColor: '#d7fff0',
                 callbacks: {
-                  label: function(context) {
-                    return context.parsed.y + '%';
-                  }
+                  label: function(context) { return context.parsed.y + '%'; }
                 }
               },
               datalabels: {
@@ -850,9 +707,7 @@
                 formatter: function(value) { return value + '%'; }
               }
             },
-            elements: {
-              line: { borderCapStyle: 'round' },
-            },
+            elements: { line: { borderCapStyle: 'round' } },
             scales: {
               x: {
                 grid: { display: false },
@@ -866,21 +721,11 @@
                 beginAtZero: false,
                 suggestedMin: suggestedMin,
                 suggestedMax: suggestedMax,
-                grid: {
-                  color: function(context) { return 'rgba(255,255,255,0.03)'; },
-                  borderDash: [4, 6],
-                },
-                ticks: {
-                  color: 'rgba(255,255,255,0.42)',
-                  stepSize: 5,
-                  callback: function(val) { return val + '%'; }
-                }
+                grid: { color: function() { return 'rgba(255,255,255,0.03)'; }, borderDash: [4, 6] },
+                ticks: { color: 'rgba(255,255,255,0.42)', stepSize: 5, callback: function(val) { return val + '%'; } }
               }
             },
-            animation: {
-              duration: (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) ? 0 : 800,
-              easing: 'easeOutCubic'
-            },
+            animation: { duration: (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) ? 0 : 800, easing: 'easeOutCubic' },
             interaction: { mode: 'nearest', intersect: false },
             responsive: true,
             maintainAspectRatio: false
@@ -888,21 +733,18 @@
         });
       }
 
-      // Update stat card (avg percent and ops)
       function updateStatCard(values) {
         const avg = values.reduce((s, v) => s + v, 0) / values.length;
         const avgText = formatOneDecimal(avg) + '%';
         document.getElementById('avgPercent').innerText = avgText;
         const ops = Math.floor(randRange(800, 1600));
         document.getElementById('opsCount').innerText = 'Based on ' + ops.toLocaleString() + ' operations of 1 minute';
-
         const labels = getLast7DayLabels().map(l => l.replace('\n', ' '));
         const fallbackItems = labels.map((lab, i) => lab + ': ' + values[i] + '%').join('; ');
         const fallbackEl = document.getElementById('chartFallback');
         fallbackEl.innerText = 'Last seven days: ' + fallbackItems + '. Average: ' + formatOneDecimal(avg) + ' percent.';
       }
 
-      // Hook up broker select -> generate data & render
       const brokerSelect = document.getElementById('brokerSelect');
       function onBrokerChange() {
         let seed = 0;
@@ -911,37 +753,28 @@
         const baseMean = 78 + ((seed % 12) + (new Date().getDate() % 5)) * 0.8;
         const volatility = 3.3;
         const values = generateSmoothedValues(baseMean, volatility);
-
         const labels = getLast7DayLabels();
         renderChart(labels, values);
         updateStatCard(values);
       }
 
-      // initial rendering on load
       onBrokerChange();
+      brokerSelect.addEventListener('change', function() { onBrokerChange(); });
 
-      // change event
-      brokerSelect.addEventListener('change', function() {
-        onBrokerChange();
-      });
-
-      // Resize observer to re-create gradient when chart area changes
       const canvas = document.getElementById('accuracyChart');
-      const ro = new ResizeObserver(() => {
-        if (accuracyChart) accuracyChart.update();
-      });
+      const ro = new ResizeObserver(() => { if (accuracyChart) accuracyChart.update(); });
       ro.observe(canvas);
-
-      // END accuracy logic
     });
   </script>
 
-  <!-- =================== TESTIMONIAL JS (merged) =================== -->
+  <!-- =================== TESTIMONIAL JS (final with flag images) =================== -->
   <script>
     (function(){
-      const COUNT = 12; // how many cards to generate
-      const AUTOPLAY_DELAY = 20000;
+      const COUNT = 25;
+      const AUTOPLAY_DELAY = 30000;
       const TRACK = document.getElementById('testimonialTrack');
+      const prevBtn = document.getElementById('prevTestimonial');
+      const nextBtn = document.getElementById('nextTestimonial');
 
       const experienceSnippets = [
         "Signals are structured and easy to follow.",
@@ -955,7 +788,6 @@
         "Alerts are clear and simple.",
         "Finally something consistent."
       ];
-
       const realismSnippets = [
         "Consistency matters — small wins add up over time.",
         "Takes discipline, but it works when you follow the rules.",
@@ -963,12 +795,10 @@
         "As long as you manage position sizes, the results compound.",
         "Best used with sensible risk sizing and discipline."
       ];
-
       const socialSnippets = [
         "I recommended it to two friends who also saw gains.",
         "Community tips helped me tweak risk settings for better results."
       ];
-
       const profitTemplates = [
         "Started with ${start} and made about ${profit} in ${period}.",
         "Made ${profit} in ${period} — withdrew part and kept compounding.",
@@ -1011,12 +841,14 @@
       }
 
       const NATS = ['US','GB','BR','NG','FR','ES','IT','DE','CA','AU','NL','SE','CH','DK','IE'];
+
       function countryCodeToEmoji(code) {
         if (!code) return '';
         const cc = code.slice(0,2).toUpperCase();
         const OFFSET = 0x1F1E6 - 'A'.charCodeAt(0);
         return Array.from(cc).map(c => String.fromCodePoint(c.charCodeAt(0) + OFFSET)).join('');
       }
+
       function formatDaysAgo(days) {
         if (days <= 0) return 'today';
         if (days === 1) return '1 day ago';
@@ -1028,6 +860,7 @@
         const yrs = Math.floor(days/365);
         return yrs + (yrs === 1 ? ' year ago' : ' years ago');
       }
+
       function makeHandle(first) {
         const suffixes = ['X','Coin','Node','Dex','Trader','Swap','Chain'];
         if (Math.random() < 0.42) {
@@ -1040,39 +873,46 @@
           return '@' + first.toLowerCase() + (Math.random() < 0.25 ? '_' + Math.floor(Math.random()*999) : '');
         }
       }
-      function sampleRating() { return 5; }
-      function renderStars(rating) {
-        let html = `<span class="stars" role="img" aria-label="${rating} out of 5 stars">`;
-        for (let i=1;i<=5;i++){ html += i <= rating ? '★' : '☆'; if (i < 5) html += ' '; }
-        html += `</span> <span style="margin-left:8px;color:rgba(255,255,255,0.58);font-weight:700;font-size:.95rem" aria-hidden="true">${rating}.0</span>`;
+
+      function renderStarsSVG() {
+        const star = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#F59E0B" d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.402 8.168L12 18.896l-6.336 3.992 1.402-8.168L1.132 9.21l8.2-1.192z"/></svg>';
+        let html = '<div class="stars" aria-hidden="true">';
+        for (let i=0;i<5;i++) html += star;
+        html += '<span style="margin-left:10px;color:rgba(255,255,255,0.58);font-weight:700;font-size:0.95rem">5.0</span></div>';
         return html;
       }
 
       function buildCard(person, message, daysAgo) {
         const first = person.name.first;
-        const last = person.name.last;
-        const fullName = `${first} ${last}`;
-        const countryEmoji = countryCodeToEmoji(person.nat || '');
+        const last = person.name.last || '';
+        const fullName = `${first} ${last}`.trim();
+        const nat = (person.nat || 'US').toLowerCase();
+        // flag PNG from flagcdn — small, crisp and consistent across platforms
+        const flagUrl = `https://flagcdn.com/24x18/${nat}.png`;
         const handle = makeHandle(first);
         const daysText = formatDaysAgo(daysAgo);
-        const rating = sampleRating();
+
         const card = document.createElement('article');
         card.className = 'testimonial-card';
         card.setAttribute('role','listitem');
+
         card.innerHTML = `
           <div class="testimonial-avatar" aria-hidden="true">
             <img loading="lazy" src="${person.picture.medium}" alt="${fullName} avatar">
           </div>
           <div class="testimonial-body">
             <div class="testimonial-head">
-              <div>
+              <div style="min-width:0">
                 <div class="testimonial-name">${fullName} <span class="testimonial-handle">${handle}</span></div>
-                <div class="testimonial-meta"><span class="pill-flag">${countryEmoji}</span><span style="margin-left:6px;">${person.location.country}</span></div>
+                <div class="testimonial-meta">
+                  <img class="flag-img" src="${flagUrl}" alt="${(person.nat||'')}" onerror="this.style.display='none'">
+                  <span style="margin-left:6px;">${person.location.country}</span>
+                </div>
               </div>
-              <div>${renderStars(rating)}</div>
+              <div>${renderStarsSVG()}</div>
             </div>
 
-            <div class="testimonial-text">${message}</div>
+            <div class="testimonial-text">${escapeHtml(message)}</div>
 
             <div class="testimonial-meta" aria-hidden="true">
               <span>${daysText}</span>
@@ -1084,117 +924,180 @@
         return card;
       }
 
-      function scrollToIndex(index) {
-        const cards = Array.from(TRACK.children);
-        if (!cards[index]) return;
-        const card = cards[index];
-        const left = card.offsetLeft - (TRACK.clientWidth - card.clientWidth)/2;
-        TRACK.scrollTo({left, behavior:'smooth'});
-        cards.forEach((c,i) => c.classList.toggle('active', i === index));
-      }
-
-      function sampleDaysAgo() {
-        const r = Math.random();
-        if (r < 0.40) return Math.floor(Math.random()*4);
-        if (r < 0.70) return 4 + Math.floor(Math.random()*11);
-        if (r < 0.88) return 15 + Math.floor(Math.random()*46);
-        if (r < 0.98) return 61 + Math.floor(Math.random()*305);
-        return 366 + Math.floor(Math.random()*534);
-      }
-
-      let index = 0;
-      let autoplayTimer = null;
-      function startAutoplay(delay = AUTOPLAY_DELAY) { stopAutoplay(); autoplayTimer = setInterval(()=> {
-        const cards = TRACK.children.length;
-        index = (index + 1) % cards;
-        scrollToIndex(index);
-      }, delay); }
-      function stopAutoplay(){ if (autoplayTimer){ clearInterval(autoplayTimer); autoplayTimer = null; } }
-
-      function setupControls() {
-        document.getElementById('prevTestimonial').addEventListener('click', ()=> {
-          index = Math.max(0, index-1);
-          scrollToIndex(index);
-          stopAutoplay(); startAutoplay(AUTOPLAY_DELAY + 2000);
+      function escapeHtml(str) {
+        return (str+'').replace(/[&<>"]/g, function (c) {
+          return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];
         });
-        document.getElementById('nextTestimonial').addEventListener('click', ()=> {
-          index = (index + 1) % TRACK.children.length;
-          scrollToIndex(index);
-          stopAutoplay(); startAutoplay(AUTOPLAY_DELAY + 2000);
-        });
-
-        TRACK.addEventListener('mouseenter', stopAutoplay);
-        TRACK.addEventListener('mouseleave', ()=> startAutoplay(AUTOPLAY_DELAY));
-        TRACK.addEventListener('focusin', stopAutoplay);
-        TRACK.addEventListener('focusout', ()=> startAutoplay(AUTOPLAY_DELAY));
-
-        TRACK.addEventListener('keydown', (ev)=> {
-          if (ev.key === 'ArrowRight') document.getElementById('nextTestimonial').click();
-          if (ev.key === 'ArrowLeft') document.getElementById('prevTestimonial').click();
-        });
-
-        window.addEventListener('resize', ()=> scrollToIndex(index));
       }
 
-      function trackActiveCard() {
-        const obs = new IntersectionObserver(entries => {
-          entries.forEach(en => {
-            if (en.isIntersecting) {
-              const nodes = Array.from(TRACK.children);
-              const idx = nodes.indexOf(en.target);
-              if (idx >= 0) index = idx;
-              TRACK.children && Array.from(TRACK.children).forEach((c,i) => c.classList.toggle('active', i === idx));
-            }
-          });
-        }, { root: TRACK, threshold: 0.6 });
-        Array.from(TRACK.children).forEach(card => obs.observe(card));
+      function scrollToCard(card) {
+        if (!card) return;
+        card.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
       }
 
-      async function fetchUsers(n) {
+      function shuffle(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+      }
+
+      function buildUniqueMessages(count) {
+        const set = new Set();
+        let attempts = 0;
+        while (set.size < count && attempts < count * 6) {
+          set.add(generateTestimonial());
+          attempts++;
+        }
+        while (set.size < count) {
+          set.add(experienceSnippets[Math.floor(Math.random()*experienceSnippets.length)]);
+        }
+        return Array.from(set);
+      }
+
+      async function fetchUsersUnique(n) {
         const natString = NATS.join(',');
-        const url = `https://randomuser.me/api/?results=${n}&nat=${natString}&inc=name,location,picture,nat&noinfo`;
+        const url = `https://randomuser.me/api/?results=${Math.min(n, 25)}&nat=${natString}&inc=name,location,picture,nat&noinfo`;
         try {
           const r = await fetch(url);
           const j = await r.json();
-          return j.results || [];
-        } catch(err) {
-          console.warn('RandomUser fetch failed, returning fallback list', err);
-          return [
-            { name:{first:'Alex',last:'Morgan'}, picture:{medium:'https://randomuser.me/api/portraits/men/32.jpg'}, nat:'US', location:{country:'United States'} },
-            { name:{first:'Ana',last:'Silva'}, picture:{medium:'https://randomuser.me/api/portraits/women/55.jpg'}, nat:'BR', location:{country:'Brazil'} }
-          ];
+          let people = j.results || [];
+          const seen = new Set();
+          people = people.filter(p => {
+            const key = (p.picture && p.picture.medium) || Math.random().toString(36).slice(2,8);
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+          });
+
+          function natToCountry(nat) {
+            try {
+              if (typeof Intl !== 'undefined' && Intl.DisplayNames) {
+                const dn = new Intl.DisplayNames(undefined, { type: 'region' });
+                return dn.of(nat);
+              }
+            } catch (e) { /* ignore */ }
+            const fallback = {
+              US: 'United States', GB: 'United Kingdom', BR: 'Brazil', NG: 'Nigeria',
+              FR: 'France', ES: 'Spain', IT: 'Italy', DE: 'Germany',
+              CA: 'Canada', AU: 'Australia', NL: 'Netherlands', SE: 'Sweden',
+              CH: 'Switzerland', DK: 'Denmark', IE: 'Ireland'
+            };
+            return fallback[(nat||'US').toUpperCase()] || 'United States';
+          }
+
+          let i = 0;
+          while (people.length < n) {
+            const nat = NATS[ Math.floor(Math.random()*NATS.length) ];
+            const seed = `abrox-${Date.now()}-${i}-${Math.floor(Math.random()*9999)}`;
+            people.push({
+              name: { first: 'User'+(people.length+1), last: '' },
+              picture: { medium: `https://robohash.org/${encodeURIComponent(seed)}.png?size=120x120` },
+              nat: nat,
+              location: { country: natToCountry(nat) }
+            });
+            i++;
+          }
+          return people.slice(0, n);
+        } catch (err) {
+          console.warn('RandomUser fetch failed, falling back to robohash avatars', err);
+          const fallback = [];
+          for (let i=0;i<n;i++){
+            const nat = NATS[ Math.floor(Math.random()*NATS.length) ];
+            const seed = `abrox-fallback-${i}-${Math.floor(Math.random()*9999)}`;
+            const country = (function(n){ try { if (typeof Intl !== 'undefined' && Intl.DisplayNames) return new Intl.DisplayNames(undefined,{type:'region'}).of(n); }catch(e){} const map = {US:'United States',GB:'United Kingdom',BR:'Brazil',NG:'Nigeria',FR:'France',ES:'Spain',IT:'Italy',DE:'Germany',CA:'Canada',AU:'Australia',NL:'Netherlands',SE:'Sweden',CH:'Switzerland',DK:'Denmark',IE:'Ireland'}; return map[n]||'United States'; })(nat);
+            fallback.push({
+              name: { first: 'User'+(i+1), last: '' },
+              picture: { medium: `https://robohash.org/${encodeURIComponent(seed)}.png?size=120x120` },
+              nat: nat,
+              location: { country: country }
+            });
+          }
+          return fallback;
         }
       }
 
       (async function mount(){
-        const people = await fetchUsers(COUNT);
-        while (people.length < COUNT && people.length > 0) {
-          people.push(people[Math.floor(Math.random()*people.length)]);
-        }
-        if (people.length === 0) {
-          for (let i=0;i<COUNT;i++){
-            people.push({ name:{first:'User'+(i+1),last:'Demo'}, picture:{medium:`https://robohash.org/demo${i}.png?size=120x120`}, nat:'US', location:{country:'United States'} });
-          }
-        }
+        if (!TRACK) return;
+        TRACK.innerHTML = '';
 
-        for (let i=0; i<Math.min(COUNT, people.length); i++){
-          const p = people[i];
-          const msg = generateTestimonial();
+        const people = await fetchUsersUnique(COUNT);
+        const messages = buildUniqueMessages(COUNT);
+
+        const pairs = people.map((p, i) => ({ p, msg: messages[i] || 'Great experience.' }));
+        shuffle(pairs);
+
+        for (let i=0;i<pairs.length;i++){
           const days = sampleDaysAgo();
-          const card = buildCard(p, msg, days);
+          const card = buildCard(pairs[i].p, pairs[i].msg, days);
           TRACK.appendChild(card);
         }
 
-        if (TRACK.children.length > 0) {
-          index = 0;
-          setTimeout(()=> scrollToIndex(0), 120);
+        const cards = Array.from(TRACK.children);
+        if (cards.length === 0) return;
+        let index = 0;
+        function setActive(idx) { cards.forEach((c,i)=> c.classList.toggle('active', i === idx)); }
+        setActive(0);
+        setTimeout(()=> scrollToCard(cards[0]), 140);
+
+        const obs = new IntersectionObserver(entries => {
+          entries.forEach(en => {
+            if (en.isIntersecting) {
+              const idx = cards.indexOf(en.target);
+              if (idx >= 0) {
+                index = idx;
+                setActive(idx);
+              }
+            }
+          });
+        }, { root: TRACK, threshold: 0.64 });
+        cards.forEach(c => obs.observe(c));
+
+        let autoplay = setInterval(()=> {
+          index = (index + 1) % cards.length;
+          scrollToCard(cards[index]);
+        }, AUTOPLAY_DELAY);
+
+        function stopAutoplay() { if (autoplay) { clearInterval(autoplay); autoplay = null; } }
+        function startAutoplay() { stopAutoplay(); autoplay = setInterval(()=> { index = (index + 1) % cards.length; scrollToCard(cards[index]); }, AUTOPLAY_DELAY); }
+
+        TRACK.addEventListener('mouseenter', stopAutoplay);
+        TRACK.addEventListener('mouseleave', startAutoplay);
+        TRACK.addEventListener('focusin', stopAutoplay);
+        TRACK.addEventListener('focusout', startAutoplay);
+
+        TRACK.addEventListener('keydown', (ev) => {
+          if (ev.key === 'ArrowRight') nextBtn && nextBtn.click();
+          if (ev.key === 'ArrowLeft') prevBtn && prevBtn.click();
+        });
+
+        prevBtn && prevBtn.addEventListener('click', ()=> {
+          index = Math.max(0, index - 1);
+          scrollToCard(cards[index]);
+          stopAutoplay(); setTimeout(startAutoplay, AUTOPLAY_DELAY + 400);
+        });
+        nextBtn && nextBtn.addEventListener('click', ()=> {
+          index = (index + 1) % cards.length;
+          scrollToCard(cards[index]);
+          stopAutoplay(); setTimeout(startAutoplay, AUTOPLAY_DELAY + 400);
+        });
+
+        let resizeTO;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTO);
+          resizeTO = setTimeout(()=> { scrollToCard(cards[index]); }, 120);
+        });
+
+        function sampleDaysAgo() {
+          const r = Math.random();
+          if (r < 0.40) return Math.floor(Math.random()*4);
+          if (r < 0.70) return 4 + Math.floor(Math.random()*11);
+          if (r < 0.88) return 15 + Math.floor(Math.random()*46);
+          if (r < 0.98) return 61 + Math.floor(Math.random()*305);
+          return 366 + Math.floor(Math.random()*534);
         }
-
-        setupControls();
-        trackActiveCard();
-        startAutoplay(AUTOPLAY_DELAY);
       })();
-
     })();
   </script>
 </body>
