@@ -418,7 +418,7 @@
     /* Slightly reduce star SVG size to balance with name */
     .stars svg { width: 16px; height: 16px; display: block; flex-shrink: 0; }
 
-    /* Keep numeric rating aligned and styled */
+    /* Keep numeric rating aligned and styled (removed in markup) */
     .stars span {
       margin-left: 6px;
       color: rgba(255,255,255,0.62);
@@ -1146,10 +1146,11 @@
       }
 
       function renderStarsSVG() {
+        // Removed numeric rating to keep stars compact at top-right
         const star = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#F59E0B" d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.402 8.168L12 18.896l-6.336 3.992 1.402-8.168L1.132 9.21l8.2-1.192z"/></svg>';
         let html = '<div class="stars" aria-hidden="true">';
         for (let i=0;i<5;i++) html += star;
-        html += '<span style="margin-left:10px;color:rgba(255,255,255,0.58);font-weight:700;font-size:0.95rem">5.0</span></div>';
+        html += '</div>';
         return html;
       }
 
