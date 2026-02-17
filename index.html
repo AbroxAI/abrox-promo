@@ -299,7 +299,58 @@
       </div>
     </section>
 
-    <!-- === NEW: EUR/USD Accuracy Rate section (dynamic last 7 days) === -->
+    <!-- ========== PRICING block (moved BEFORE accuracy) ========== -->
+    <section class="mt-10 px-4 w-full max-w-[1024px] mx-auto" role="region" aria-labelledby="pricing-title">
+      <h2 id="pricing-title" class="sr-only">Black Friday Pricing</h2>
+
+      <div class="pricing-card p-6 md:p-8">
+        <div class="flex items-center pricing-columns gap-6">
+          <!-- Left: Regular price -->
+          <div class="w-1/3 min-w-[130px] flex flex-col items-center justify-center text-center">
+            <div class="text-sm text-white/60 uppercase">Regular Price:</div>
+            <div class="mt-3">
+              <span class="strike text-2xl md:text-3xl font-bold text-white/60">$500/year</span>
+            </div>
+          </div>
+
+          <!-- Divider -->
+          <div class="pricing-divider h-20 border-r border-white/6"></div>
+
+          <!-- Right: Black Friday Price & LIFETIME ACCESS -->
+          <div class="flex-1 price-display pl-3">
+            <div class="text-sm md:text-base font-extrabold uppercase text-green-400">BLACK FRIDAY SPECIAL:</div>
+
+            <!-- Single-line price so $ sits level with digits -->
+            <div class="mt-2">
+              <span class="text-[48px] md:text-[64px] font-extrabold text-green-500 leading-none">$399</span>
+            </div>
+
+            <div class="mt-3 uppercase text-lg md:text-xl font-semibold tracking-wide">
+              <div>LIFETIME</div>
+              <div>ACCESS</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Limited time pill + big buy CTA -->
+        <div class="mt-6 flex flex-col items-center gap-4">
+          <button type="button" class="limited-pill inline-flex items-center gap-3 text-white font-semibold rounded-full px-5 py-3 text-base" aria-hidden="false" aria-label="Limited time offer">
+            <!-- animated emoji with class -->
+            <span class="flame-emoji" aria-hidden="true">🔥</span>
+            <span>LIMITED TIME OFFER</span>
+          </button>
+
+          <a id="buyNowPricing" href="#checkout" class="pricing-cta w-full max-w-[600px] inline-flex items-center justify-center rounded-2xl py-5 px-6 bg-gradient-to-r from-green-600 to-green-500 text-white font-extrabold text-2xl shadow-[0_12px_36px_rgba(0,0,0,0.45)]" aria-label="Buy lifetime access for $399 — Black Friday special">
+            BUY NOW
+          </a>
+
+          <p class="mt-2 text-center text-white/60">Click the button above to unlock your access</p>
+        </div>
+      </div>
+    </section>
+    <!-- ========== end PRICING block ========== -->
+
+    <!-- === EUR/USD Accuracy Rate section (dynamic last 7 days) === -->
     <section id="accuracy" class="mt-8 px-4 w-full max-w-[1024px] mx-auto" aria-labelledby="accuracy-title">
       <h2 id="accuracy-title" class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center leading-tight">EUR/USD Accuracy Rate</h2>
       <p class="text-center muted mt-2 mb-4">Last 7 days performance</p>
@@ -355,56 +406,6 @@
       </div>
     </section>
     <!-- === end accuracy section === -->
-
-    <!-- ========== Pricing block (inserted earlier) ========== -->
-    <section class="mt-10 px-4 w-full max-w-[1024px] mx-auto" role="region" aria-labelledby="pricing-title">
-      <h2 id="pricing-title" class="sr-only">Black Friday Pricing</h2>
-
-      <div class="pricing-card p-6 md:p-8">
-        <div class="flex items-center pricing-columns gap-6">
-          <!-- Left: Regular price -->
-          <div class="w-1/3 min-w-[130px] flex flex-col items-center justify-center text-center">
-            <div class="text-sm text-white/60 uppercase">Regular Price:</div>
-            <div class="mt-3">
-              <span class="strike text-2xl md:text-3xl font-bold text-white/60">$500/year</span>
-            </div>
-          </div>
-
-          <!-- Divider -->
-          <div class="pricing-divider h-20 border-r border-white/6"></div>
-
-          <!-- Right: Black Friday Price & LIFETIME ACCESS -->
-          <div class="flex-1 price-display pl-3">
-            <div class="text-sm md:text-base font-extrabold uppercase text-green-400">BLACK FRIDAY SPECIAL:</div>
-
-            <!-- Single-line price so $ sits level with digits -->
-            <div class="mt-2">
-              <span class="text-[48px] md:text-[64px] font-extrabold text-green-500 leading-none">$399</span>
-            </div>
-
-            <div class="mt-3 uppercase text-lg md:text-xl font-semibold tracking-wide">
-              <div>LIFETIME</div>
-              <div>ACCESS</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Limited time pill + big buy CTA -->
-        <div class="mt-6 flex flex-col items-center gap-4">
-          <button type="button" class="limited-pill inline-flex items-center gap-3 text-white font-semibold rounded-full px-5 py-3 text-base" aria-hidden="false" aria-label="Limited time offer">
-            <!-- animated emoji with class -->
-            <span class="flame-emoji" aria-hidden="true">🔥</span>
-            <span>LIMITED TIME OFFER</span>
-          </button>
-
-          <a id="buyNowPricing" href="#checkout" class="pricing-cta w-full max-w-[600px] inline-flex items-center justify-center rounded-2xl py-5 px-6 bg-gradient-to-r from-green-600 to-green-500 text-white font-extrabold text-2xl shadow-[0_12px_36px_rgba(0,0,0,0.45)]" aria-label="Buy lifetime access for $399 — Black Friday special">
-            BUY NOW
-          </a>
-
-          <p class="mt-2 text-center text-white/60">Click the button above to unlock your access</p>
-        </div>
-      </div>
-    </section>
 
     <!-- Footer -->
     <footer class="mt-12 border-t border-white/10"><p class="text-center text-sm text-white/60 py-6">© 2026 Abrox. All rights reserved.</p></footer>
