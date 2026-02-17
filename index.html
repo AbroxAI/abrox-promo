@@ -278,9 +278,9 @@
     .testimonial-avatar { width:72px; height:72px; border-radius:999px; overflow:hidden; flex-shrink:0; border: 2px solid rgba(255,255,255,0.04); display:flex; align-items:center; justify-content:center; background: rgba(255,255,255,0.02); flex-basis:72px; }
     .testimonial-avatar img { width:100%; height:100%; object-fit:cover; display:block; }
 
-    .testimonial-body { flex:1; display:flex; flex-direction:column; gap:8px; }
-    .testimonial-head { display:flex; align-items:flex-start; gap:12px; justify-content:space-between; }
-    .testimonial-name { font-weight:800; font-size:1.02rem; color:#fff; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    .testimonial-body { flex:1; display:flex; flex-direction:column; gap:8px; min-width: 0; }
+    .testimonial-head { display:flex; align-items:flex-start; gap:12px; justify-content:space-between; min-width: 0; }
+    .testimonial-name { font-weight:800; font-size:1.02rem; color:#fff; display:flex; gap:8px; align-items:center; flex-wrap:wrap; min-width: 0; }
     .testimonial-handle { color: rgba(255,255,255,0.58); font-weight:700; font-size:.9rem; opacity:.95; }
 
     .testimonial-text { color: rgba(255,255,255,0.94); line-height:1.6; margin-top:4px; font-size:1.06rem; word-break:break-word; }
@@ -304,28 +304,34 @@
     .pill-flag { font-size:1.02rem; margin-right:6px; }
 
     /* flag image tiny helper */
-    .flag-img { display:inline-block; width:24px; height:18px; vertical-align:middle; border-radius:2px; margin-right:6px; }
+    .flag-img { display:inline-block; width:24px; height:18px; vertical-align:middle; border-radius:2px; margin-right:6px; object-fit:cover; }
   </style>
 
-  <!-- ====== OVERRIDE: TESTIMONIAL FIXES (drop-in) ====== -->
+  <!-- ====== OVERRIDE: TESTIMONIAL FIXES (drop-in, consolidated) ====== -->
   <style>
-    /* ---------- TESTIMONIAL FIXES (drop-in override) ---------- */
+    /*
+      Consolidated overrides:
+      - single-card mobile/tablet
+      - reduce avatar slightly for some breakpoints
+      - ensure left column stacks (name / handle / flag/country)
+      - pin stars to top-right and reduce their size slightly
+      - readability: balanced padding, line-height, max-width
+    */
 
-    /* make track explicitly allow visible overflow for transformed/shifted cards
-       while preserving horizontal scroll behaviour */
+    /* Track: allow visible overflow for shadows/transforms */
     .testimonial-track {
-      overflow-x: auto;      /* horizontal scroll kept */
-      overflow-y: visible;   /* allow card content to overflow vertically if needed */
+      overflow-x: auto;
+      overflow-y: visible;
       -webkit-overflow-scrolling: touch;
-      padding-inline: 22px;  /* keep your existing padding */
+      padding-inline: 22px;
     }
 
-    /* slightly smaller card footprint for large phones so shadows don't clash on some widths */
+    /* Slightly smaller footprint by default to leave breathing room (desktop uses 100%) */
     .testimonial-card {
       flex: 0 0 86%;
       min-width: 86%;
       max-width: 90%;
-      padding: 16px 22px;
+      padding: 18px 22px;
       box-sizing: border-box;
       z-index: 1;
     }
@@ -336,40 +342,116 @@
       z-index: 8;
     }
 
-    /* reduce avatar a touch so it doesn't push text wide */
+    /* Reduce avatar a touch so it doesn't push text wide */
     .testimonial-avatar {
       width: 56px; height: 56px; flex-basis: 56px;
       border-radius: 999px;
       flex-shrink: 0;
     }
+    .testimonial-avatar img { width:100%; height:100%; object-fit:cover; display:block; }
 
-    /* ensure heading area can shrink and text wraps correctly */
-    .testimonial-body, .testimonial-head, .testimonial-name {
-      min-width: 0;   /* critical for truncation to work inside flex containers */
+    /* On very small screens adapt */
+    @media (max-width:520px) {
+      .testimonial-card { flex: 0 0 90%; min-width: 90%; max-width: 96%; padding: 12px 16px; }
+      .testimonial-avatar { width: 48px; height: 48px; flex-basis: 48px; }
     }
 
-    /* make name area able to truncate, don't let it force stars out */
-    .testimonial-name { display: flex; gap: 8px; align-items: center; min-width: 0; }
-    .testimonial-name > * { min-width: 0; }
+    /* Ensure left column stacks vertically and can shrink */
+    .testimonial-head > div:first-child {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
 
-    /* keep stars grouped and prevent them from shrinking into the text area */
-    .stars { display:flex; gap:6px; align-items:center; justify-content:flex-end; flex: 0 0 auto; margin-left: 10px; }
+    /* Put name on its own line, handle below */
+    .testimonial-name {
+      display: block;
+      font-size: 1rem;
+      line-height: 1.08;
+      margin: 0;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      font-weight: 800;
+      color: #fff;
+    }
 
-    /* allow testimonial text to scale and wrap, slightly smaller on narrow screens */
+    .testimonial-handle {
+      display: block;
+      font-size: 0.92rem;
+      color: rgba(255,255,255,0.62);
+      margin-top: 4px;
+      font-weight: 700;
+    }
+
+    /* Flag + country metadata under the name */
+    .testimonial-head .testimonial-meta {
+      margin-top: 6px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      color: rgba(255,255,255,0.58);
+      font-size: 0.92rem;
+    }
+
+    /* Force flag image size & visibility */
+    .flag-img {
+      display: inline-block !important;
+      width: 20px !important;
+      height: 14px !important;
+      object-fit: cover !important;
+      border-radius: 2px;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    /* Stars — fixed column, top-right anchor */
+    .stars {
+      flex: 0 0 auto;
+      align-self: flex-start;
+      margin-left: 12px;
+      display: flex;
+      gap: 6px;
+      justify-content: flex-end;
+    }
+
+    /* Slightly reduce star SVG size to balance with name */
+    .stars svg { width: 16px; height: 16px; display: block; flex-shrink: 0; }
+
+    /* Keep numeric rating aligned and styled */
+    .stars span {
+      margin-left: 6px;
+      color: rgba(255,255,255,0.62);
+      font-weight: 800;
+      font-size: 0.94rem;
+      align-self: center;
+    }
+
+    /* Safety: stacking context for stars if needed */
+    .testimonial-head > div:last-child { z-index: 5; position: relative; }
+
+    /* Improve testimonial text comfort & readability (Balanced preset) */
+    .testimonial-card {
+      /* keep padding above; ensure readability */
+      padding: 22px 26px;
+    }
+
     .testimonial-text {
-      font-size: clamp(0.95rem, 2.2vw, 1.04rem);
-      line-height: 1.5;
+      margin-top: 14px;
+      margin-bottom: 12px;
+      font-size: clamp(0.98rem, 1rem, 1.04rem);
+      line-height: 1.65;               /* balanced desktop line-height */
+      letter-spacing: 0.2px;
+      color: rgba(255,255,255,0.92);
+      max-width: 60ch;                 /* readable line length ~50-65 chars */
       word-break: break-word;
       overflow-wrap: anywhere;
       hyphens: auto;
-      margin-top: 6px;
     }
 
-    /* extra right padding to avoid decorative shadows or rating overflow being clipped */
-    .testimonial-card::after { content: ""; display:block; width:6px; }
+    .testimonial-meta { margin-top: 14px; }
 
-    /* ---------- NEW: Single-card-per-view on mobile/tablet ---------- */
-    /* Force a single-card visible on viewports smaller than 980px (no neighbors shown) */
+    /* Single-card-per-view on mobile/tablet: eliminate neighbors visible */
     @media (max-width: 979px) {
       .testimonial-card {
         flex: 0 0 100% !important;
@@ -379,19 +461,22 @@
       }
       .testimonial-avatar { width: 56px; height:56px; flex-basis:56px; }
       .testimonial-track { gap: 12px; padding: 12px 8px; }
-      /* keep the active lift but ensure shadow doesn't cause visual clipping */
       .testimonial-card.active { transform: translateY(-6px) scale(1.01); box-shadow: 0 28px 64px rgba(2,8,23,0.62); }
+      /* Keep text a touch more airy on mobile */
+      .testimonial-text { line-height: 1.70; max-width: 58ch; font-size: 1rem; }
     }
 
-    /* optional: smaller on very small phones */
+    /* Very small phones */
     @media (max-width:420px) {
       .testimonial-avatar { width: 48px; height:48px; flex-basis:48px; }
       .testimonial-card { padding: 12px 14px !important; }
-      .testimonial-text { font-size: 0.98rem; }
+      .testimonial-text { font-size: 0.98rem; line-height: 1.72; }
+      .flag-img { width: 18px !important; height: 13px !important; }
+      .stars svg { width: 14px; height: 14px; }
     }
 
-    /* optional: if you want to cap the text with "read more" later, you can enable clamping */
-    /* .testimonial-text { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 6; overflow: hidden; } */
+    /* Optional: premium variant comment - change to 1.75 line-height if you want more air */
+    /* .testimonial-text { line-height: 1.75; } */
   </style>
 </head>
 <body class="min-h-screen bg-gradient-to-b from-[#03060a] via-[#050a12] to-[#020407] text-[#e6e8eb] antialiased">
@@ -1021,7 +1106,8 @@
           <div class="testimonial-body">
             <div class="testimonial-head">
               <div style="min-width:0">
-                <div class="testimonial-name">${fullName} <span class="testimonial-handle">${handle}</span></div>
+                <div class="testimonial-name">${fullName}</div>
+                <div class="testimonial-handle">${handle}</div>
                 <div class="testimonial-meta">
                   <img class="flag-img" src="${flagUrl}" alt="${(person.nat||'')}" onerror="this.style.display='none'">
                   <span style="margin-left:6px;">${person.location.country}</span>
