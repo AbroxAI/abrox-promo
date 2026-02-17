@@ -478,6 +478,74 @@
     /* Optional: premium variant comment - change to 1.75 line-height if you want more air */
     /* .testimonial-text { line-height: 1.75; } */
   </style>
+
+  <!-- ====== EMERGENCY FIX: restore normal name flow (append this) ====== -->
+  <style>
+    /* ===== Emergency fix: restore normal name flow & prevent vertical stacking ===== */
+
+    /* Ensure left column expands to available space (prevents collapse) */
+    .testimonial-head > div:first-child {
+      min-width: 0;
+      flex: 1 1 auto;                /* allow this column to take remaining space */
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      white-space: normal;           /* allow normal wrapping */
+    }
+
+    /* Restore normal inline flow for the name so characters don't stack */
+    .testimonial-name {
+      display: inline-flex !important;
+      flex-wrap: wrap !important;
+      white-space: normal !important;
+      word-break: normal !important;
+      overflow-wrap: normal !important;
+      letter-spacing: 0 !important;
+      font-size: 1rem;
+      line-height: 1.18;
+      margin: 0;
+    }
+
+    /* Make sure handle stays under the name but doesn't force tiny width */
+    .testimonial-handle {
+      display: block;
+      margin-top: 4px;
+      font-size: 0.92rem;
+      white-space: normal;
+    }
+
+    /* Keep the stars fixed to the right and not affecting left column sizing */
+    .stars {
+      flex: 0 0 auto !important;
+      align-self: flex-start;
+      margin-left: 12px;
+      display: flex;
+      gap: 6px;
+      justify-content: flex-end;
+      white-space: nowrap;
+    }
+
+    /* Safety: ensure avatar doesn't shrink the name column */
+    .testimonial-avatar {
+      flex-shrink: 0;
+      margin-right: 12px;
+    }
+
+    /* Prevent any over-aggressive breaking rules on short words (names) */
+    .testimonial-head .testimonial-meta,
+    .testimonial-name,
+    .testimonial-handle {
+      -webkit-hyphens: none;
+      -ms-hyphens: none;
+      hyphens: none;
+    }
+
+    /* Mobile safety - keep name readable on very narrow screens */
+    @media (max-width:520px) {
+      .testimonial-name { font-size: 1rem; line-height: 1.22; }
+      .testimonial-head > div:first-child { flex: 1 1 auto; }
+    }
+  </style>
 </head>
 <body class="min-h-screen bg-gradient-to-b from-[#03060a] via-[#050a12] to-[#020407] text-[#e6e8eb] antialiased">
   <div class="relative z-10 max-w-[1100px] mx-auto px-4">
