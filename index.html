@@ -220,16 +220,16 @@
     .big-glass { background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006)); border-radius: 18px; padding: 26px; border: 1px solid rgba(255,255,255,0.035); box-shadow: 0 28px 60px rgba(2,6,23,0.56), inset 0 1px 0 rgba(255,255,255,0.01); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); margin-bottom: 18px; }
     @media (max-width:520px) { .big-glass { padding: 18px; border-radius:14px; } }
 
-    /* ================== TESTIMONIAL STYLES (final: example-like) ================== */
+    /* ================== TESTIMONIAL STYLES (final - UPDATED) ================== */
     .testimonials-section { display:flex; justify-content:center; padding:36px 16px 36px; }
-    .testimonials-shell { width:100%; max-width:1100px; border-radius:18px; background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006)); padding:28px 20px; box-shadow: 0 28px 60px rgba(2,6,23,0.56); border:1px solid rgba(255,255,255,0.03); }
-    .testimonials-header { text-align:center; margin: 6px 0 18px; padding-bottom:10px; }
-    .testimonials-header h2 { font-size: clamp(1.8rem, 4.2vw, 2.8rem); margin:0; font-weight:900; letter-spacing:-0.5px; color:#fff; }
+    .testimonials-shell { width:100%; max-width:1100px; border-radius:18px; background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006)); padding:22px; box-shadow: 0 28px 60px rgba(2,6,23,0.56); border:1px solid rgba(255,255,255,0.03); }
+    .testimonials-header { text-align:center; margin: 6px 0 16px; padding-bottom:10px; }
+    .testimonials-header h2 { font-size: clamp(1.6rem, 3.8vw, 2.6rem); margin:0; font-weight:900; letter-spacing:-0.5px; color:#fff; }
     .testimonials-header .subtitle { margin-top:10px; color:rgba(255,255,255,0.58); font-weight:700; font-size:1rem; }
 
     .testimonial-outer { position:relative; margin-top:18px; display:flex; align-items:center; gap:12px; }
 
-    /* track: single card centered; reserve padding for navs so they don't overlap */
+    /* updated track: ensure padding + scroll-padding so centering math is stable */
     .testimonial-track {
       display:flex;
       gap:18px;
@@ -237,111 +237,74 @@
       overflow-y:visible;
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
-      padding: 14px 48px; /* keep space for navs */
+      padding: 18px 22px;
       align-items: stretch;
       width:100%;
       position: relative;
       scroll-behavior: smooth;
       border-radius: 14px;
-      scroll-padding-inline: 48px;
-      justify-content:center;
+      scroll-padding-inline: 22px;
     }
     .testimonial-track::-webkit-scrollbar { height: 8px; }
 
-    /* card: centered single card, roomy padding, rounded */
+    /* make card box-sizing explicit and fix flex basis so cards don't shrink/overlap */
     .testimonial-card {
       box-sizing: border-box;
-      flex: 0 0 86%;
-      min-width: 86%;
-      max-width: 920px;
+      flex: 0 0 92%;
+      min-width: 92%;
+      max-width: 94%;
       scroll-snap-align: center;
       scroll-snap-stop: always;
       background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006));
       border: 1px solid rgba(255,255,255,0.03);
       border-radius: 16px;
-      padding: 22px 26px;
+      padding: 20px;
       box-shadow: 0 20px 40px rgba(2,6,23,0.6);
       display:flex;
-      flex-direction:column;
-      gap:14px;
-      align-items:stretch;
-      transition: transform .35s cubic-bezier(.2,.9,.3,1), box-shadow .35s ease, opacity .35s ease;
+      gap:16px;
+      align-items:flex-start;
+      transition: transform .45s cubic-bezier(.2,.9,.3,1), box-shadow .45s ease, opacity .45s ease;
       position: relative;
       flex-shrink: 0;
-      opacity: 1;
+      opacity: .98;
       color:#fff;
       transform-origin: center center;
       z-index: 1;
-      overflow: visible;
     }
 
-    .testimonial-card.active { transform: translateY(-6px) scale(1.01); box-shadow: 0 34px 80px rgba(2,8,23,0.66); z-index: 8; }
+    /* active lifted state */
+    .testimonial-card.active { transform: translateY(-8px) scale(1.02); box-shadow: 0 34px 80px rgba(2,8,23,0.66); opacity: 1; z-index: 6; }
 
-    /* top row: avatar + name + flag on left, stars on right */
-    .testimonial-top {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-    }
-    .testimonial-left {
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width:0;
-    }
-
-    /* avatar: smaller (48px) circular bubble like your example */
-    .testimonial-avatar { width:48px; height:48px; border-radius:999px; overflow:hidden; flex-shrink:0; display:flex; align-items:center; justify-content:center; background:#10b981; color:#fff; font-weight:700; font-size:1.05rem; border: 2px solid rgba(255,255,255,0.04); flex-basis:48px; }
+    .testimonial-avatar { width:72px; height:72px; border-radius:999px; overflow:hidden; flex-shrink:0; border: 2px solid rgba(255,255,255,0.04); display:flex; align-items:center; justify-content:center; background: rgba(255,255,255,0.02); flex-basis:72px; }
     .testimonial-avatar img { width:100%; height:100%; object-fit:cover; display:block; }
 
+    .testimonial-body { flex:1; display:flex; flex-direction:column; gap:8px; }
+    .testimonial-head { display:flex; align-items:flex-start; gap:12px; justify-content:space-between; }
     .testimonial-name { font-weight:800; font-size:1.02rem; color:#fff; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
-    .testimonial-handle { color: rgba(255,255,255,0.58); font-weight:700; font-size:.9rem; opacity:.95; margin-left:6px; }
+    .testimonial-handle { color: rgba(255,255,255,0.58); font-weight:700; font-size:.9rem; opacity:.95; }
 
-    .flag-img { display:inline-block; width:20px; height:14px; vertical-align:middle; border-radius:2px; margin-left:8px; }
+    .testimonial-text { color: rgba(255,255,255,0.94); line-height:1.6; margin-top:4px; font-size:1.06rem; word-break:break-word; }
+    .testimonial-meta { display:flex; gap:10px; align-items:center; color: rgba(255,255,255,0.58); font-size:.9rem; margin-top:6px; flex-wrap:wrap; }
 
-    /* stars aligned to the right of top row */
     .stars { display:flex; gap:6px; align-items:center; justify-content:flex-end; }
     .stars svg { width:18px; height:18px; display:block; flex-shrink:0; }
 
-    /* testimonial text: centered paragraph like your example */
-    .testimonial-text {
-      color: rgba(255,255,255,0.94);
-      line-height:1.6;
-      margin-top:4px;
-      font-size:1.03rem;
-      text-align:center;     /* centered text in card (example) */
-      word-break:normal;
-      overflow-wrap:break-word;
-      hyphens:auto;
-    }
-
-    .testimonial-meta { display:flex; gap:10px; align-items:center; color: rgba(255,255,255,0.58); font-size:.9rem; justify-content:center; }
-
-    /* nav buttons (moved inside shell but outside card) */
-    .testimonial-nav { position:absolute; top:50%; transform: translateY(-50%); width:44px; height:44px; border-radius:999px; display:flex; align-items:center; justify-content:center; background: linear-gradient(180deg, rgba(0,0,0,0.36), rgba(255,255,255,0.02)); border: 1px solid rgba(255,255,255,0.04); color: #fff; font-size: 22px; cursor:pointer; box-shadow: 0 8px 24px rgba(2,6,23,0.48); z-index: 60; pointer-events: auto; }
-    .testimonial-nav.left { left: 12px; }
-    .testimonial-nav.right { right: 12px; }
+    .testimonial-nav { position:absolute; top:50%; transform: translateY(-50%); width:44px; height:44px; border-radius:999px; display:flex; align-items:center; justify-content:center; background: linear-gradient(180deg, rgba(0,0,0,0.36), rgba(255,255,255,0.02)); border: 1px solid rgba(255,255,255,0.04); color: #fff; font-size: 22px; cursor:pointer; box-shadow: 0 8px 24px rgba(2,6,23,0.48); z-index: 40; }
+    .testimonial-nav.left { left: 6px; }
+    .testimonial-nav.right { right: 6px; }
 
     @media (min-width:980px) {
-      /* ensure single comfortable card on desktop */
-      .testimonial-card { flex: 0 0 66%; min-width:66%; max-width:920px; padding:28px 34px; }
-      .testimonial-track { padding: 18px 64px; scroll-padding-inline:64px; }
-      .testimonial-text { font-size:1.06rem; }
-      .testimonial-avatar { width:56px; height:56px; flex-basis:56px; font-size:1.08rem; }
-      .testimonial-nav { width:52px; height:52px; font-size:26px; }
+      /* desktop: force a single card per view for comfortable balance */
+      .testimonial-card { flex: 0 0 100%; min-width:100%; max-width:100%; }
+      .testimonial-track { gap: 22px; padding: 22px; }
+      .testimonial-nav { width:50px; height:50px; font-size:24px; }
     }
-    @media (max-width:520px) {
-      .testimonial-card { flex: 0 0 94%; min-width:94%; padding:18px 18px; }
-      .testimonial-avatar { width:44px; height:44px; flex-basis:44px; font-size:1rem; }
-      .testimonial-text { font-size:1rem; }
-      .testimonial-track { padding: 12px 20px; scroll-padding-inline:20px; }
-      .testimonial-nav.left { left: 8px; }
-      .testimonial-nav.right { right: 8px; }
-    }
+    @media (max-width:520px) { .testimonial-card { padding:14px; gap:12px; min-width:92%; max-width:96%; } .testimonial-avatar { width:64px; height:64px; } .testimonials-shell { padding:18px; border-radius:14px; } }
 
-    .muted { color: rgba(255,255,255,0.58); }
+    .pill-flag { font-size:1.02rem; margin-right:6px; }
 
+    /* flag image tiny helper */
+    .flag-img { display:inline-block; width:24px; height:18px; vertical-align:middle; border-radius:2px; margin-right:6px; }
   </style>
 </head>
 <body class="min-h-screen bg-gradient-to-b from-[#03060a] via-[#050a12] to-[#020407] text-[#e6e8eb] antialiased">
@@ -836,8 +799,10 @@
   <!-- =================== TESTIMONIAL JS (final with flag images) =================== -->
   <script>
     (function(){
+      // Number of testimonials to build (you can change this)
       const COUNT = 25;
-      const AUTOPLAY_DELAY = 20000; // 20 seconds
+      // Autoplay delay changed to 20 seconds (20000 ms)
+      const AUTOPLAY_DELAY = 20000;
       const TRACK = document.getElementById('testimonialTrack');
       const prevBtn = document.getElementById('prevTestimonial');
       const nextBtn = document.getElementById('nextTestimonial');
@@ -908,6 +873,13 @@
 
       const NATS = ['US','GB','BR','NG','FR','ES','IT','DE','CA','AU','NL','SE','CH','DK','IE'];
 
+      function countryCodeToEmoji(code) {
+        if (!code) return '';
+        const cc = code.slice(0,2).toUpperCase();
+        const OFFSET = 0x1F1E6 - 'A'.charCodeAt(0);
+        return Array.from(cc).map(c => String.fromCodePoint(c.charCodeAt(0) + OFFSET)).join('');
+      }
+
       function formatDaysAgo(days) {
         if (days <= 0) return 'today';
         if (days === 1) return '1 day ago';
@@ -946,6 +918,7 @@
         const last = person.name.last || '';
         const fullName = `${first} ${last}`.trim();
         const nat = (person.nat || 'US').toLowerCase();
+        // flag PNG from flagcdn — small, crisp and consistent across platforms
         const flagUrl = `https://flagcdn.com/24x18/${nat}.png`;
         const handle = makeHandle(first);
         const daysText = formatDaysAgo(daysAgo);
@@ -955,24 +928,28 @@
         card.setAttribute('role','listitem');
 
         card.innerHTML = `
-          <div class="testimonial-top">
-            <div class="testimonial-left">
-              <div class="testimonial-avatar" aria-hidden="true">
-                <img loading="lazy" src="${person.picture.medium}" alt="${fullName} avatar" onerror="this.style.display='none'">
-                <span class="fallback-initial" aria-hidden="true">${(first||'U')[0].toUpperCase()}</span>
-              </div>
-              <div class="testimonial-meta-left" style="min-width:0">
-                <div class="testimonial-name">${fullName}<img class="flag-img" src="${flagUrl}" alt="${(person.nat||'')}" onerror="this.style.display='none'"></div>
-                <div class="muted" style="font-size:0.9rem;margin-top:6px">${daysText}</div>
-              </div>
-            </div>
-            <div>${renderStarsSVG()}</div>
+          <div class="testimonial-avatar" aria-hidden="true">
+            <img loading="lazy" src="${person.picture.medium}" alt="${fullName} avatar">
           </div>
+          <div class="testimonial-body">
+            <div class="testimonial-head">
+              <div style="min-width:0">
+                <div class="testimonial-name">${fullName} <span class="testimonial-handle">${handle}</span></div>
+                <div class="testimonial-meta">
+                  <img class="flag-img" src="${flagUrl}" alt="${(person.nat||'')}" onerror="this.style.display='none'">
+                  <span style="margin-left:6px;">${person.location.country}</span>
+                </div>
+              </div>
+              <div>${renderStarsSVG()}</div>
+            </div>
 
-          <div class="testimonial-text">${escapeHtml(message)}</div>
+            <div class="testimonial-text">${escapeHtml(message)}</div>
 
-          <div class="testimonial-meta">
-            <div class="muted">Verified community member</div>
+            <div class="testimonial-meta" aria-hidden="true">
+              <span>${daysText}</span>
+              <span>•</span>
+              <span class="muted">Verified community member</span>
+            </div>
           </div>
         `;
         return card;
@@ -984,7 +961,7 @@
         });
       }
 
-      // better center-scrolling helper (keeps card centered)
+      // Robust center-scrolling helper (more consistent than scrollIntoView across browsers)
       function scrollToCard(card) {
         if (!card || !TRACK) return;
         const trackRect = TRACK.getBoundingClientRect();
