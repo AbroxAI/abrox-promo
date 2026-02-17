@@ -1,396 +1,723 @@
 <!doctype html>
 
-<html lang="en">  
-<head>  
-<meta charset="utf-8" />  
-<meta name="viewport" content="width=device-width,initial-scale=1" />  
-<title>Abrox</title>  <!-- Tailwind CDN -->  <script>  
-  tailwind = window.tailwind || {};  
-  tailwind.config = { theme: { extend: { boxShadow: { 'soft-xl': '0 20px 60px rgba(0,0,0,0.55), inset 0 -4px 20px rgba(0,0,0,0.2)' } } } };  
-</script>  <script src="https://cdn.tailwindcss.com"></script>  <style>  
-  /* ---------- Base ---------- */  
-  html { -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; }  
-  body, button, input { -webkit-tap-highlight-color: transparent; }  
-  :root{  
-    --card-bg: rgba(255,255,255,0.02);  
-    --card-bg-2: rgba(255,255,255,0.018);  
-    --card-shadow: 0 10px 30px rgba(2,6,23,0.45);  
-  }  
-  
-  /* ---------- Logo / Hero balance ---------- */  
-  .site-logo { max-width: 220px; transition: transform .22s ease, opacity .22s ease; opacity:.95; display:block; margin:0 auto; }  
-  @media (min-width:640px){ .site-logo { max-width: 360px; } }  
-  .hero-img { max-width:960px; display:block; margin:0 auto; }  
-  
-  .logo-glow::before { display:none !important; }  
-  
-  /* ---------- Video (single pulsing play overlay) ---------- */  
-  .video-card { position: relative; border-radius: .75rem; overflow: hidden; background: #000; border: 1px solid rgba(255,255,255,0.06); box-shadow: var(--card-shadow); }  
-  .play-btn {  
-    width:84px; height:84px; border-radius:9999px; display:flex; align-items:center; justify-content:center;  
-    background: rgba(255,255,255,0.96); box-shadow: 0 12px 30px rgba(0,0,0,0.45); cursor:pointer; border:none;  
-    animation: pulseScale 2.6s ease-in-out infinite;  
-  }  
-  @keyframes pulseScale { 0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)} }  
-  .video-overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; }  
-  .video-overlay .play-btn { pointer-events:auto; }  
-  
-  video::-webkit-media-controls-overlay-play-button { display:none !important; -webkit-appearance:none; }  
-  video::-webkit-media-controls-start-playback-button { display:none !important; -webkit-appearance:none; }  
-  
-  video { width:100%; height:100%; display:block; }  
-  
-  .unmute-hint { position:absolute; left:50%; transform:translateX(-50%); bottom:12px; background:rgba(0,0,0,0.7); color:#fff; padding:.4rem .75rem; border-radius:999px; font-size:.85rem; opacity:0; transition:opacity .18s; pointer-events:none; }  
-  
-  .spinner { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background: rgba(0,0,0,0.45); }  
-  
-  /* ---------- CTA exact sizing ---------- */  
-  .cta-wrap { width:100%; display:flex; flex-direction:column; align-items:center; gap:22px; margin-top:1.5rem; }  
-  
-  /* BUY large full-width */  
-  .buy-btn {  
-    width:100%; max-width:1100px; min-height:96px; padding:0 22px; border-radius:16px;  
-    display:inline-flex; align-items:center; justify-content:center; font-weight:800;  
-    font-size:28px; line-height:1; white-space:nowrap; box-shadow:0 12px 36px rgba(0,0,0,0.45);  
-    text-decoration:none; color:#fff;  
-    background: linear-gradient(90deg,#16a34a,#059669);  
-  }  
-  @media (max-width:380px){ .buy-btn{ min-height:84px; font-size:22px; padding:0 12px; } }  
-  
-  /* DOWNLOAD medium */  
-  .download-btn {  
-    width:62%; max-width:680px; min-height:76px; padding:0 22px; border-radius:14px;  
-    display:inline-flex; align-items:center; justify-content:center; gap:14px; font-weight:800;  
-    font-size:22px; white-space:nowrap; text-decoration:none; color:#fff;  
-    background: linear-gradient(90deg,#7c3aed,#8b5cf6);  
-    color: #fff; /* ensures inline svgs inherit the button color */  
-  }  
-  
-  /* PHONE icon container: slightly larger so icon can be bolder/readable */  
-  .phone-icon{  
-    width:36px;  
-    height:36px;  
-    flex-shrink:0;  
-    display:inline-flex;  
-    align-items:center;  
-    justify-content:center;  
-  }  
-  
-  /* Bolder phone SVG (stroke uses currentColor) */  
-  .phone-icon svg {  
-    width:22px;  
-    height:22px;  
-    stroke: currentColor;  
-    fill: none;  
-    stroke-linecap: round;  
-    stroke-linejoin: round;  
-    stroke-width: 2.4;  
-  }  
-  .phone-icon svg circle { fill: currentColor; }  
-  
-  @media (max-width:380px){ .download-btn{ min-height:68px; font-size:18px; width:68%; } }  
-  
-  /* SUPPORT small */  
-  /* left-positioned circular icon + centered label */  
-  .support-btn{  
-    width:44%; max-width:340px; min-height:56px; padding:0 16px; border-radius:12px;  
-    display:inline-flex; align-items:center; justify-content:center; gap:12px; font-weight:700;  
-    font-size:18px; white-space:nowrap; text-decoration:none; color:#fff; background:#0088cc;  
-    position:relative; padding-left:66px; /* reserve space for icon on left */  
-  }  
-  
-  .cta-icon{  
-    width:40px; height:40px; border-radius:9999px; overflow:hidden; display:inline-flex; align-items:center; justify-content:center; padding:6px; background:rgba(255,255,255,0.03); flex-shrink:0;  
-    position:absolute; left:10px; top:50%; transform:translateY(-50%);  
-  }  
-  
-  /* clip the JPG into a perfect circle and make inner image slightly smaller so it reads like a badge */  
-  .cta-icon img{  
-    width:86%;  
-    height:86%;  
-    object-fit:cover;  
-    display:block;  
-    transform: translateZ(0);  
-  }  
-  
-  @media (max-width:380px){  
-    .support-btn{ min-height:52px; font-size:16px; width:56%; padding-left:56px; }  
-    .cta-icon{ width:36px; height:36px; left:8px; top:50%; transform:translateY(-50%); }  
-    .cta-icon img{ width:100%; height:100%; }  
-    .phone-icon{ width:32px; height:32px; }  
-    .phone-icon svg{ width:20px; height:20px; stroke-width:2.0; }  
-  }  
-  
-  /* ---------- Brokers: circular badges ---------- */  
-  .broker-logo-wrap{ width:76px; height:76px; border-radius:9999px; overflow:hidden; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.02); }  
-  .broker-logo{ width:70%; height:70%; object-fit:contain; display:block; }  
-  .broker-card{ background:linear-gradient(180deg,var(--card-bg-2),var(--card-bg)); border:1px solid rgba(255,255,255,0.03); box-shadow:var(--card-shadow); border-radius:14px; padding:1rem; display:flex; flex-direction:column; align-items:center; gap:.75rem; min-height:130px; }  
-  
-  /* hide noise if present */  
-  .pointer-noise{ display:none !important; }
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Abrox</title>
+  <!-- Tailwind CDN -->
+  <script>
+    tailwind = window.tailwind || {};
+    tailwind.config = { theme: { extend: { boxShadow: { 'soft-xl': '0 20px 60px rgba(0,0,0,0.55), inset 0 -4px 20px rgba(0,0,0,0.2)' } } } };
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
 
-  /* ===== Pricing card custom styles (added) ===== */
-  .pricing-card {
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.012));
-    border: 1px solid rgba(255,255,255,0.03);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.55), inset 0 -4px 20px rgba(0,0,0,0.2);
-    border-radius: 16px;
-  }
-
-  /* thicker visible strikethrough for regular price */
-  .strike {
-    text-decoration: line-through;
-    text-decoration-thickness: 3px;
-    text-decoration-color: rgba(255,255,255,0.18);
-  }
-
-  /* limited pill gradient & small shadow */
-  .limited-pill {
-    background: linear-gradient(90deg,#ff6b5f,#e0443a);
-    box-shadow: 0 8px 28px rgba(224,68,58,0.16);
-  }
-
-  /* subtle pointer + focus styles for accessibility */
-  .pricing-cta:focus { outline: none; box-shadow: 0 0 0 4px rgba(34,197,94,0.18); border-radius: 14px; }
-  .limited-pill:focus { outline: none; box-shadow: 0 0 0 4px rgba(234,88,12,0.12); border-radius: 10px; }
-
-  /* Flame pulse animation */
-  .flame-emoji {
-    display: inline-block;
-    transform-origin: center;
-    animation: flamePulse 1.6s ease-in-out infinite;
-    will-change: transform, filter, opacity;
-    font-size: 18px; /* keep same size as surrounding text */
-    line-height: 1;
-  }
-  @keyframes flamePulse {
-    0% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 0 rgba(255,85,0,0)); }
-    45% { transform: scale(1.08) translateY(-1%); opacity: 0.98; filter: drop-shadow(0 6px 12px rgba(255,85,0,0.12)); }
-    100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 0 rgba(255,85,0,0)); }
-  }
-  /* Respect user's reduced motion preference */
-  @media (prefers-reduced-motion: reduce) {
-    .flame-emoji { animation: none; }
-  }
-
-  /* responsive tweak: stack columns at very small widths */
-  @media (max-width:420px) {
-    .pricing-columns { flex-direction: column; gap: 12px; }
-    .pricing-divider { display: none; }
-    .price-display { text-align: center; }
-  }
-</style>  </head>  
-<body class="min-h-screen bg-gradient-to-b from-[#03060a] via-[#050a12] to-[#020407] text-[#e6e8eb] antialiased">  <div class="relative z-10 max-w-[1100px] mx-auto px-4">    <!-- Logo (smaller than hero) -->    <header class="flex justify-center pt-4 pb-1">  
-    <div class="w-full flex justify-center">  
-      <img src="assets/logo.png" alt="Abrox Logo" class="site-logo object-contain" loading="eager" decoding="async">  
-    </div>  
-  </header>    <!-- Hero -->    <section class="flex justify-center hero">  
-    <div class="w-full max-w-[960px] my-3">  
-      <img src="assets/hero.png" alt="Hero" class="hero-img w-full rounded-xl object-contain" width="1200" height="560" loading="lazy" decoding="async">  
-    </div>  
-  </section>    <!-- Video -->    <section class="flex justify-center">  
-    <div class="w-full max-w-[900px]">  
-      <div class="video-card aspect-video">  
-        <!--
-          controlsList="nodownload noremoteplayback" hides the "download" option in browsers that support it.
-          disablePictureInPicture blocks picture-in-picture (optional).
-          oncontextmenu="return false;" prevents native right-click menu on many devices.
-        -->
-        <video id="demoVideo" controls playsinline preload="metadata" poster="assets/poster.jpg" class="w-full h-full" aria-label="Demo video" controlsList="nodownload noremoteplayback" disablePictureInPicture oncontextmenu="return false;">
-          <source src="assets/demo.mp4" type="video/mp4">  
-          Your browser does not support HTML5 video.  
-        </video>  <!-- custom overlay play (single pulsing play) -->  
-    <div class="video-overlay" id="videoOverlay" aria-hidden="true">  
-      <button id="playBtn" class="play-btn" aria-label="Play demo">  
-        <svg viewBox="0 0 24 24" width="36" height="36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 5v14l11-7-11-7z" fill="#000"/></svg>  
-      </button>  
-    </div>  
-
-    <div class="spinner hidden" id="loadingSpinner"><div style="width:40px;height:40px;border:3px solid rgba(255,255,255,0.25);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite"></div></div>  
-    <div class="unmute-hint" id="unmuteHint">🔊 Tap to unmute</div>  
-  </div>  
-</div>
-
-  </section>    <!-- CTAs -->    <div class="cta-wrap">  
-    <a id="buyBtn" class="buy-btn" href="#checkout">BUY NOW — $399 LIFETIME</a>  <a id="downloadBtn" class="download-btn" href="#download" aria-label="Download App">  
-  <!-- phone inline SVG (bolder, uses currentColor) -->  
-  <span class="phone-icon" aria-hidden="true">  
-    <svg viewBox="0 0 24 24" width="28" height="28" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" focusable="false">  
-      <rect x="6" y="2" width="12" height="20" rx="2" stroke="currentColor" stroke-width="2.4" fill="none" />  
-      <circle cx="12" cy="18.2" r="1.6" fill="currentColor" />  
-    </svg>  
-  </span>  
-  <span>Download App</span>  
-</a>  
-
-<a id="telegramSupport" class="support-btn" href="https://t.me/YOUR_TELEGRAM_USERNAME" aria-label="Telegram Support">  
-  <!-- circle-only fix: the image is clipped to a perfect circle and slightly zoomed so white square corners are hidden -->  
-  <span class="cta-icon" aria-hidden="true"><img src="assets/telegram.jpg" alt="Telegram"></span>  
-  <span>Telegram Support</span>  
-</a>
-
-  </div>    <!-- Brokers -->    <section class="mt-12 px-2 w-full">  
-    <div class="max-w-[1024px] mx-auto">  
-      <h2 class="text-center text-2xl sm:text-3xl font-bold mb-6">Compatible Brokers</h2>  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">  
-    <!-- add your broker images into assets/brokers/ (square PNG/SVG recommended) -->  
-    <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/iq-option.png" alt="IQ Option" class="broker-logo"></div><div class="broker-label">IQ OPTION</div></div>  
-    <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/quotex.png" alt="QUOTEX" class="broker-logo"></div><div class="broker-label">QUOTEX</div></div>  
-    <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/pocket-option.png" alt="Pocket Option" class="broker-logo"></div><div class="broker-label">POCKET OPTION</div></div>  
-    <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/polarium-broker.png" alt="Polarium Broker" class="broker-logo"></div><div class="broker-label">POLARIUM BROKER</div></div>  
-
-    <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/expert-option.jpeg" alt="Expert Option" class="broker-logo"></div><div class="broker-label">EXPERT OPTION</div></div>  
-    <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/binomo.png" alt="Binomo" class="broker-logo"></div><div class="broker-label">BINOMO</div></div>  
-    <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/olymp-trade.png" alt="Olymp Trade" class="broker-logo"></div><div class="broker-label">OLYMP TRADE</div></div>  
-    <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/home-broker.png" alt="Home Broker" class="broker-logo"></div><div class="broker-label">HOME BROKER</div></div>  
-
-    <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/exnova.png" alt="Exnova" class="broker-logo"></div><div class="broker-label">EXNOVA</div></div>  
-    <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/avalon.png" alt="Avalon" class="broker-logo"></div><div class="broker-label">AVALON</div></div>  
-    <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/bullex.jpeg" alt="Bullex" class="broker-logo"></div><div class="broker-label">BULLEX</div></div>  
-    <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/ebinex.png" alt="Ebinex" class="broker-logo"></div><div class="broker-label">EBINEX</div></div>  
-  </div>  
-</div>
-
-  </section>
-
-  <!-- ========== Pricing block (inserted after the Brokers section) ========== -->
-<section id="pricing" class="mt-10 px-4 w-full max-w-[1024px] mx-auto" role="region" aria-labelledby="pricing-title">
-  <h2 id="pricing-title" class="sr-only">Black Friday Pricing</h2>
-
-  <div class="pricing-card p-6 md:p-8">
-    <div class="flex items-center pricing-columns gap-6">
-      <!-- Left: Regular price -->
-      <div class="w-1/3 min-w-[130px] flex flex-col items-center justify-center text-center">
-        <div class="text-sm text-white/60 uppercase">Regular Price:</div>
-        <div class="mt-3">
-          <span class="strike text-2xl md:text-3xl font-bold text-white/60">$500/year</span>
-        </div>
-      </div>
-
-      <!-- Divider -->
-      <div class="pricing-divider h-20 border-r border-white/6"></div>
-
-      <!-- Right: Black Friday Price & LIFETIME ACCESS -->
-      <div class="flex-1 price-display pl-3">
-        <div class="text-sm md:text-base font-extrabold uppercase text-green-400">BLACK FRIDAY SPECIAL:</div>
-
-        <!-- Single-line price so $ sits level with digits -->
-        <div class="mt-2">
-          <span class="text-[48px] md:text-[64px] font-extrabold text-green-500 leading-none">$399</span>
-        </div>
-
-        <div class="mt-3 uppercase text-lg md:text-xl font-semibold tracking-wide">
-          <div>LIFETIME</div>
-          <div>ACCESS</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Limited time pill + big buy CTA -->
-    <div class="mt-6 flex flex-col items-center gap-4">
-      <button type="button" class="limited-pill inline-flex items-center gap-3 text-white font-semibold rounded-full px-5 py-3 text-base" aria-hidden="false" aria-label="Limited time offer">
-        <!-- animated emoji with class -->
-        <span class="flame-emoji" aria-hidden="true">🔥</span>
-        <span>LIMITED TIME OFFER</span>
-      </button>
-
-      <a id="buyNowPricing" href="#checkout" class="pricing-cta w-full max-w-[600px] inline-flex items-center justify-center rounded-2xl py-5 px-6 bg-gradient-to-r from-green-600 to-green-500 text-white font-extrabold text-2xl shadow-[0_12px_36px_rgba(0,0,0,0.45)]" aria-label="Buy lifetime access for $399 — Black Friday special">
-        BUY NOW
-      </a>
-
-      <p class="mt-2 text-center text-white/60">Click the button above to unlock your access</p>
-    </div>
-  </div>
-</section>
-
-  <!-- Footer -->    <footer class="mt-12 border-t border-white/10"><p class="text-center text-sm text-white/60 py-6">© 2026 Abrox. All rights reserved.</p></footer>  
-</div>  <!-- Lucide (optional) -->  <script src="https://unpkg.com/lucide@latest/dist/lucide.min.js" defer></script>  <script>  
-  document.addEventListener('DOMContentLoaded', function () {  
-    // lucide replace (optional)  
-    if (window.lucide && typeof window.lucide.replace === 'function') window.lucide.replace();  
-  
-    const video = document.getElementById('demoVideo');  
-    const playBtn = document.getElementById('playBtn');  
-    const overlay = document.getElementById('videoOverlay');  
-    const spinner = document.getElementById('loadingSpinner');  
-    const unmuteHint = document.getElementById('unmuteHint');  
-  
-    function showOverlay(show){  
-      if(!overlay) return;  
-      overlay.style.opacity = show ? '1' : '0';  
-      overlay.style.pointerEvents = show ? 'auto' : 'none';  
-    }  
-  
-    if (playBtn && video){  
-      playBtn.addEventListener('click', function (e) {  
-        e.stopPropagation();  
-        if (video.paused){  
-          if (spinner) spinner.classList.remove('hidden');  
-          video.play().then(()=> {  
-            if (spinner) spinner.classList.add('hidden');  
-            showOverlay(false);  
-          }).catch(()=> {  
-            if (spinner) spinner.classList.add('hidden');  
-          });  
-        } else {  
-          video.pause();  
-          showOverlay(true);  
-        }  
-      });  
-    }  
-  
-    if (video){  
-      video.addEventListener('play', ()=>{ showOverlay(false); if(video.muted && unmuteHint) unmuteHint.style.opacity='1'; });  
-      video.addEventListener('pause', ()=>{ showOverlay(true); if(unmuteHint) unmuteHint.style.opacity='0'; });  
-      video.addEventListener('canplay', ()=>{ if (spinner) spinner.classList.add('hidden'); if(!video.paused) showOverlay(false); });  
-      video.addEventListener('volumechange', ()=>{ if(!video.muted && unmuteHint) unmuteHint.style.opacity='0'; });  
-    }  
-  
-    setTimeout(()=> {  
-      if (video && video.paused) showOverlay(true);  
-    }, 300);  
-  
-    const style = document.createElement('style');  
-    style.innerHTML = '@keyframes spin{to{transform:rotate(360deg)}}';  
-    document.head.appendChild(style);
-
-    /* -------------------------
-       Anti-download / anti-steal helpers
-       - controlsList on the <video> hides the browser "download" option in supported browsers.
-       - The listeners below block right-click/long-press context menu, drag, and common save shortcuts.
-       NOTE: Nothing here is bulletproof. For strong protection use tokenized streaming and DRM on the server.
-       ------------------------- */
-
-    // Prevent native context menu (right click / long-press)
-    if (video) {
-      video.addEventListener('contextmenu', function (e) { e.preventDefault(); });
-      // Prevent dragging the video
-      video.addEventListener('dragstart', function (e) { e.preventDefault(); });
-      // Prevent some mobile long-press context menus that emit "contextmenu" event
-      video.addEventListener('touchstart', function (e) { /* allow normal touch; contextmenu listener blocks long-press */ }, { passive: true });
+  <style>
+    /* ---------- Base ---------- */
+    html { -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; }
+    body, button, input { -webkit-tap-highlight-color: transparent; }
+    :root{
+      --card-bg: rgba(255,255,255,0.02);
+      --card-bg-2: rgba(255,255,255,0.018);
+      --card-shadow: 0 10px 30px rgba(2,6,23,0.45);
     }
 
-    // Block common "save" keyboard shortcuts (Ctrl/Cmd + S)
-    document.addEventListener('keydown', function(e){
-      if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
-        e.preventDefault();
+    /* ---------- Logo / Hero balance ---------- */
+    .site-logo { max-width: 220px; transition: transform .22s ease, opacity .22s ease; opacity:.95; display:block; margin:0 auto; }
+    @media (min-width:640px){ .site-logo { max-width: 360px; } }
+    .hero-img { max-width:960px; display:block; margin:0 auto; }
+
+    .logo-glow::before { display:none !important; }
+
+    /* ---------- Video (single pulsing play overlay) ---------- */
+    .video-card { position: relative; border-radius: .75rem; overflow: hidden; background: #000; border: 1px solid rgba(255,255,255,0.06); box-shadow: var(--card-shadow); }
+    .play-btn {
+      width:84px; height:84px; border-radius:9999px; display:flex; align-items:center; justify-content:center;
+      background: rgba(255,255,255,0.96); box-shadow: 0 12px 30px rgba(0,0,0,0.45); cursor:pointer; border:none;
+      animation: pulseScale 2.6s ease-in-out infinite;
+    }
+    @keyframes pulseScale { 0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)} }
+    .video-overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; }
+    .video-overlay .play-btn { pointer-events:auto; }
+
+    video::-webkit-media-controls-overlay-play-button { display:none !important; -webkit-appearance:none; }
+    video::-webkit-media-controls-start-playback-button { display:none !important; -webkit-appearance:none; }
+
+    video { width:100%; height:100%; display:block; }
+
+    .unmute-hint { position:absolute; left:50%; transform:translateX(-50%); bottom:12px; background:rgba(0,0,0,0.7); color:#fff; padding:.4rem .75rem; border-radius:999px; font-size:.85rem; opacity:0; transition:opacity .18s; pointer-events:none; }
+
+    .spinner { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background: rgba(0,0,0,0.45); }
+
+    /* ---------- CTA exact sizing ---------- */
+    .cta-wrap { width:100%; display:flex; flex-direction:column; align-items:center; gap:22px; margin-top:1.5rem; }
+
+    /* BUY large full-width */
+    .buy-btn {
+      width:100%; max-width:1100px; min-height:96px; padding:0 22px; border-radius:16px;
+      display:inline-flex; align-items:center; justify-content:center; font-weight:800;
+      font-size:28px; line-height:1; white-space:nowrap; box-shadow:0 12px 36px rgba(0,0,0,0.45);
+      text-decoration:none; color:#fff;
+      background: linear-gradient(90deg,#16a34a,#059669);
+    }
+    @media (max-width:380px){ .buy-btn{ min-height:84px; font-size:22px; padding:0 12px; } }
+
+    /* DOWNLOAD medium */
+    .download-btn {
+      width:62%; max-width:680px; min-height:76px; padding:0 22px; border-radius:14px;
+      display:inline-flex; align-items:center; justify-content:center; gap:14px; font-weight:800;
+      font-size:22px; white-space:nowrap; text-decoration:none; color:#fff;
+      background: linear-gradient(90deg,#7c3aed,#8b5cf6);
+      color: #fff; /* ensures inline svgs inherit the button color */
+    }
+
+    /* PHONE icon container: slightly larger so icon can be bolder/readable */
+    .phone-icon{
+      width:36px;
+      height:36px;
+      flex-shrink:0;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    /* Bolder phone SVG (stroke uses currentColor) */
+    .phone-icon svg {
+      width:22px;
+      height:22px;
+      stroke: currentColor;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 2.4;
+    }
+    .phone-icon svg circle { fill: currentColor; }
+
+    @media (max-width:380px){ .download-btn{ min-height:68px; font-size:18px; width:68%; } }
+
+    /* SUPPORT small */
+    /* left-positioned circular icon + centered label */
+    .support-btn{
+      width:44%; max-width:340px; min-height:56px; padding:0 16px; border-radius:12px;
+      display:inline-flex; align-items:center; justify-content:center; gap:12px; font-weight:700;
+      font-size:18px; white-space:nowrap; text-decoration:none; color:#fff; background:#0088cc;
+      position:relative; padding-left:66px; /* reserve space for icon on left */
+    }
+
+    .cta-icon{
+      width:40px; height:40px; border-radius:9999px; overflow:hidden; display:inline-flex; align-items:center; justify-content:center; padding:6px; background:rgba(255,255,255,0.03); flex-shrink:0;
+      position:absolute; left:10px; top:50%; transform:translateY(-50%);
+    }
+
+    /* clip the JPG into a perfect circle and make inner image slightly smaller so it reads like a badge */
+    .cta-icon img{
+      width:86%;
+      height:86%;
+      object-fit:cover;
+      display:block;
+      transform: translateZ(0);
+    }
+
+    @media (max-width:380px){
+      .support-btn{ min-height:52px; font-size:16px; width:56%; padding-left:56px; }
+      .cta-icon{ width:36px; height:36px; left:8px; top:50%; transform:translateY(-50%); }
+      .cta-icon img{ width:100%; height:100%; }
+      .phone-icon{ width:32px; height:32px; }
+      .phone-icon svg{ width:20px; height:20px; stroke-width:2.0; }
+    }
+
+    /* ---------- Brokers: circular badges ---------- */
+    .broker-logo-wrap{ width:76px; height:76px; border-radius:9999px; overflow:hidden; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.02); }
+    .broker-logo{ width:70%; height:70%; object-fit:contain; display:block; }
+    .broker-card{ background:linear-gradient(180deg,var(--card-bg-2),var(--card-bg)); border:1px solid rgba(255,255,255,0.03); box-shadow:var(--card-shadow); border-radius:14px; padding:1rem; display:flex; flex-direction:column; align-items:center; gap:.75rem; min-height:130px; }
+
+    /* hide noise if present */
+    .pointer-noise{ display:none !important; }
+
+    /* ===== Pricing card custom styles (added) ===== */
+    .pricing-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.012));
+      border: 1px solid rgba(255,255,255,0.03);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.55), inset 0 -4px 20px rgba(0,0,0,0.2);
+      border-radius: 16px;
+    }
+
+    /* thicker visible strikethrough for regular price */
+    .strike {
+      text-decoration: line-through;
+      text-decoration-thickness: 3px;
+      text-decoration-color: rgba(255,255,255,0.18);
+    }
+
+    /* limited pill gradient & small shadow */
+    .limited-pill {
+      background: linear-gradient(90deg,#ff6b5f,#e0443a);
+      box-shadow: 0 8px 28px rgba(224,68,58,0.16);
+    }
+
+    /* subtle pointer + focus styles for accessibility */
+    .pricing-cta:focus { outline: none; box-shadow: 0 0 0 4px rgba(34,197,94,0.18); border-radius: 14px; }
+    .limited-pill:focus { outline: none; box-shadow: 0 0 0 4px rgba(234,88,12,0.12); border-radius: 10px; }
+
+    /* Flame pulse animation */
+    .flame-emoji {
+      display: inline-block;
+      transform-origin: center;
+      animation: flamePulse 1.6s ease-in-out infinite;
+      will-change: transform, filter, opacity;
+      font-size: 18px; /* keep same size as surrounding text */
+      line-height: 1;
+    }
+    @keyframes flamePulse {
+      0% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 0 rgba(255,85,0,0)); }
+      45% { transform: scale(1.08) translateY(-1%); opacity: 0.98; filter: drop-shadow(0 6px 12px rgba(255,85,0,0.12)); }
+      100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 0 rgba(255,85,0,0)); }
+    }
+    /* Respect user's reduced motion preference */
+    @media (prefers-reduced-motion: reduce) {
+      .flame-emoji { animation: none; }
+    }
+
+    /* responsive tweak: stack columns at very small widths */
+    @media (max-width:420px) {
+      .pricing-columns { flex-direction: column; gap: 12px; }
+      .pricing-divider { display: none; }
+      .price-display { text-align: center; }
+    }
+
+    /* ===== Stat card + chart card styles (new) ===== */
+    .stat-card {
+      background: linear-gradient(180deg, rgba(10,70,46,0.96), rgba(7,48,33,0.96));
+      border-radius: 14px;
+      padding: 20px;
+      border: 1px solid rgba(255,255,255,0.03);
+      box-shadow: var(--card-shadow);
+      position: relative;
+    }
+
+    .chart-card {
+      border-radius: 14px;
+      padding: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.006));
+      border: 1px solid rgba(255,255,255,0.03);
+      box-shadow: var(--card-shadow);
+    }
+
+    .legend-square { width:18px; height:18px; border-radius:6px; background: linear-gradient(90deg,#16a34a,#34d399); box-shadow: 0 6px 16px rgba(16,185,129,0.12); display:inline-block; }
+
+    /* small muted helper text */
+    .muted { color: rgba(255,255,255,0.58); }
+
+    /* small dotted grid line look */
+    .dotted-grid { border-top: 1px dotted rgba(255,255,255,0.03); }
+
+    /* ensure chart canvas fills container and keeps aspect */
+    .chart-canvas { width:100%; height:260px; }
+    @media (max-width:480px) { .chart-canvas { height:220px; } }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-b from-[#03060a] via-[#050a12] to-[#020407] text-[#e6e8eb] antialiased">
+  <div class="relative z-10 max-w-[1100px] mx-auto px-4">
+
+    <!-- Logo (smaller than hero) -->
+    <header class="flex justify-center pt-4 pb-1">
+      <div class="w-full flex justify-center">
+        <img src="assets/logo.png" alt="Abrox Logo" class="site-logo object-contain" loading="eager" decoding="async">
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="flex justify-center hero">
+      <div class="w-full max-w-[960px] my-3">
+        <img src="assets/hero.png" alt="Hero" class="hero-img w-full rounded-xl object-contain" width="1200" height="560" loading="lazy" decoding="async">
+      </div>
+    </section>
+
+    <!-- Video -->
+    <section class="flex justify-center">
+      <div class="w-full max-w-[900px]">
+        <div class="video-card aspect-video">
+          <video id="demoVideo" controls playsinline preload="metadata" poster="assets/poster.jpg" class="w-full h-full" aria-label="Demo video" controlsList="nodownload noremoteplayback" disablePictureInPicture oncontextmenu="return false;">
+            <source src="assets/demo.mp4" type="video/mp4">
+            Your browser does not support HTML5 video.
+          </video>
+
+          <!-- custom overlay play (single pulsing play) -->
+          <div class="video-overlay" id="videoOverlay" aria-hidden="true">
+            <button id="playBtn" class="play-btn" aria-label="Play demo">
+              <svg viewBox="0 0 24 24" width="36" height="36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 5v14l11-7-11-7z" fill="#000"/></svg>
+            </button>
+          </div>
+
+          <div class="spinner hidden" id="loadingSpinner"><div style="width:40px;height:40px;border:3px solid rgba(255,255,255,0.25);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite"></div></div>
+          <div class="unmute-hint" id="unmuteHint">🔊 Tap to unmute</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTAs -->
+    <div class="cta-wrap">
+      <a id="buyBtn" class="buy-btn" href="#checkout">BUY NOW — $399 LIFETIME</a>
+
+      <a id="downloadBtn" class="download-btn" href="#download" aria-label="Download App">
+        <span class="phone-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="28" height="28" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" focusable="false">
+            <rect x="6" y="2" width="12" height="20" rx="2" stroke="currentColor" stroke-width="2.4" fill="none" />
+            <circle cx="12" cy="18.2" r="1.6" fill="currentColor" />
+          </svg>
+        </span>
+        <span>Download App</span>
+      </a>
+
+      <a id="telegramSupport" class="support-btn" href="https://t.me/YOUR_TELEGRAM_USERNAME" aria-label="Telegram Support">
+        <span class="cta-icon" aria-hidden="true"><img src="assets/telegram.jpg" alt="Telegram"></span>
+        <span>Telegram Support</span>
+      </a>
+    </div>
+
+    <!-- Brokers -->
+    <section class="mt-12 px-2 w-full">
+      <div class="max-w-[1024px] mx-auto">
+        <h2 class="text-center text-2xl sm:text-3xl font-bold mb-6">Compatible Brokers</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
+          <!-- add your broker images into assets/brokers/ (square PNG/SVG recommended) -->
+          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/iq-option.png" alt="IQ Option" class="broker-logo"></div><div class="broker-label">IQ OPTION</div></div>
+          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/quotex.png" alt="QUOTEX" class="broker-logo"></div><div class="broker-label">QUOTEX</div></div>
+          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/pocket-option.png" alt="Pocket Option" class="broker-logo"></div><div class="broker-label">POCKET OPTION</div></div>
+          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/polarium-broker.png" alt="Polarium Broker" class="broker-logo"></div><div class="broker-label">POLARIUM BROKER</div></div>
+
+          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/expert-option.jpeg" alt="Expert Option" class="broker-logo"></div><div class="broker-label">EXPERT OPTION</div></div>
+          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/binomo.png" alt="Binomo" class="broker-logo"></div><div class="broker-label">BINOMO</div></div>
+          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/olymp-trade.png" alt="Olymp Trade" class="broker-logo"></div><div class="broker-label">OLYMP TRADE</div></div>
+          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/home-broker.png" alt="Home Broker" class="broker-logo"></div><div class="broker-label">HOME BROKER</div></div>
+
+          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/exnova.png" alt="Exnova" class="broker-logo"></div><div class="broker-label">EXNOVA</div></div>
+          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/avalon.png" alt="Avalon" class="broker-logo"></div><div class="broker-label">AVALON</div></div>
+          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/bullex.jpeg" alt="Bullex" class="broker-logo"></div><div class="broker-label">BULLEX</div></div>
+          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/ebinex.png" alt="Ebinex" class="broker-logo"></div><div class="broker-label">EBINEX</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- === NEW: EUR/USD Accuracy Rate section (dynamic last 7 days) === -->
+    <section id="accuracy" class="mt-8 px-4 w-full max-w-[1024px] mx-auto" aria-labelledby="accuracy-title">
+      <h2 id="accuracy-title" class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center leading-tight">EUR/USD Accuracy Rate</h2>
+      <p class="text-center muted mt-2 mb-4">Last 7 days performance</p>
+
+      <!-- Broker select row -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
+        <label for="brokerSelect" class="font-semibold mr-2">Broker:</label>
+        <select id="brokerSelect" class="bg-[#0b1220] rounded-xl px-4 py-3 border border-white/6 text-white/90 min-w-[200px]">
+          <!-- matches your broker list -->
+          <option>IQ OPTION</option>
+          <option>QUOTEX</option>
+          <option>POCKET OPTION</option>
+          <option>POLARIUM BROKER</option>
+          <option>EXPERT OPTION</option>
+          <option>BINOMO</option>
+          <option>OLYMP TRADE</option>
+          <option>HOME BROKER</option>
+          <option>EXNOVA</option>
+          <option>AVALON</option>
+          <option>BULLEX</option>
+          <option>EBINEX</option>
+        </select>
+      </div>
+
+      <!-- Stat card (green) -->
+      <div class="stat-card mb-6">
+        <div class="flex items-center justify-between gap-4">
+          <div>
+            <div class="text-sm muted uppercase">Average Accuracy</div>
+            <div id="avgPercent" class="text-[64px] md:text-[84px] font-extrabold text-green-400 leading-none mt-2" aria-live="polite">--.-%</div>
+            <div id="opsCount" class="muted mt-3">Based on — operations of 1 minute</div>
+          </div>
+
+          <!-- optional PCI or badge area -->
+          <div class="hidden md:block ml-4">
+            <!-- If you have a PCI badge, place it here: -->
+            <img src="assets/pci-badge.png" alt="" style="width:94px;height:auto;opacity:0.98;">
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart card -->
+      <div class="chart-card">
+        <canvas id="accuracyChart" class="chart-canvas" role="img" aria-label="Accuracy chart for last 7 days"></canvas>
+        <!-- x-axis labels are rendered by Chart.js; we provide a textual fallback for screen readers -->
+        <div id="chartFallback" class="sr-only" aria-hidden="false"></div>
+      </div>
+
+      <!-- Legend -->
+      <div class="mt-6 flex items-center justify-center gap-3">
+        <span class="legend-square" aria-hidden="true"></span>
+        <span class="muted">Accuracy Rate</span>
+      </div>
+    </section>
+    <!-- === end accuracy section === -->
+
+    <!-- ========== Pricing block (inserted earlier) ========== -->
+    <section class="mt-10 px-4 w-full max-w-[1024px] mx-auto" role="region" aria-labelledby="pricing-title">
+      <h2 id="pricing-title" class="sr-only">Black Friday Pricing</h2>
+
+      <div class="pricing-card p-6 md:p-8">
+        <div class="flex items-center pricing-columns gap-6">
+          <!-- Left: Regular price -->
+          <div class="w-1/3 min-w-[130px] flex flex-col items-center justify-center text-center">
+            <div class="text-sm text-white/60 uppercase">Regular Price:</div>
+            <div class="mt-3">
+              <span class="strike text-2xl md:text-3xl font-bold text-white/60">$500/year</span>
+            </div>
+          </div>
+
+          <!-- Divider -->
+          <div class="pricing-divider h-20 border-r border-white/6"></div>
+
+          <!-- Right: Black Friday Price & LIFETIME ACCESS -->
+          <div class="flex-1 price-display pl-3">
+            <div class="text-sm md:text-base font-extrabold uppercase text-green-400">BLACK FRIDAY SPECIAL:</div>
+
+            <!-- Single-line price so $ sits level with digits -->
+            <div class="mt-2">
+              <span class="text-[48px] md:text-[64px] font-extrabold text-green-500 leading-none">$399</span>
+            </div>
+
+            <div class="mt-3 uppercase text-lg md:text-xl font-semibold tracking-wide">
+              <div>LIFETIME</div>
+              <div>ACCESS</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Limited time pill + big buy CTA -->
+        <div class="mt-6 flex flex-col items-center gap-4">
+          <button type="button" class="limited-pill inline-flex items-center gap-3 text-white font-semibold rounded-full px-5 py-3 text-base" aria-hidden="false" aria-label="Limited time offer">
+            <!-- animated emoji with class -->
+            <span class="flame-emoji" aria-hidden="true">🔥</span>
+            <span>LIMITED TIME OFFER</span>
+          </button>
+
+          <a id="buyNowPricing" href="#checkout" class="pricing-cta w-full max-w-[600px] inline-flex items-center justify-center rounded-2xl py-5 px-6 bg-gradient-to-r from-green-600 to-green-500 text-white font-extrabold text-2xl shadow-[0_12px_36px_rgba(0,0,0,0.45)]" aria-label="Buy lifetime access for $399 — Black Friday special">
+            BUY NOW
+          </a>
+
+          <p class="mt-2 text-center text-white/60">Click the button above to unlock your access</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="mt-12 border-t border-white/10"><p class="text-center text-sm text-white/60 py-6">© 2026 Abrox. All rights reserved.</p></footer>
+  </div>
+
+  <!-- Lucide (optional) -->
+  <script src="https://unpkg.com/lucide@latest/dist/lucide.min.js" defer></script>
+
+  <!-- Chart.js + datalabels plugin (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+
+  <script>
+    // Video overlay & anti-download helpers (kept from your file)
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.lucide && typeof window.lucide.replace === 'function') window.lucide.replace();
+
+      const video = document.getElementById('demoVideo');
+      const playBtn = document.getElementById('playBtn');
+      const overlay = document.getElementById('videoOverlay');
+      const spinner = document.getElementById('loadingSpinner');
+      const unmuteHint = document.getElementById('unmuteHint');
+
+      function showOverlay(show){
+        if(!overlay) return;
+        overlay.style.opacity = show ? '1' : '0';
+        overlay.style.pointerEvents = show ? 'auto' : 'none';
       }
-      // Optionally block Ctrl+Shift+I / F12 (devtools) attempts - note: this is only an annoyance,
-      // it does not stop a determined user and can be disabled by the browser.
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'i')) {
-        e.preventDefault();
+
+      if (playBtn && video){
+        playBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (video.paused){
+            if (spinner) spinner.classList.remove('hidden');
+            video.play().then(()=> {
+              if (spinner) spinner.classList.add('hidden');
+              showOverlay(false);
+            }).catch(()=> {
+              if (spinner) spinner.classList.add('hidden');
+            });
+          } else {
+            video.pause();
+            showOverlay(true);
+          }
+        });
       }
+
+      if (video){
+        video.addEventListener('play', ()=>{ showOverlay(false); if(video.muted && unmuteHint) unmuteHint.style.opacity='1'; });
+        video.addEventListener('pause', ()=>{ showOverlay(true); if(unmuteHint) unmuteHint.style.opacity='0'; });
+        video.addEventListener('canplay', ()=>{ if (spinner) spinner.classList.add('hidden'); if(!video.paused) showOverlay(false); });
+        video.addEventListener('volumechange', ()=>{ if(!video.muted && unmuteHint) unmuteHint.style.opacity='0'; });
+      }
+
+      setTimeout(()=> {
+        if (video && video.paused) showOverlay(true);
+      }, 300);
+
+      const style = document.createElement('style');
+      style.innerHTML = '@keyframes spin{to{transform:rotate(360deg)}}';
+      document.head.appendChild(style);
+
+      // Prevent native context menu (right click / long-press)
+      if (video) {
+        video.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+        video.addEventListener('dragstart', function (e) { e.preventDefault(); });
+        video.addEventListener('touchstart', function (e) { }, { passive: true });
+      }
+
+      // Block common "save" keyboard shortcuts (Ctrl/Cmd + S)
+      document.addEventListener('keydown', function(e){
+        if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+          e.preventDefault();
+        }
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'i')) {
+          e.preventDefault();
+        }
+      });
+
+      document.addEventListener('contextmenu', function(e){
+        if (e.target && (e.target.closest && e.target.closest('.video-card'))) {
+          e.preventDefault();
+        }
+      });
+
+      // === ACCURACY CHART LOGIC ===
+
+      // Register datalabels plugin
+      if (window.Chart && window.Chart.register) {
+        Chart.register(ChartDataLabels);
+      }
+
+      // Utilities
+      function formatOneDecimal(n) { return (Math.round(n * 10) / 10).toFixed(1); }
+      function randRange(min, max) { return Math.random() * (max - min) + min; }
+
+      // Generate last 7 days labels (e.g., "Feb\n11")
+      function getLast7DayLabels() {
+        const labels = [];
+        const now = new Date();
+        for (let i = 6; i >= 0; i--) {
+          const d = new Date(now);
+          d.setDate(now.getDate() - i);
+          const month = d.toLocaleString(undefined, { month: 'short' });
+          const day = d.getDate();
+          labels.push(month + '\n' + day);
+        }
+        return labels;
+      }
+
+      // Generate smoothed realistic accuracy values for 7 days
+      function generateSmoothedValues(baseMean = 83, volatility = 3.2) {
+        // baseMean around 75-90; volatility controls daily variation
+        const values = [];
+        // Start near baseMean with a small random offset
+        let prev = baseMean + randRange(-1.6, 1.6);
+        for (let i = 0; i < 7; i++) {
+          // small AR(1)-like smoothing: next = prev*alpha + noise
+          const alpha = 0.6 + Math.random() * 0.25; // 0.6-0.85 smoothing
+          const noise = randRange(-volatility, volatility);
+          const next = prev * alpha + (baseMean * (1 - alpha)) + noise * (1 - alpha * 0.5);
+          // clamp between 60 and 98
+          const clamped = Math.max(60, Math.min(98, Math.round(next * 10) / 10));
+          values.push(clamped);
+          prev = clamped;
+        }
+        return values;
+      }
+
+      // Create gradient for chart area
+      function createGradient(ctx, chartArea) {
+        const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+        gradient.addColorStop(0, 'rgba(20,184,166,0.16)'); // light green top
+        gradient.addColorStop(0.45, 'rgba(20,184,166,0.08)');
+        gradient.addColorStop(1, 'rgba(20,184,166,0.00)'); // transparent bottom
+        return gradient;
+      }
+
+      // Chart instance variable
+      let accuracyChart = null;
+
+      // Build or update the chart with new data
+      function renderChart(labels, values) {
+        const ctx = document.getElementById('accuracyChart').getContext('2d');
+
+        // compute suggested bounds
+        const minVal = Math.min(...values);
+        const maxVal = Math.max(...values);
+        const suggestedMin = Math.max(60, Math.floor(minVal - 3));
+        const suggestedMax = Math.min(100, Math.ceil(maxVal + 3));
+
+        // if chart exists, update dataset and re-create gradient after layout
+        if (accuracyChart) {
+          accuracyChart.data.labels = labels;
+          accuracyChart.data.datasets[0].data = values;
+          accuracyChart.options.scales.y.suggestedMin = suggestedMin;
+          accuracyChart.options.scales.y.suggestedMax = suggestedMax;
+          accuracyChart.update();
+          return;
+        }
+
+        // create chart
+        accuracyChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Accuracy',
+              data: values,
+              tension: 0.28, // smooth curve
+              borderWidth: 3,
+              borderColor: '#10b981', // green
+              pointBackgroundColor: '#34d399',
+              pointBorderColor: '#093927',
+              pointRadius: 6,
+              pointHoverRadius: 8,
+              fill: true, // area fill
+              backgroundColor: function(context) {
+                const chart = context.chart;
+                const { ctx, chartArea } = chart;
+                if (!chartArea) {
+                  return null;
+                }
+                return createGradient(ctx, chartArea);
+              },
+            }]
+          },
+          options: {
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                enabled: true,
+                backgroundColor: '#00140f',
+                titleColor: '#fff',
+                bodyColor: '#d7fff0',
+                callbacks: {
+                  label: function(context) {
+                    return context.parsed.y + '%';
+                  }
+                }
+              },
+              datalabels: {
+                color: '#34d399',
+                anchor: 'end',
+                align: 'start',
+                offset: -8,
+                font: { weight: '700', size: 11 },
+                formatter: function(value) { return value + '%'; }
+              }
+            },
+            elements: {
+              line: { borderCapStyle: 'round' },
+            },
+            scales: {
+              x: {
+                grid: {
+                  display: false,
+                },
+                ticks: {
+                  color: 'rgba(255,255,255,0.6)',
+                  font: { size: 12 },
+                  callback: function(value, index, values) {
+                    // labels already include newline
+                    return this.getLabelForValue(index);
+                  }
+                }
+              },
+              y: {
+                beginAtZero: false,
+                suggestedMin: suggestedMin,
+                suggestedMax: suggestedMax,
+                grid: {
+                  color: function(context) {
+                    // dotted horizontal grid
+                    return 'rgba(255,255,255,0.03)';
+                  },
+                  borderDash: [4, 6],
+                },
+                ticks: {
+                  color: 'rgba(255,255,255,0.42)',
+                  // show percent ticks every ~5
+                  stepSize: 5,
+                  callback: function(val) { return val + '%'; }
+                }
+              }
+            },
+            animation: {
+              duration: (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) ? 0 : 800,
+              easing: 'easeOutCubic'
+            },
+            interaction: {
+              mode: 'nearest',
+              intersect: false
+            },
+            responsive: true,
+            maintainAspectRatio: false
+          }
+        });
+      }
+
+      // Update stat card (avg percent and ops)
+      function updateStatCard(values) {
+        const avg = values.reduce((s, v) => s + v, 0) / values.length;
+        const avgText = formatOneDecimal(avg) + '%';
+        document.getElementById('avgPercent').innerText = avgText;
+        // realistic sample count between 800 and 1600 (varies by broker)
+        const ops = Math.floor(randRange(800, 1600));
+        document.getElementById('opsCount').innerText = 'Based on ' + ops.toLocaleString() + ' operations of 1 minute';
+
+        // Update textual fallback for screen readers
+        const labels = getLast7DayLabels().map(l => l.replace('\n', ' '));
+        const fallbackItems = labels.map((lab, i) => lab + ': ' + values[i] + '%').join('; ');
+        const fallbackEl = document.getElementById('chartFallback');
+        fallbackEl.innerText = 'Last seven days: ' + fallbackItems + '. Average: ' + formatOneDecimal(avg) + ' percent.';
+      }
+
+      // Hook up broker select -> generate data & render
+      const brokerSelect = document.getElementById('brokerSelect');
+      function onBrokerChange() {
+        // create a baseMean based on a pseudo-random function influenced by broker name (so different brokers vary)
+        const brokerName = brokerSelect.value || 'IQ OPTION';
+        // use char codes to produce a seed-ish value (not deterministic across visits, but provides variety)
+        let seed = 0;
+        for (let i = 0; i < brokerName.length; i++) seed += brokerName.charCodeAt(i);
+        // produce base mean in 78..88 influenced by seed and time
+        const baseMean = 78 + ((seed % 12) + (new Date().getDate() % 5)) * 0.8; // yields realistic spread around 78-88
+        const volatility = 3.3; // day-to-day variance
+        const values = generateSmoothedValues(baseMean, volatility);
+
+        const labels = getLast7DayLabels();
+        // reformat labels to be Chart-friendly (with newline) - already done by getLast7DayLabels()
+        renderChart(labels, values);
+        updateStatCard(values);
+      }
+
+      // initial rendering on load
+      onBrokerChange();
+
+      // change event
+      brokerSelect.addEventListener('change', function() {
+        onBrokerChange();
+      });
+
+      // Resize observer to re-create gradient when chart area changes
+      const canvas = document.getElementById('accuracyChart');
+      const ro = new ResizeObserver(() => {
+        if (accuracyChart) accuracyChart.update();
+      });
+      ro.observe(canvas);
+
+      // END accuracy logic
     });
-
-    // Optional: intercept contextmenu at document level as well (be careful — this disables right-click globally)
-    document.addEventListener('contextmenu', function(e){
-      // If you want to allow right-click elsewhere, only prevent when target is the video or inside video card.
-      if (e.target && (e.target.closest && e.target.closest('.video-card'))) {
-        e.preventDefault();
-      }
-    });
-
-    // END anti-download helpers
-
-  });  
-</script>  </body>  
+  </script>
+</body>
 </html>
