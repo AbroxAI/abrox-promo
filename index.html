@@ -218,9 +218,9 @@
 
     /* ---------- NEW: Big glass wrapper (the “big glass card”) ---------- */
     .big-glass { background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006)); border-radius: 18px; padding: 26px; border: 1px solid rgba(255,255,255,0.035); box-shadow: 0 28px 60px rgba(2,6,23,0.56), inset 0 1px 0 rgba(255,255,255,0.01); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); margin-bottom: 18px; }
-    @media (max-width:520px) { .big-glass { padding: 18px; border-radius: 14px; } }
+    @media (max-width:520px) { .big-glass { padding: 18px; border-radius:14px; } }
 
-    /* ================== TESTIMONIAL STYLES (final) ================== */
+    /* ================== TESTIMONIAL STYLES (final - UPDATED) ================== */
     .testimonials-section { display:flex; justify-content:center; padding:36px 16px 36px; }
     .testimonials-shell { width:100%; max-width:1100px; border-radius:18px; background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006)); padding:22px; box-shadow: 0 28px 60px rgba(2,6,23,0.56); border:1px solid rgba(255,255,255,0.03); }
     .testimonials-header { text-align:center; margin: 6px 0 16px; padding-bottom:10px; }
@@ -228,12 +228,33 @@
     .testimonials-header .subtitle { margin-top:10px; color:rgba(255,255,255,0.58); font-weight:700; font-size:1rem; }
 
     .testimonial-outer { position:relative; margin-top:18px; display:flex; align-items:center; gap:12px; }
-    .testimonial-track { display:flex; gap:18px; overflow-x:auto; overflow-y:visible; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; padding: 18px 22px; align-items: stretch; width:100%; position: relative; scroll-behavior: smooth; border-radius: 14px; }
 
+    /* updated track: ensure padding + scroll-padding so centering math is stable */
+    .testimonial-track {
+      display:flex;
+      gap:18px;
+      overflow-x:auto;
+      overflow-y:visible;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding: 18px 22px;
+      align-items: stretch;
+      width:100%;
+      position: relative;
+      scroll-behavior: smooth;
+      border-radius: 14px;
+      scroll-padding-inline: 22px;
+    }
+    .testimonial-track::-webkit-scrollbar { height: 8px; }
+
+    /* make card box-sizing explicit and fix flex basis so cards don't shrink/overlap */
     .testimonial-card {
-      scroll-snap-align: center;
+      box-sizing: border-box;
+      flex: 0 0 92%;
       min-width: 92%;
       max-width: 94%;
+      scroll-snap-align: center;
+      scroll-snap-stop: always;
       background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006));
       border: 1px solid rgba(255,255,255,0.03);
       border-radius: 16px;
@@ -247,9 +268,12 @@
       flex-shrink: 0;
       opacity: .98;
       color:#fff;
+      transform-origin: center center;
+      z-index: 1;
     }
 
-    .testimonial-card.active { transform: translateY(-8px) scale(1.02); box-shadow: 0 34px 80px rgba(2,8,23,0.66); opacity: 1; }
+    /* active lifted state */
+    .testimonial-card.active { transform: translateY(-8px) scale(1.02); box-shadow: 0 34px 80px rgba(2,8,23,0.66); opacity: 1; z-index: 6; }
 
     .testimonial-avatar { width:72px; height:72px; border-radius:999px; overflow:hidden; flex-shrink:0; border: 2px solid rgba(255,255,255,0.04); display:flex; align-items:center; justify-content:center; background: rgba(255,255,255,0.02); flex-basis:72px; }
     .testimonial-avatar img { width:100%; height:100%; object-fit:cover; display:block; }
@@ -269,7 +293,12 @@
     .testimonial-nav.left { left: 6px; }
     .testimonial-nav.right { right: 6px; }
 
-    @media (min-width:980px) { .testimonial-card { min-width: 44%; max-width: 46%; } .testimonial-track { gap: 22px; padding: 22px; } .testimonial-nav { width:50px; height:50px; font-size:24px; } }
+    @media (min-width:980px) {
+      /* desktop: force a single card per view for comfortable balance */
+      .testimonial-card { flex: 0 0 100%; min-width:100%; max-width:100%; }
+      .testimonial-track { gap: 22px; padding: 22px; }
+      .testimonial-nav { width:50px; height:50px; font-size:24px; }
+    }
     @media (max-width:520px) { .testimonial-card { padding:14px; gap:12px; min-width:92%; max-width:96%; } .testimonial-avatar { width:64px; height:64px; } .testimonials-shell { padding:18px; border-radius:14px; } }
 
     .pill-flag { font-size:1.02rem; margin-right:6px; }
@@ -770,8 +799,10 @@
   <!-- =================== TESTIMONIAL JS (final with flag images) =================== -->
   <script>
     (function(){
+      // Number of testimonials to build (you can change this)
       const COUNT = 25;
-      const AUTOPLAY_DELAY = 30000;
+      // Autoplay delay changed to 20 seconds (20000 ms)
+      const AUTOPLAY_DELAY = 20000;
       const TRACK = document.getElementById('testimonialTrack');
       const prevBtn = document.getElementById('prevTestimonial');
       const nextBtn = document.getElementById('nextTestimonial');
@@ -930,9 +961,13 @@
         });
       }
 
+      // Robust center-scrolling helper (more consistent than scrollIntoView across browsers)
       function scrollToCard(card) {
-        if (!card) return;
-        card.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        if (!card || !TRACK) return;
+        const trackRect = TRACK.getBoundingClientRect();
+        const cardRect = card.getBoundingClientRect();
+        const left = TRACK.scrollLeft + (cardRect.left - trackRect.left) - ((trackRect.width - cardRect.width) / 2);
+        TRACK.scrollTo({ left: Math.max(0, Math.round(left)), behavior: 'smooth' });
       }
 
       function shuffle(arr) {
