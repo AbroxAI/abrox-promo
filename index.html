@@ -200,31 +200,33 @@
 
     /* NEW: outlined red pill (matches screenshot red rectangle) - improved visibility & alignment */
     .limited-pill-outline {
-      background: linear-gradient(180deg, rgba(224,68,58,0.07), rgba(224,68,58,0.045));
-      border: 1px solid rgba(224,68,58,0.36);
-      color: #ffb7ae;                         /* brighter coral for readability */
-      box-shadow: 0 6px 18px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.01);
-      padding: 1rem 1.5rem;
-      font-weight: 800;
-      border-radius: 14px;
-      font-size: 1.05rem;
+      /* slightly stronger, taller, and rounder */
+      background: linear-gradient(180deg, rgba(224,68,58,0.085), rgba(224,68,58,0.05));
+      border: 1px solid rgba(255,122,114,0.42); /* brighter coral border */
+      color: #ff7a72;                         /* stronger coral text */
+      box-shadow: 0 10px 30px rgba(0,0,0,0.32), inset 0 1px 0 rgba(255,255,255,0.02);
+      padding: 1.1rem 1.75rem;                /* taller pill */
+      font-weight: 900;
+      border-radius: 22px;                   /* larger radius to match screenshot */
+      font-size: 1.12rem;                    /* slightly larger text */
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 12px;
-      min-height: 64px;                       /* ensures comfortable vertical space */
+      min-height: 78px;                      /* comfortable vertical size */
       line-height: 1;
+      text-shadow: 0 1px 0 rgba(0,0,0,0.25);
     }
 
     /* clearer text inside pill */
     .limited-pill-outline .pill-text {
-      font-weight: 800;
-      color: #ffb7ae;
-      font-size: 1.05rem;
-      letter-spacing: 0.2px;
+      font-weight: 900;
+      color: #ff7a72;
+      font-size: 1.12rem;
+      letter-spacing: 0.3px;
       display: inline-block;
       text-align: center;
-      line-height: 1.05;
+      line-height: 1.02;
     }
 
     /* Flame: bigger, vertically aligned and a soft drop shadow so it stays visible on dark glass */
@@ -233,13 +235,13 @@
       transform-origin: center;
       animation: flamePulse 1.6s ease-in-out infinite;
       will-change: transform, filter, opacity;
-      font-size: 22px;                         /* larger flame */
+      font-size: 26px;                         /* larger flame for prominence */
       line-height: 1;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      filter: drop-shadow(0 6px 10px rgba(224,68,58,0.18));
-      margin-top: -1px;                        /* tiny vertical nudge to perfectly align baseline */
+      filter: drop-shadow(0 8px 16px rgba(255,122,114,0.18));
+      margin-top: 0;                           /* neutral vertical alignment */
     }
 
     @keyframes flamePulse {
@@ -252,9 +254,42 @@
     .pricing-cta:focus { outline: none; box-shadow: 0 0 0 4px rgba(34,197,94,0.18); border-radius: 14px; }
     .limited-pill:focus { outline: none; box-shadow: 0 0 0 4px rgba(234,88,12,0.12); border-radius: 10px; }
 
-    /* Respect user's reduced motion preference */
+    /* CTA tweaks to match screenshot: larger, taller, more rounded */
+    .pricing-cta {
+      border-radius: 26px !important;
+      padding-top: 1.25rem !important;
+      padding-bottom: 1.25rem !important;
+      font-size: 28px !important; /* larger CTA text */
+      letter-spacing: 0.6px;
+      box-shadow: 0 18px 42px rgba(6,95,70,0.16) !important;
+      min-height: 116px;
+    }
+
+    /* ========== NEW: secure button pulse animation ========== */
+    .secure-pulse {
+      animation: securePulse 2400ms cubic-bezier(.2,.9,.25,1) infinite;
+      will-change: transform, box-shadow, filter;
+    }
+
+    @keyframes securePulse {
+      0%   { transform: translateY(0) scale(1); box-shadow: 0 10px 26px rgba(16,185,129,0.14); }
+      45%  { transform: translateY(-4px) scale(1.035); box-shadow: 0 36px 84px rgba(16,185,129,0.22); }
+      70%  { transform: translateY(-2px) scale(1.02); box-shadow: 0 26px 60px rgba(16,185,129,0.18); }
+      100% { transform: translateY(0) scale(1); box-shadow: 0 10px 26px rgba(16,185,129,0.14); }
+    }
+
+    /* stronger hover/active affordance */
+    .pricing-cta.secure-pulse:hover, .pricing-cta.secure-pulse:focus {
+      transform: translateY(-3px) scale(1.045);
+      box-shadow: 0 44px 100px rgba(16,185,129,0.28) !important;
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    /* Respect reduced motion */
     @media (prefers-reduced-motion: reduce) {
+      .secure-pulse { animation: none !important; transform: none !important; box-shadow: 0 12px 36px rgba(6,95,70,0.08) !important; }
       .flame-emoji { animation: none; }
+      .buy-pulse { animation: none; }
     }
 
     /* responsive tweak: stack columns at very small widths */
@@ -262,9 +297,10 @@
       .pricing-columns { flex-direction: column; gap: 12px; }
       .pricing-divider { display: none; }
       .price-display { text-align: center; }
-      .limited-pill-outline { width: 92%; padding: 0.85rem 1rem; font-size: 0.98rem; min-height: 58px; gap: 10px; }
-      .limited-pill-outline .pill-text { font-size: 0.98rem; }
-      .flame-emoji { font-size: 20px; margin-top: 0; }
+      .limited-pill-outline { width: 92%; padding: 0.95rem 1.1rem; font-size: 1.02rem; min-height: 64px; gap: 10px; border-radius: 18px; }
+      .limited-pill-outline .pill-text { font-size: 1.02rem; }
+      .flame-emoji { font-size: 22px; }
+      .pricing-cta { font-size: 22px !important; min-height: 96px; border-radius: 22px !important; padding-top: 1rem !important; padding-bottom: 1rem !important; }
     }
 
     /* ===== Stat card + chart card styles (new) ===== */
@@ -552,7 +588,7 @@
           </button>
 
           <!-- UNIQUE CTA: use flex-col + text-center so multi-line text centers perfectly -->
-          <a id="secureSpot" href="#checkout" class="pricing-cta w-full max-w-[640px] flex flex-col items-center justify-center text-center rounded-2xl py-6 px-6 bg-gradient-to-r from-green-600 to-green-500 text-white font-extrabold text-2xl shadow-[0_12px_36px_rgba(0,0,0,0.45)] leading-tight" aria-label="Secure my spot — lifetime access for $399">
+          <a id="secureSpot" href="#checkout" class="pricing-cta secure-pulse w-full max-w-[640px] flex flex-col items-center justify-center text-center rounded-2xl py-6 px-6 bg-gradient-to-r from-green-600 to-green-500 text-white font-extrabold text-2xl shadow-[0_12px_36px_rgba(0,0,0,0.45)] leading-tight" aria-label="Secure my spot — lifetime access for $399">
             SECURE MY<br/>SPOT NOW
           </a>
 
