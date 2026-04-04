@@ -74,7 +74,7 @@
     .platform-item { display: flex; flex-direction: column; align-items: center; gap: 8px; font-weight: 600; color: rgba(255,255,255,0.8); }
     .platform-icon { width: 52px; height: 52px; background: rgba(255,255,255,0.05); border-radius: 60px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.08); }
     .platform-icon svg { width: 28px; height: 28px; stroke: #48d7ff; stroke-width: 1.5; fill: none; }
-    /* FIXED TOAST – middle-left, checkmark, never moves with scroll */
+    /* FIXED TOAST – middle-left, checkmark, slides in */
     .toast-alert {
       position: fixed;
       top: 50%;
@@ -240,7 +240,7 @@
     <span id="activeCounter" class="stat-number">25,369</span>
   </div>
 
-  <!-- Fixed middle-left toast (checkmark, always visible, never moves with scroll) -->
+  <!-- Fixed middle-left toast (checkmark, slides in) -->
   <div id="purchaseToast" class="toast-alert">
     <div class="toast-check">✓</div>
     <span id="toastText">James Okafor (Nigeria) just purchased!</span>
