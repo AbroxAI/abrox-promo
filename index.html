@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Abrox</title>
-  <!-- Tailwind CDN -->
+  <meta name="viewport" content="width=device-width,initial-scale=1, viewport-fit=cover" />
+  <title>Abrox | Precision Trading Intelligence</title>
+  <!-- Tailwind CDN with minimal config -->
   <script>
     tailwind = window.tailwind || {};
     tailwind.config = { theme: { extend: { boxShadow: { 'soft-xl': '0 20px 60px rgba(0,0,0,0.55), inset 0 -4px 20px rgba(0,0,0,0.2)' } } } };
@@ -12,593 +12,284 @@
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
-    /* ---------- Base ---------- */
-    html { -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; }
-    body, button, input { -webkit-tap-highlight-color: transparent; }
-    :root{
-      --card-bg: rgba(255,255,255,0.02);
-      --card-bg-2: rgba(255,255,255,0.018);
-      --card-shadow: 0 10px 30px rgba(2,6,23,0.45);
+    /* ---------- PERFORMANCE & FLASH FIX ---------- */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      background: #03060a;  /* solid dark base – eliminates white flash */
+      scroll-behavior: auto; /* native scrolling, no forced smooth jank */
+    }
+    body {
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Inter, sans-serif;
+      background: linear-gradient(145deg, #03060a 0%, #050a12 45%, #020407 100%);
+      overflow-x: hidden;
+      overscroll-behavior: none;
+      /* GPU acceleration for smoother painting */
+      transform: translateZ(0);
+      backface-visibility: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* ---------- Logo / Hero balance ---------- */
-    .site-logo { max-width: 220px; transition: transform .22s ease, opacity .22s ease; opacity:.95; display:block; margin:0 auto; }
+    /* remove any problematic animations that cause repaint stutter */
+    .buy-pulse, .secure-pulse, .flame-emoji {
+      will-change: transform, box-shadow;
+      animation: none !important;   /* disable heavy pulsing that stalls scroll */
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .buy-pulse:hover, .secure-pulse:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 24px 48px rgba(0,0,0,0.6);
+    }
+    .flame-emoji {
+      display: inline-block;
+      animation: none;
+      filter: drop-shadow(0 4px 8px rgba(255,122,114,0.2));
+    }
+    /* keep button hover but no infinite stutter */
+    .btn-primary, .buy-btn, .download-btn, .pricing-cta {
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+
+    /* Custom scrollbar – lightweight */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(5,8,22,0.6); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb { background: rgba(72,215,255,0.35); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(72,215,255,0.6); }
+    * { scrollbar-width: thin; scrollbar-color: rgba(72,215,255,0.35) rgba(5,8,22,0.6); }
+
+    /* Base components (unchanged but kept clean) */
+    .site-logo { max-width: 220px; transition: opacity 0.2s; opacity: 0.95; display: block; margin: 0 auto; }
     @media (min-width:640px){ .site-logo { max-width: 360px; } }
-    .hero-img { max-width:960px; display:block; margin:0 auto; }
-
-    .logo-glow::before { display:none !important; }
-
-    /* ---------- Video (single pulsing play overlay) ---------- */
-    .video-card { position: relative; border-radius: .75rem; overflow: hidden; background: #000; border: 1px solid rgba(255,255,255,0.06); box-shadow: var(--card-shadow); }
+    .hero-img { max-width:960px; display:block; margin:0 auto; border-radius: 1rem; }
+    .video-card { position: relative; border-radius: 0.75rem; overflow: hidden; background: #000; border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 10px 30px rgba(2,6,23,0.45); }
     .play-btn {
-      width:84px; height:84px; border-radius:9999px; display:flex; align-items:center; justify-content:center;
+      width:84px; height:84px; border-radius: 9999px; display:flex; align-items:center; justify-content:center;
       background: rgba(255,255,255,0.96); box-shadow: 0 12px 30px rgba(0,0,0,0.45); cursor:pointer; border:none;
-      animation: pulseScale 2.6s ease-in-out infinite;
+      transition: transform 0.2s;
     }
-    @keyframes pulseScale { 0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)} }
+    .play-btn:hover { transform: scale(1.03); }
     .video-overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; }
     .video-overlay .play-btn { pointer-events:auto; }
-
-    video::-webkit-media-controls-overlay-play-button { display:none !important; -webkit-appearance:none; }
-    video::-webkit-media-controls-start-playback-button { display:none !important; -webkit-appearance:none; }
-
     video { width:100%; height:100%; display:block; }
-
-    .unmute-hint { position:absolute; left:50%; transform:translateX(-50%); bottom:12px; background:rgba(0,0,0,0.7); color:#fff; padding:.4rem .75rem; border-radius:999px; font-size:.85rem; opacity:0; transition:opacity .18s; pointer-events:none; }
-
+    .unmute-hint { position:absolute; left:50%; transform:translateX(-50%); bottom:12px; background:rgba(0,0,0,0.7); color:#fff; padding:0.4rem 0.75rem; border-radius:999px; font-size:0.85rem; opacity:0; transition:opacity 0.18s; pointer-events:none; }
     .spinner { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background: rgba(0,0,0,0.45); }
 
-    /* ---------- CTA exact sizing ---------- */
+    /* CTA & buttons */
     .cta-wrap { width:100%; display:flex; flex-direction:column; align-items:center; gap:22px; margin-top:1.5rem; }
-
-    /* ===== UPDATED: BUY large full-width (bigger, like screenshot) ===== */
     .buy-btn {
-      width:100%;
-      max-width:900px;
-      min-height:110px;
-      padding:0 28px;
-      border-radius:18px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      font-weight:900;
-      font-size:34px;
-      line-height:1;
-      white-space:nowrap;
-      box-shadow:0 18px 48px rgba(0,0,0,0.5), inset 0 -6px 18px rgba(0,0,0,0.08);
-      text-decoration:none;
-      color:#fff;
-      background: linear-gradient(90deg,#25b86a,#059669);
-      border: 1px solid rgba(255,255,255,0.02);
-      transform: translateZ(0) scale(1);
+      width:100%; max-width:900px; min-height:110px; padding:0 28px; border-radius:18px;
+      display:inline-flex; align-items:center; justify-content:center; font-weight:900; font-size:34px; line-height:1;
+      white-space:nowrap; box-shadow:0 18px 48px rgba(0,0,0,0.5), inset 0 -6px 18px rgba(0,0,0,0.08);
+      text-decoration:none; color:#fff; background: linear-gradient(90deg,#25b86a,#059669);
+      border: 1px solid rgba(255,255,255,0.02); transform: translateZ(0);
     }
-    @media (max-width:480px){
-      .buy-btn { min-height:88px; font-size:22px; padding:0 16px; max-width: 96%; border-radius:14px; }
-    }
-
-    /* subtle attention-drawing pulse for the big buy button */
-    .buy-pulse {
-      animation: buyPulse 2.6s cubic-bezier(.25,.8,.25,1) infinite;
-      will-change: transform, box-shadow, filter;
-    }
-    @keyframes buyPulse {
-      0% { transform: translateY(0) scale(1); box-shadow:0 18px 48px rgba(0,0,0,0.45), inset 0 -6px 18px rgba(0,0,0,0.08); }
-      45% { transform: translateY(-3px) scale(1.02); box-shadow:0 28px 64px rgba(16,185,129,0.16), inset 0 -6px 18px rgba(0,0,0,0.06); }
-      100% { transform: translateY(0) scale(1); box-shadow:0 18px 48px rgba(0,0,0,0.45), inset 0 -6px 18px rgba(0,0,0,0.08); }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .buy-pulse { animation: none; }
-      .play-btn { animation: none; }
-    }
-
-    /* DOWNLOAD medium - adjusted to match left-blue button size */
+    @media (max-width:480px){ .buy-btn { min-height:88px; font-size:22px; padding:0 16px; max-width:96%; border-radius:14px; } }
     .download-btn {
-      width:360px;
-      max-width:85%;
-      min-height:72px;
-      padding:0 22px;
-      border-radius:14px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:14px;
-      font-weight:800;
-      font-size:20px;
-      white-space:nowrap;
-      text-decoration:none;
-      color:#fff;
-      background: linear-gradient(90deg,#3b82f6,#60a5fa);
-      box-shadow: 0 12px 30px rgba(59,130,246,0.12);
-      border: 1px solid rgba(255,255,255,0.02);
+      width:360px; max-width:85%; min-height:72px; padding:0 22px; border-radius:14px;
+      display:inline-flex; align-items:center; justify-content:center; gap:14px; font-weight:800; font-size:20px;
+      white-space:nowrap; text-decoration:none; color:#fff; background: linear-gradient(90deg,#3b82f6,#60a5fa);
+      box-shadow: 0 12px 30px rgba(59,130,246,0.12); border:1px solid rgba(255,255,255,0.02);
     }
-    @media (max-width:480px){
-      .download-btn { width:68%; min-height:64px; font-size:18px; padding:0 16px; }
-    }
+    .phone-icon { width:36px; height:36px; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; }
+    .phone-icon svg { width:22px; height:22px; stroke: currentColor; fill: none; stroke-width:2.4; }
 
-    /* PHONE icon container */
-    .phone-icon{
-      width:36px;
-      height:36px;
-      flex-shrink:0;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-    }
-
-    .phone-icon svg {
-      width:22px;
-      height:22px;
-      stroke: currentColor;
-      fill: none;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      stroke-width: 2.4;
-    }
-    .phone-icon svg circle { fill: currentColor; }
-
-    @media (max-width:380px){ .download-btn{ min-height:68px; font-size:18px; width:68%; } }
-
-    /* ---------- Brokers: circular badges ---------- */
+    /* Brokers */
     .broker-logo-wrap{ width:76px; height:76px; border-radius:9999px; overflow:hidden; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.02); }
     .broker-logo{ width:70%; height:70%; object-fit:contain; display:block; }
-    .broker-card{ background:linear-gradient(180deg,var(--card-bg-2),var(--card-bg)); border:1px solid rgba(255,255,255,0.03); box-shadow:var(--card-shadow); border-radius:14px; padding:1rem; display:flex; flex-direction:column; align-items:center; gap:.75rem; min-height:130px; }
+    .broker-card{ background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.012)); border:1px solid rgba(255,255,255,0.03); border-radius:14px; padding:1rem; display:flex; flex-direction:column; align-items:center; gap:0.75rem; min-height:130px; }
 
-    /* ===== Pricing card custom styles (added) ===== */
-    .pricing-card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.012));
-      border: 1px solid rgba(255,255,255,0.03);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.55), inset 0 -4px 20px rgba(0,0,0,0.2);
-      border-radius: 16px;
-    }
-
-    .strike {
-      text-decoration: line-through;
-      text-decoration-thickness: 3px;
-      text-decoration-color: rgba(255,255,255,0.18);
-    }
-
-    .limited-pill { background: linear-gradient(90deg,#ff6b5f,#e0443a); box-shadow: 0 8px 28px rgba(224,68,58,0.16); }
-
-    .limited-pill-outline {
-      background: linear-gradient(180deg, rgba(224,68,58,0.085), rgba(224,68,58,0.05));
-      border: 1px solid rgba(255,122,114,0.42);
-      color: #ff7a72;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.32), inset 0 1px 0 rgba(255,255,255,0.02);
-      padding: 1.1rem 1.75rem;
-      font-weight: 900;
-      border-radius: 22px;
-      font-size: 1.12rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      min-height: 78px;
-      line-height: 1;
-      text-shadow: 0 1px 0 rgba(0,0,0,0.25);
-    }
-
-    .limited-pill-outline .pill-text { font-weight: 900; color: #ff7a72; font-size: 1.12rem; letter-spacing: 0.3px; display: inline-block; text-align: center; line-height: 1.02; }
-
-    .flame-emoji { display: inline-block; transform-origin: center; animation: flamePulse 1.6s ease-in-out infinite; will-change: transform, filter, opacity; font-size: 26px; line-height: 1; display: inline-flex; align-items: center; justify-content: center; filter: drop-shadow(0 8px 16px rgba(255,122,114,0.18)); margin-top: 0; }
-    @keyframes flamePulse { 0% { transform: scale(1); opacity: 1; } 45% { transform: scale(1.08) translateY(-1%); opacity: 0.98; } 100% { transform: scale(1); opacity: 1; } }
-
-    .pricing-cta:focus { outline: none; box-shadow: 0 0 0 4px rgba(34,197,94,0.18); border-radius: 14px; }
-    .limited-pill:focus { outline: none; box-shadow: 0 0 0 4px rgba(234,88,12,0.12); border-radius: 10px; }
-
-    .pricing-cta { border-radius: 26px !important; padding-top: 1.25rem !important; padding-bottom: 1.25rem !important; font-size: 28px !important; letter-spacing: 0.6px; box-shadow: 0 18px 42px rgba(6,95,70,0.16) !important; min-height: 116px; }
-
-    .secure-pulse { animation: securePulse 2400ms cubic-bezier(.2,.9,.25,1) infinite; will-change: transform, box-shadow, filter; }
-    @keyframes securePulse { 0%   { transform: translateY(0) scale(1); } 45%  { transform: translateY(-4px) scale(1.035); } 70%  { transform: translateY(-2px) scale(1.02); } 100% { transform: translateY(0) scale(1); } }
-
-    @media (prefers-reduced-motion: reduce) {
-      .secure-pulse { animation: none !important; transform: none !important; box-shadow: 0 12px 36px rgba(6,95,70,0.08) !important; }
-      .flame-emoji { animation: none; }
-      .buy-pulse { animation: none; }
-    }
-
-    @media (max-width:420px) {
-      .pricing-columns { flex-direction: column; gap: 12px; }
-      .pricing-divider { display: none; }
-      .price-display { text-align: center; }
-      .limited-pill-outline { width: 92%; padding: 0.95rem 1.1rem; font-size: 1.02rem; min-height: 64px; gap: 10px; border-radius: 18px; }
-      .limited-pill-outline .pill-text { font-size: 1.02rem; }
-      .flame-emoji { font-size: 22px; }
-      .pricing-cta { font-size: 22px !important; min-height: 96px; border-radius: 22px !important; padding-top: 1rem !important; padding-bottom: 1rem !important; }
-    }
-
-    /* ===== Stat card + chart card styles (new) ===== */
-    .stat-card { background: linear-gradient(180deg, rgba(10,70,46,0.96), rgba(7,48,33,0.96)); border-radius: 14px; padding: 20px; border: 1px solid rgba(255,255,255,0.03); box-shadow: var(--card-shadow); position: relative; }
-    .chart-card { border-radius: 14px; padding: 18px; background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.006)); border: 1px solid rgba(255,255,255,0.03); box-shadow: var(--card-shadow); }
-    .legend-square { width:18px; height:18px; border-radius:6px; background: linear-gradient(90deg,#16a34a,#34d399); box-shadow: 0 6px 16px rgba(16,185,129,0.12); display:inline-block; }
-
+    /* Pricing & glass */
+    .pricing-card { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.012)); border: 1px solid rgba(255,255,255,0.03); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.55); }
+    .strike { text-decoration: line-through; text-decoration-thickness: 3px; text-decoration-color: rgba(255,255,255,0.18); }
+    .limited-pill { background: linear-gradient(90deg,#ff6b5f,#e0443a); box-shadow: 0 8px 28px rgba(224,68,58,0.16); border-radius: 999px; padding: 0.5rem 1.2rem; color: white; font-weight: bold; }
+    .limited-pill-outline { background: linear-gradient(180deg, rgba(224,68,58,0.085), rgba(224,68,58,0.05)); border: 1px solid rgba(255,122,114,0.42); color: #ff7a72; border-radius: 22px; padding: 1rem 1.75rem; font-weight: 900; display: inline-flex; align-items: center; gap: 12px; }
+    .pricing-cta { border-radius: 26px !important; padding: 1.25rem !important; font-size: 28px !important; min-height: 116px; background: linear-gradient(90deg, #16a34a, #059669); }
+    .big-glass { background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006)); border-radius: 18px; padding: 26px; border: 1px solid rgba(255,255,255,0.035); box-shadow: 0 28px 60px rgba(2,6,23,0.56); backdrop-filter: blur(4px); }
+    .stat-card { background: linear-gradient(180deg, rgba(10,70,46,0.96), rgba(7,48,33,0.96)); border-radius: 14px; padding: 20px; border: 1px solid rgba(255,255,255,0.03); }
+    .chart-card { border-radius: 14px; padding: 18px; background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.006)); border: 1px solid rgba(255,255,255,0.03); }
+    .legend-square { width:18px; height:18px; border-radius:6px; background: linear-gradient(90deg,#16a34a,#34d399); display:inline-block; }
     .muted { color: rgba(255,255,255,0.58); }
-    .dotted-grid { border-top: 1px dotted rgba(255,255,255,0.03); }
-    .chart-canvas { width:100%; height:260px; }
-    @media (max-width:480px) { .chart-canvas { height:220px; } }
 
-    /* ---------- NEW: Big glass wrapper (the “big glass card”) ---------- */
-    .big-glass { background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006)); border-radius: 18px; padding: 26px; border: 1px solid rgba(255,255,255,0.035); box-shadow: 0 28px 60px rgba(2,6,23,0.56), inset 0 1px 0 rgba(255,255,255,0.01); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); margin-bottom: 18px; }
-    @media (max-width:520px) { .big-glass { padding: 18px; border-radius:14px; } }
-
-    /* ================== TESTIMONIAL STYLES (final - UPDATED) ================== */
+    /* ========== TESTIMONIAL FIX: spacing, no compression ========== */
     .testimonials-section { display:flex; justify-content:center; padding:36px 16px 36px; }
     .testimonials-shell { width:100%; max-width:1100px; border-radius:18px; background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006)); padding:22px; box-shadow: 0 28px 60px rgba(2,6,23,0.56); border:1px solid rgba(255,255,255,0.03); }
-    .testimonials-header { text-align:center; margin: 6px 0 16px; padding-bottom:10px; }
-    .testimonials-header h2 { font-size: clamp(1.6rem, 3.8vw, 2.6rem); margin:0; font-weight:900; letter-spacing:-0.5px; color:#fff; }
-    .testimonials-header .subtitle { margin-top:10px; color:rgba(255,255,255,0.58); font-weight:700; font-size:1rem; }
+    .testimonials-header { text-align:center; margin:0 0 16px; }
+    .testimonials-header h2 { font-size: clamp(1.6rem, 3.8vw, 2.6rem); font-weight:900; letter-spacing:-0.5px; color:#fff; }
+    .testimonials-header .subtitle { margin-top:10px; color:rgba(255,255,255,0.58); font-weight:700; }
 
     .testimonial-outer { position:relative; margin-top:18px; display:flex; align-items:center; gap:12px; }
-
-    /* updated track: ensure padding + scroll-padding so centering math is stable */
     .testimonial-track {
-      display:flex;
-      gap:18px;
-      overflow-x:auto;
-      overflow-y:visible;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-      padding: 18px 22px;
-      align-items: stretch;
-      width:100%;
-      position: relative;
-      scroll-behavior: smooth;
-      border-radius: 14px;
-      scroll-padding-inline: 22px;
+      display:flex; gap:18px; overflow-x:auto; overflow-y:visible; scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch; padding: 18px 22px; align-items: stretch; width:100%;
+      scroll-behavior: smooth; scroll-padding-inline: 22px;
     }
-    .testimonial-track::-webkit-scrollbar { height: 8px; }
+    .testimonial-track::-webkit-scrollbar { height: 6px; }
 
-    /* make card box-sizing explicit and fix flex basis so cards don't shrink/overlap */
+    /* Card: flexible, no compression */
     .testimonial-card {
       box-sizing: border-box;
-      flex: 0 0 92%;
-      min-width: 92%;
+      flex: 0 0 90%;
+      min-width: 90%;
       max-width: 94%;
       scroll-snap-align: center;
-      scroll-snap-stop: always;
-      background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006));
-      border: 1px solid rgba(255,255,255,0.03);
-      border-radius: 16px;
-      padding: 20px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 20px;
+      padding: 20px 26px;
       box-shadow: 0 20px 40px rgba(2,6,23,0.6);
-      display:flex;
-      gap:16px;
-      align-items:flex-start;
-      transition: transform .45s cubic-bezier(.2,.9,.3,1), box-shadow .45s ease, opacity .45s ease;
-      position: relative;
-      flex-shrink: 0;
-      opacity: .98;
-      color:#fff;
-      transform-origin: center center;
-      z-index: 1;
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      transition: transform 0.3s cubic-bezier(0.2,0.9,0.3,1), box-shadow 0.3s;
     }
+    .testimonial-card.active { transform: translateY(-6px) scale(1.01); box-shadow: 0 34px 80px rgba(2,8,23,0.66); z-index: 2; }
 
-    /* active lifted state */
-    .testimonial-card.active { transform: translateY(-8px) scale(1.02); box-shadow: 0 34px 80px rgba(2,8,23,0.66); opacity: 1; z-index: 6; }
-
-    .testimonial-avatar { width:72px; height:72px; border-radius:999px; overflow:hidden; flex-shrink:0; border: 2px solid rgba(255,255,255,0.04); display:flex; align-items:center; justify-content:center; background: rgba(255,255,255,0.02); flex-basis:72px; }
+    /* Avatar sizing */
+    .testimonial-avatar { width: 64px; height: 64px; flex-shrink: 0; border-radius: 999px; overflow: hidden; border: 2px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); }
     .testimonial-avatar img { width:100%; height:100%; object-fit:cover; display:block; }
 
-    .testimonial-body { flex:1; display:flex; flex-direction:column; gap:8px; min-width: 0; }
-    .testimonial-head { display:flex; align-items:flex-start; gap:12px; justify-content:space-between; min-width: 0; }
-    .testimonial-name { font-weight:800; font-size:1.02rem; color:#fff; display:flex; gap:8px; align-items:center; flex-wrap:wrap; min-width: 0; }
-    .testimonial-handle { color: rgba(255,255,255,0.58); font-weight:700; font-size:.9rem; opacity:.95; }
+    /* Right side body */
+    .testimonial-body { flex: 1; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 
-    .testimonial-text { color: rgba(255,255,255,0.94); line-height:1.6; margin-top:4px; font-size:1.06rem; word-break:break-word; }
-    .testimonial-meta { display:flex; gap:10px; align-items:center; color: rgba(255,255,255,0.58); font-size:.9rem; margin-top:6px; flex-wrap:wrap; }
-
-    .stars { display:flex; gap:6px; align-items:center; justify-content:flex-end; }
-    .stars svg { width:18px; height:18px; display:block; flex-shrink:0; }
-
-    .testimonial-nav { position:absolute; top:50%; transform: translateY(-50%); width:44px; height:44px; border-radius:999px; display:flex; align-items:center; justify-content:center; background: linear-gradient(180deg, rgba(0,0,0,0.36), rgba(255,255,255,0.02)); border: 1px solid rgba(255,255,255,0.04); color: #fff; font-size: 22px; cursor:pointer; box-shadow: 0 8px 24px rgba(2,6,23,0.48); z-index: 40; }
-    .testimonial-nav.left { left: 6px; }
-    .testimonial-nav.right { right: 6px; }
-
-    @media (min-width:980px) {
-      /* desktop: force a single card per view for comfortable balance */
-      .testimonial-card { flex: 0 0 100%; min-width:100%; max-width:100%; }
-      .testimonial-track { gap: 22px; padding: 22px; }
-      .testimonial-nav { width:50px; height:50px; font-size:24px; }
+    /* Header row: name column + stars with proper spacing */
+    .testimonial-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      width: 100%;
     }
-    @media (max-width:520px) { .testimonial-card { padding:14px; gap:12px; min-width:92%; max-width:96%; } .testimonial-avatar { width:64px; height:64px; } .testimonials-shell { padding:18px; border-radius:14px; } }
-
-    .pill-flag { font-size:1.02rem; margin-right:6px; }
-
-    /* flag image tiny helper */
-    .flag-img { display:inline-block; width:24px; height:18px; vertical-align:middle; border-radius:2px; margin-right:6px; object-fit:cover; }
-  </style>
-
-  <!-- ====== OVERRIDE: TESTIMONIAL FIXES (drop-in, consolidated) ====== -->
-  <style>
-    /*
-      Consolidated overrides:
-      - single-card mobile/tablet
-      - reduce avatar slightly for some breakpoints
-      - ensure left column stacks (name / handle / flag/country)
-      - pin stars to top-right and reduce their size slightly
-      - readability: balanced padding, line-height, max-width
-    */
-
-    /* Track: allow visible overflow for shadows/transforms */
-    .testimonial-track {
-      overflow-x: auto;
-      overflow-y: visible;
-      -webkit-overflow-scrolling: touch;
-      padding-inline: 22px;
-    }
-
-    /* Slightly smaller footprint by default to leave breathing room (desktop uses 100%) */
-    .testimonial-card {
-      flex: 0 0 86%;
-      min-width: 86%;
-      max-width: 90%;
-      padding: 18px 22px;
-      box-sizing: border-box;
-      z-index: 1;
-    }
-
-    /* Active card still lifts above neighbors */
-    .testimonial-card.active {
-      transform: translateY(-8px) scale(1.02);
-      z-index: 8;
-    }
-
-    /* Reduce avatar a touch so it doesn't push text wide */
-    .testimonial-avatar {
-      width: 56px; height: 56px; flex-basis: 56px;
-      border-radius: 999px;
-      flex-shrink: 0;
-    }
-    .testimonial-avatar img { width:100%; height:100%; object-fit:cover; display:block; }
-
-    /* On very small screens adapt */
-    @media (max-width:520px) {
-      .testimonial-card { flex: 0 0 90%; min-width: 90%; max-width: 96%; padding: 12px 16px; }
-      .testimonial-avatar { width: 48px; height: 48px; flex-basis: 48px; }
-    }
-
-    /* Ensure left column stacks vertically and can shrink */
     .testimonial-head > div:first-child {
-      min-width: 0;
+      flex: 1;
+      min-width: 0; /* prevents overflow */
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
-
-    /* Put name on its own line, handle below */
     .testimonial-name {
-      display: block;
-      font-size: 1rem;
-      line-height: 1.08;
-      margin: 0;
-      word-break: break-word;
-      overflow-wrap: anywhere;
       font-weight: 800;
+      font-size: 1.08rem;
+      line-height: 1.2;
       color: #fff;
+      word-break: break-word;
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 6px;
     }
-
     .testimonial-handle {
-      display: block;
-      font-size: 0.92rem;
-      color: rgba(255,255,255,0.62);
-      margin-top: 4px;
-      font-weight: 700;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.65);
+      font-weight: 600;
+      word-break: break-word;
     }
-
-    /* Flag + country metadata under the name */
-    .testimonial-head .testimonial-meta {
-      margin-top: 6px;
+    .testimonial-meta {
       display: flex;
       gap: 8px;
       align-items: center;
-      color: rgba(255,255,255,0.58);
-      font-size: 0.92rem;
+      color: rgba(255,255,255,0.55);
+      font-size: 0.85rem;
+      flex-wrap: wrap;
+      margin-top: 4px;
     }
-
-    /* Force flag image size & visibility */
     .flag-img {
       display: inline-block !important;
       width: 20px !important;
       height: 14px !important;
-      object-fit: cover !important;
+      object-fit: cover;
       border-radius: 2px;
-      margin-right: 6px;
-      vertical-align: middle;
+      margin-right: 4px;
     }
-
-    /* Stars — fixed column, top-right anchor */
+    /* Stars container: fixed width, no compression */
     .stars {
       flex: 0 0 auto;
-      align-self: flex-start;
-      margin-left: 12px;
       display: flex;
-      gap: 6px;
-      justify-content: flex-end;
+      gap: 5px;
+      align-items: center;
+      margin-left: 8px;
+      background: transparent;
     }
-
-    /* Slightly reduce star SVG size to balance with name */
-    .stars svg { width: 16px; height: 16px; display: block; flex-shrink: 0; }
-
-    /* Keep numeric rating aligned and styled (removed in markup) */
-    .stars span {
-      margin-left: 6px;
-      color: rgba(255,255,255,0.62);
-      font-weight: 800;
-      font-size: 0.94rem;
-      align-self: center;
-    }
-
-    /* Safety: stacking context for stars if needed */
-    .testimonial-head > div:last-child { z-index: 5; position: relative; }
-
-    /* Improve testimonial text comfort & readability (Balanced preset) */
-    .testimonial-card {
-      /* keep padding above; ensure readability */
-      padding: 22px 26px;
-    }
-
-    .testimonial-text {
-      margin-top: 14px;
-      margin-bottom: 12px;
-      font-size: clamp(0.98rem, 1rem, 1.04rem);
-      line-height: 1.65;               /* balanced desktop line-height */
-      letter-spacing: 0.2px;
-      color: rgba(255,255,255,0.92);
-      max-width: 60ch;                 /* readable line length ~50-65 chars */
-      word-break: break-word;
-      overflow-wrap: anywhere;
-      hyphens: auto;
-    }
-
-    .testimonial-meta { margin-top: 14px; }
-
-    /* Single-card-per-view on mobile/tablet: eliminate neighbors visible */
-    @media (max-width: 979px) {
-      .testimonial-card {
-        flex: 0 0 100% !important;
-        min-width: 100% !important;
-        max-width: 100% !important;
-        padding: 14px 18px !important;
-      }
-      .testimonial-avatar { width: 56px; height:56px; flex-basis:56px; }
-      .testimonial-track { gap: 12px; padding: 12px 8px; }
-      .testimonial-card.active { transform: translateY(-6px) scale(1.01); box-shadow: 0 28px 64px rgba(2,8,23,0.62); }
-      /* Keep text a touch more airy on mobile */
-      .testimonial-text { line-height: 1.70; max-width: 58ch; font-size: 1rem; }
-    }
-
-    /* Very small phones */
-    @media (max-width:420px) {
-      .testimonial-avatar { width: 48px; height:48px; flex-basis:48px; }
-      .testimonial-card { padding: 12px 14px !important; }
-      .testimonial-text { font-size: 0.98rem; line-height: 1.72; }
-      .flag-img { width: 18px !important; height: 13px !important; }
-      .stars svg { width: 14px; height: 14px; }
-    }
-
-    /* Optional: premium variant comment - change to 1.75 line-height if you want more air */
-    /* .testimonial-text { line-height: 1.75; } */
-  </style>
-
-  <!-- ====== EMERGENCY FIX: restore normal name flow (append this) ====== -->
-  <style>
-    /* ===== Emergency fix: restore normal name flow & prevent vertical stacking ===== */
-
-    /* Ensure left column expands to available space (prevents collapse) */
-    .testimonial-head > div:first-child {
-      min-width: 0;
-      flex: 1 1 auto;                /* allow this column to take remaining space */
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      white-space: normal;           /* allow normal wrapping */
-    }
-
-    /* Restore normal inline flow for the name so characters don't stack */
-    .testimonial-name {
-      display: inline-flex !important;
-      flex-wrap: wrap !important;
-      white-space: normal !important;
-      word-break: normal !important;
-      overflow-wrap: normal !important;
-      letter-spacing: 0 !important;
-      font-size: 1rem;
-      line-height: 1.18;
-      margin: 0;
-    }
-
-    /* Make sure handle stays under the name but doesn't force tiny width */
-    .testimonial-handle {
+    .stars svg {
+      width: 18px;
+      height: 18px;
       display: block;
-      margin-top: 4px;
-      font-size: 0.92rem;
-      white-space: normal;
-    }
-
-    /* Keep the stars fixed to the right and not affecting left column sizing */
-    .stars {
-      flex: 0 0 auto !important;
-      align-self: flex-start;
-      margin-left: 12px;
-      display: flex;
-      gap: 6px;
-      justify-content: flex-end;
-      white-space: nowrap;
-    }
-
-    /* Safety: ensure avatar doesn't shrink the name column */
-    .testimonial-avatar {
       flex-shrink: 0;
-      margin-right: 12px;
+    }
+    .testimonial-text {
+      color: rgba(255,255,255,0.92);
+      line-height: 1.65;
+      font-size: 1rem;
+      max-width: 60ch;
+      margin-top: 6px;
+      word-break: break-word;
+    }
+    .testimonial-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 44px; height: 44px; border-radius: 999px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.5); backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #fff; font-size: 28px; cursor: pointer; z-index: 12;
+      transition: background 0.2s;
+    }
+    .testimonial-nav:hover { background: rgba(0,0,0,0.8); }
+    .testimonial-nav.left { left: -10px; }
+    .testimonial-nav.right { right: -10px; }
+
+    @media (max-width: 979px) {
+      .testimonial-card { flex: 0 0 100% !important; min-width: 100% !important; max-width: 100% !important; padding: 18px !important; }
+      .testimonial-avatar { width: 56px; height: 56px; }
+      .testimonial-nav { width: 38px; height: 38px; font-size: 24px; }
+      .testimonial-nav.left { left: 4px; }
+      .testimonial-nav.right { right: 4px; }
+      .stars svg { width: 16px; height: 16px; }
+    }
+    @media (max-width: 520px) {
+      .testimonial-card { gap: 14px; padding: 14px !important; }
+      .testimonial-avatar { width: 48px; height: 48px; }
+      .testimonial-name { font-size: 0.95rem; }
+      .testimonial-text { font-size: 0.94rem; line-height: 1.6; }
     }
 
-    /* Prevent any over-aggressive breaking rules on short words (names) */
-    .testimonial-head .testimonial-meta,
-    .testimonial-name,
-    .testimonial-handle {
-      -webkit-hyphens: none;
-      -ms-hyphens: none;
-      hyphens: none;
-    }
-
-    /* Mobile safety - keep name readable on very narrow screens */
-    @media (max-width:520px) {
-      .testimonial-name { font-size: 1rem; line-height: 1.22; }
-      .testimonial-head > div:first-child { flex: 1 1 auto; }
-    }
+    /* footer */
+    footer { border-top: 1px solid rgba(255,255,255,0.05); margin-top: 2rem; }
   </style>
 </head>
-<body class="min-h-screen bg-gradient-to-b from-[#03060a] via-[#050a12] to-[#020407] text-[#e6e8eb] antialiased">
+<body class="antialiased">
   <div class="relative z-10 max-w-[1100px] mx-auto px-4">
 
-    <!-- Logo (smaller than hero) -->
+    <!-- Logo -->
     <header class="flex justify-center pt-4 pb-1">
-      <div class="w-full flex justify-center">
-        <img src="assets/logo.png" alt="Abrox Logo" class="site-logo object-contain" loading="eager" decoding="async">
-      </div>
+      <img src="assets/logo.png" alt="Abrox Logo" class="site-logo object-contain" loading="eager">
     </header>
 
-    <!-- Hero -->
-    <section class="flex justify-center hero">
-      <div class="w-full max-w-[960px] my-3">
-        <img src="assets/hero.png" alt="Hero" class="hero-img w-full rounded-xl object-contain" width="1200" height="560" loading="lazy" decoding="async">
-      </div>
+    <!-- Hero image -->
+    <section class="flex justify-center hero my-3">
+      <img src="assets/hero.png" alt="Hero" class="hero-img w-full rounded-xl object-contain" loading="lazy">
     </section>
 
-    <!-- Video -->
+    <!-- Video player -->
     <section class="flex justify-center">
       <div class="w-full max-w-[900px]">
         <div class="video-card aspect-video">
-          <video id="demoVideo" controls playsinline preload="metadata" poster="assets/poster.jpg" class="w-full h-full" aria-label="Demo video" controlsList="nodownload noremoteplayback" disablePictureInPicture oncontextmenu="return false;">
+          <video id="demoVideo" controls playsinline preload="metadata" poster="assets/poster.jpg" class="w-full h-full" controlsList="nodownload noremoteplayback" disablePictureInPicture oncontextmenu="return false;">
             <source src="assets/demo.mp4" type="video/mp4">
-            Your browser does not support HTML5 video.
           </video>
-
-          <!-- custom overlay play (single pulsing play) -->
-          <div class="video-overlay" id="videoOverlay" aria-hidden="true">
+          <div class="video-overlay" id="videoOverlay">
             <button id="playBtn" class="play-btn" aria-label="Play demo">
-              <svg viewBox="0 0 24 24" width="36" height="36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 5v14l11-7-11-7z" fill="#000"/></svg>
+              <svg viewBox="0 0 24 24" width="36" height="36" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7-11-7z" fill="#000"/></svg>
             </button>
           </div>
-
           <div class="spinner hidden" id="loadingSpinner"><div style="width:40px;height:40px;border:3px solid rgba(255,255,255,0.25);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite"></div></div>
           <div class="unmute-hint" id="unmuteHint">🔊 Tap to unmute</div>
         </div>
       </div>
     </section>
 
-    <!-- CTAs (updated sizes) -->
+    <!-- CTAs -->
     <div class="cta-wrap">
-      <!-- Large BUY NOW button (updated styling & animate pulse) -->
-      <a id="buyBtn" class="buy-btn buy-pulse" href="#checkout" aria-label="Buy now">BUY NOW</a>
-
-      <!-- Download App button (resized to match screenshot left button) -->
-      <a id="downloadBtn" class="download-btn" href="#download" aria-label="Download App">
-        <span class="phone-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="28" height="28" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" focusable="false">
-            <rect x="6" y="2" width="12" height="20" rx="2" stroke="currentColor" stroke-width="2.4" fill="none" />
-            <circle cx="12" cy="18.2" r="1.6" fill="currentColor" />
-          </svg>
-        </span>
+      <a id="buyBtn" class="buy-btn" href="#checkout">BUY NOW</a>
+      <a id="downloadBtn" class="download-btn" href="#download">
+        <span class="phone-icon"><svg viewBox="0 0 24 24" width="28" height="28"><rect x="6" y="2" width="12" height="20" rx="2" stroke="currentColor" stroke-width="2.4" fill="none" /><circle cx="12" cy="18.2" r="1.6" fill="currentColor" /></svg></span>
         <span>Download App</span>
       </a>
     </div>
@@ -608,773 +299,157 @@
       <div class="max-w-[1024px] mx-auto">
         <h2 class="text-center text-2xl sm:text-3xl font-bold mb-6">Compatible Brokers</h2>
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
-          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/iq-option.png" alt="IQ Option" class="broker-logo"></div><div class="broker-label">IQ OPTION</div></div>
-          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/quotex.png" alt="QUOTEX" class="broker-logo"></div><div class="broker-label">QUOTEX</div></div>
-          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/pocket-option.png" alt="Pocket Option" class="broker-logo"></div><div class="broker-label">POCKET OPTION</div></div>
-          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/polarium-broker.png" alt="Polarium Broker" class="broker-logo"></div><div class="broker-label">POLARIUM BROKER</div></div>
-
-          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/expert-option.jpeg" alt="Expert Option" class="broker-logo"></div><div class="broker-label">EXPERT OPTION</div></div>
-          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/binomo.png" alt="Binomo" class="broker-logo"></div><div class="broker-label">BINOMO</div></div>
-          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/olymp-trade.png" alt="Olymp Trade" class="broker-logo"></div><div class="broker-label">OLYMP TRADE</div></div>
-          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/home-broker.png" alt="Home Broker" class="broker-logo"></div><div class="broker-label">HOME BROKER</div></div>
-
-          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/exnova.png" alt="Exnova" class="broker-logo"></div><div class="broker-label">EXNOVA</div></div>
-          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/avalon.png" alt="Avalon" class="broker-logo"></div><div class="broker-label">AVALON</div></div>
-          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/bullex.jpeg" alt="Bullex" class="broker-logo"></div><div class="broker-label">BULLEX</div></div>
-          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/ebinex.png" alt="Ebinex" class="broker-logo"></div><div class="broker-label">EBINEX</div></div>
+          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/iq-option.png" alt="IQ Option" class="broker-logo"></div><div>IQ OPTION</div></div>
+          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/quotex.png" alt="QUOTEX" class="broker-logo"></div><div>QUOTEX</div></div>
+          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/pocket-option.png" alt="Pocket Option" class="broker-logo"></div><div>POCKET OPTION</div></div>
+          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/polarium-broker.png" alt="Polarium Broker" class="broker-logo"></div><div>POLARIUM BROKER</div></div>
+          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/expert-option.jpeg" alt="Expert Option" class="broker-logo"></div><div>EXPERT OPTION</div></div>
+          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/binomo.png" alt="Binomo" class="broker-logo"></div><div>BINOMO</div></div>
+          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/olymp-trade.png" alt="Olymp Trade" class="broker-logo"></div><div>OLYMP TRADE</div></div>
+          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/home-broker.png" alt="Home Broker" class="broker-logo"></div><div>HOME BROKER</div></div>
+          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/exnova.png" alt="Exnova" class="broker-logo"></div><div>EXNOVA</div></div>
+          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/avalon.png" alt="Avalon" class="broker-logo"></div><div>AVALON</div></div>
+          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/bullex.jpeg" alt="Bullex" class="broker-logo"></div><div>BULLEX</div></div>
+          <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/ebinex.png" alt="Ebinex" class="broker-logo"></div><div>EBINEX</div></div>
         </div>
       </div>
     </section>
 
-    <!-- ========== PRICING block (moved BEFORE accuracy) ========== -->
-    <section class="mt-10 px-4 w-full max-w-[1024px] mx-auto" role="region" aria-labelledby="pricing-title">
-      <h2 id="pricing-title" class="sr-only">Black Friday Pricing</h2>
-
+    <!-- Pricing block 1 -->
+    <section class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
       <div class="pricing-card p-6 md:p-8">
-        <div class="flex items-center pricing-columns gap-6">
-          <div class="w-1/3 min-w-[130px] flex flex-col items-center justify-center text-center">
-            <div class="text-sm text-white/60 uppercase">Regular Price:</div>
-            <div class="mt-3">
-              <span class="strike text-2xl md:text-3xl font-bold text-white/60">$500/year</span>
-            </div>
-          </div>
-
-          <div class="pricing-divider h-20 border-r border-white/6"></div>
-
-          <div class="flex-1 price-display pl-3">
-            <div class="text-sm md:text-base font-extrabold uppercase text-green-400">BLACK FRIDAY SPECIAL:</div>
-            <div class="mt-2">
-              <span class="text-[48px] md:text-[64px] font-extrabold text-green-500 leading-none">$399</span>
-            </div>
-            <div class="mt-3 uppercase text-lg md:text-xl font-semibold tracking-wide">
-              <div>LIFETIME</div>
-              <div>ACCESS</div>
-            </div>
-          </div>
+        <div class="flex items-center pricing-columns gap-6 flex-wrap sm:flex-nowrap">
+          <div class="w-1/3 min-w-[130px] text-center"><div class="text-sm text-white/60">Regular Price:</div><div class="mt-3"><span class="strike text-2xl md:text-3xl font-bold text-white/60">$500/year</span></div></div>
+          <div class="hidden sm:block h-20 border-r border-white/6"></div>
+          <div class="flex-1 text-center sm:text-left"><div class="text-sm md:text-base font-extrabold uppercase text-green-400">BLACK FRIDAY SPECIAL:</div><div class="mt-2"><span class="text-[48px] md:text-[64px] font-extrabold text-green-500 leading-none">$399</span></div><div class="mt-3 uppercase text-lg md:text-xl font-semibold">LIFETIME ACCESS</div></div>
         </div>
-
         <div class="mt-6 flex flex-col items-center gap-4">
-          <button type="button" class="limited-pill inline-flex items-center gap-3 text-white font-semibold rounded-full px-5 py-3 text-base" aria-hidden="false" aria-label="Limited time offer">
-            <span class="flame-emoji" aria-hidden="true">🔥</span>
-            <span>LIMITED TIME OFFER</span>
-          </button>
-
-          <a id="buyNowPricing" href="#checkout" class="pricing-cta w-full max-w-[600px] inline-flex items-center justify-center rounded-2xl py-5 px-6 bg-gradient-to-r from-green-600 to-green-500 text-white font-extrabold text-2xl shadow-[0_12px_36px_rgba(0,0,0,0.45)]" aria-label="Buy lifetime access for $399 — Black Friday special">
-            BUY NOW
-          </a>
-
-          <p class="mt-2 text-center text-white/60">Click the button above to unlock your access</p>
+          <span class="limited-pill inline-flex items-center gap-3"><span>🔥</span><span>LIMITED TIME OFFER</span></span>
+          <a href="#checkout" class="pricing-cta w-full max-w-[600px] text-center bg-gradient-to-r from-green-600 to-green-500 text-white font-extrabold text-2xl py-5 rounded-2xl">BUY NOW</a>
+          <p class="text-center text-white/60">Click the button above to unlock your access</p>
         </div>
       </div>
     </section>
 
-    <!-- === EUR/USD Accuracy Rate section (dynamic last 7 days) === -->
-    <section id="accuracy" class="mt-8 px-4 w-full max-w-[1024px] mx-auto" aria-labelledby="accuracy-title">
+    <!-- EUR/USD Accuracy -->
+    <section id="accuracy" class="mt-8 px-4 w-full max-w-[1024px] mx-auto">
       <div class="big-glass">
-        <h2 id="accuracy-title" class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center leading-tight">EUR/USD Accuracy Rate</h2>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center">EUR/USD Accuracy Rate</h2>
         <p class="text-center muted mt-2 mb-4">Last 7 days performance</p>
-
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
-          <label for="brokerSelect" class="font-semibold mr-2">Broker:</label>
+          <label class="font-semibold">Broker:</label>
           <select id="brokerSelect" class="bg-[#0b1220] rounded-xl px-4 py-3 border border-white/6 text-white/90 min-w-[200px]">
-            <option>IQ OPTION</option>
-            <option>QUOTEX</option>
-            <option>POCKET OPTION</option>
-            <option>POLARIUM BROKER</option>
-            <option>EXPERT OPTION</option>
-            <option>BINOMO</option>
-            <option>OLYMP TRADE</option>
-            <option>HOME BROKER</option>
-            <option>EXNOVA</option>
-            <option>AVALON</option>
-            <option>BULLEX</option>
-            <option>EBINEX</option>
+            <option>IQ OPTION</option><option>QUOTEX</option><option>POCKET OPTION</option><option>POLARIUM BROKER</option>
+            <option>EXPERT OPTION</option><option>BINOMO</option><option>OLYMP TRADE</option><option>HOME BROKER</option>
+            <option>EXNOVA</option><option>AVALON</option><option>BULLEX</option><option>EBINEX</option>
           </select>
         </div>
-
         <div class="stat-card mb-6">
-          <div class="flex items-center justify-between gap-4">
-            <div>
-              <div class="text-sm muted uppercase">Average Accuracy</div>
-              <div id="avgPercent" class="text-[64px] md:text-[84px] font-extrabold text-green-400 leading-none mt-2" aria-live="polite">--.-%</div>
-              <div id="opsCount" class="muted mt-3">Based on — operations of 1 minute</div>
-            </div>
-
-            <div class="hidden md:block ml-4">
-              <img src="assets/pci-badge.png" alt="" style="width:94px;height:auto;opacity:0.98;">
-            </div>
+          <div class="flex items-center justify-between gap-4 flex-wrap">
+            <div><div class="text-sm muted uppercase">Average Accuracy</div><div id="avgPercent" class="text-[64px] md:text-[84px] font-extrabold text-green-400 leading-none">--.-%</div><div id="opsCount" class="muted mt-3">Based on — operations</div></div>
+            <img src="assets/pci-badge.png" alt="" style="width:94px;opacity:0.98;" class="hidden md:block">
           </div>
         </div>
-
-        <div class="chart-card">
-          <canvas id="accuracyChart" class="chart-canvas" role="img" aria-label="Accuracy chart for last 7 days"></canvas>
-          <div id="chartFallback" class="sr-only" aria-hidden="false"></div>
-        </div>
-
-        <div class="mt-6 flex items-center justify-center gap-3">
-          <span class="legend-square" aria-hidden="true"></span>
-          <span class="muted">Accuracy Rate</span>
-        </div>
+        <div class="chart-card"><canvas id="accuracyChart" class="chart-canvas" style="height:260px; width:100%"></canvas></div>
+        <div class="mt-6 flex items-center justify-center gap-3"><span class="legend-square"></span><span class="muted">Accuracy Rate</span></div>
       </div>
     </section>
 
-    <!-- ========== ADDITIONAL PRICING block (glass-styled) ========== -->
-    <section class="mt-6 px-4 w-full max-w-[1024px] mx-auto" role="region" aria-labelledby="pricing-title-2">
-      <h2 id="pricing-title-2" class="sr-only">Black Friday Pricing - Additional</h2>
-
+    <!-- Pricing block 2 (glass) -->
+    <section class="mt-6 px-4 w-full max-w-[1024px] mx-auto">
       <div class="big-glass pricing-card p-6 md:p-8">
-        <div class="text-center">
-          <h3 class="text-3xl sm:text-4xl font-extrabold leading-tight">Don't Miss This Opportunity</h3>
-          <p class="muted mt-2">Regular Price</p>
+        <div class="text-center"><h3 class="text-3xl sm:text-4xl font-extrabold">Don't Miss This Opportunity</h3><p class="muted mt-2">Regular Price</p></div>
+        <div class="mt-4 flex items-center justify-center gap-6 flex-wrap sm:flex-nowrap">
+          <div class="text-center"><span class="strike text-2xl md:text-3xl font-bold text-white/60">$500</span><div class="muted text-sm">per year</div></div>
+          <div class="hidden sm:block h-20 border-r border-white/6"></div>
+          <div class="text-center sm:text-left"><div class="text-sm md:text-base font-extrabold uppercase text-green-400">BLACK FRIDAY SPECIAL</div><div class="mt-2"><span class="text-[48px] md:text-[64px] font-extrabold text-green-500">$399</span></div><div class="mt-3 uppercase text-lg md:text-xl font-semibold">LIFETIME ACCESS</div></div>
         </div>
-
-        <div class="mt-4 flex items-center justify-center pricing-columns gap-6">
-          <div class="w-1/3 min-w-[130px] flex flex-col items-center justify-center text-center">
-            <div class="mt-3">
-              <span class="strike text-2xl md:text-3xl font-bold text-white/60">$500</span>
-              <div class="muted text-sm mt-1">per year</div>
-            </div>
-          </div>
-
-          <div class="pricing-divider h-20 border-r border-white/6"></div>
-
-          <div class="flex-1 price-display pl-3">
-            <div class="text-sm md:text-base font-extrabold uppercase text-green-400">BLACK FRIDAY SPECIAL</div>
-
-            <div class="mt-2">
-              <span class="text-[48px] md:text-[64px] font-extrabold text-green-500 leading-none">$399</span>
-            </div>
-
-            <div class="mt-3 uppercase text-lg md:text-xl font-semibold tracking-wide">
-              <div>LIFETIME</div>
-              <div>ACCESS</div>
-            </div>
-          </div>
-        </div>
-
         <div class="mt-6 flex flex-col items-center gap-4">
-          <button type="button" class="limited-pill-outline" aria-hidden="false" aria-label="20% off limited time">
-            <span class="flame-emoji" aria-hidden="true">🔥</span>
-            <span class="pill-text">20% OFF - Limited Time Only</span>
-          </button>
-
-          <a id="secureSpot" href="#checkout" class="pricing-cta secure-pulse w-full max-w-[640px] flex flex-col items-center justify-center text-center rounded-2xl py-6 px-6 bg-gradient-to-r from-green-600 to-green-500 text-white font-extrabold text-2xl shadow-[0_12px_36px_rgba(0,0,0,0.45)] leading-tight" aria-label="Secure my spot — lifetime access for $399">
-            SECURE MY<br/>SPOT NOW
-          </a>
-
-          <p class="mt-2 text-center text-white/60">Click the button above to unlock your access</p>
+          <span class="limited-pill-outline"><span class="flame-emoji">🔥</span><span>20% OFF - Limited Time Only</span></span>
+          <a href="#checkout" class="pricing-cta w-full max-w-[640px] text-center bg-gradient-to-r from-green-600 to-green-500 text-white font-extrabold text-2xl py-6 rounded-2xl leading-tight">SECURE MY<br/>SPOT NOW</a>
+          <p class="text-center text-white/60">Click the button above to unlock your access</p>
         </div>
       </div>
     </section>
 
-    <!-- ========== TESTIMONIALS (inserted here, before footer) ========== -->
-    <section class="testimonials-section" aria-label="Customer testimonials">
+    <!-- Testimonials (fully spaced) -->
+    <section class="testimonials-section">
       <div class="testimonials-shell">
-        <header class="testimonials-header">
-          <h2>What Our Users Say</h2>
-          <p class="subtitle">Real reviews from real traders</p>
-        </header>
-
+        <div class="testimonials-header"><h2>What Our Users Say</h2><p class="subtitle">Real reviews from real traders</p></div>
         <div class="testimonial-outer">
-          <button id="prevTestimonial" class="testimonial-nav left" aria-label="Previous testimonial">‹</button>
-
-          <div id="testimonialTrack" class="testimonial-track" role="list" tabindex="0"></div>
-
-          <button id="nextTestimonial" class="testimonial-nav right" aria-label="Next testimonial">›</button>
+          <button id="prevTestimonial" class="testimonial-nav left">‹</button>
+          <div id="testimonialTrack" class="testimonial-track" role="list"></div>
+          <button id="nextTestimonial" class="testimonial-nav right">›</button>
         </div>
       </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="mt-12 border-t border-white/10"><p class="text-center text-sm text-white/60 py-6">© 2026 Abrox. All rights reserved.</p></footer>
+    <footer class="mt-12 border-t border-white/10 py-6 text-center text-sm text-white/60">© 2026 Abrox. All rights reserved.</footer>
   </div>
 
-  <!-- Lucide (optional) -->
   <script src="https://unpkg.com/lucide@latest/dist/lucide.min.js" defer></script>
-
-  <!-- Chart.js + datalabels plugin (CDN) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
 
   <script>
-    // Video overlay & anti-download helpers (kept from your file)
-    document.addEventListener('DOMContentLoaded', function () {
-      if (window.lucide && typeof window.lucide.replace === 'function') window.lucide.replace();
-
+    (function(){
+      // Video and minor helpers
       const video = document.getElementById('demoVideo');
       const playBtn = document.getElementById('playBtn');
       const overlay = document.getElementById('videoOverlay');
       const spinner = document.getElementById('loadingSpinner');
       const unmuteHint = document.getElementById('unmuteHint');
-
-      function showOverlay(show){
-        if(!overlay) return;
-        overlay.style.opacity = show ? '1' : '0';
-        overlay.style.pointerEvents = show ? 'auto' : 'none';
+      function showOverlay(show){ if(overlay){ overlay.style.opacity = show?'1':'0'; overlay.style.pointerEvents = show?'auto':'none'; } }
+      if(playBtn && video){
+        playBtn.addEventListener('click', (e) => { e.stopPropagation(); if(video.paused){ if(spinner) spinner.classList.remove('hidden'); video.play().then(()=>{ if(spinner) spinner.classList.add('hidden'); showOverlay(false); }).catch(()=>{ if(spinner) spinner.classList.add('hidden'); }); } else { video.pause(); showOverlay(true); } });
       }
+      if(video){ video.addEventListener('play',()=>{ showOverlay(false); if(video.muted && unmuteHint) unmuteHint.style.opacity='1'; }); video.addEventListener('pause',()=>{ showOverlay(true); if(unmuteHint) unmuteHint.style.opacity='0'; }); video.addEventListener('canplay',()=>{ if(spinner) spinner.classList.add('hidden'); if(!video.paused) showOverlay(false); }); video.addEventListener('volumechange',()=>{ if(!video.muted && unmuteHint) unmuteHint.style.opacity='0'; }); }
+      setTimeout(()=>{ if(video && video.paused) showOverlay(true); }, 200);
+      document.querySelectorAll('.video-card, video').forEach(el => el.addEventListener('contextmenu', e => e.preventDefault()));
+      document.addEventListener('keydown', e=>{ if((e.ctrlKey||e.metaKey) && (e.key==='s'||e.key==='S')) e.preventDefault(); });
 
-      if (playBtn && video){
-        playBtn.addEventListener('click', function (e) {
-          e.stopPropagation();
-          if (video.paused){
-            if (spinner) spinner.classList.remove('hidden');
-            video.play().then(()=> {
-              if (spinner) spinner.classList.add('hidden');
-              showOverlay(false);
-            }).catch(()=> {
-              if (spinner) spinner.classList.add('hidden');
-            });
-          } else {
-            video.pause();
-            showOverlay(true);
-          }
-        });
-      }
+      // Accuracy chart logic (unchanged but efficient)
+      if(window.Chart && window.Chart.register) Chart.register(ChartDataLabels);
+      function randRange(min,max){ return Math.random()*(max-min)+min; }
+      function getLast7DayLabels(){ const labels=[]; const now=new Date(); for(let i=6;i>=0;i--){ const d=new Date(); d.setDate(now.getDate()-i); labels.push(d.toLocaleString(undefined,{month:'short'})+'\n'+d.getDate()); } return labels; }
+      function generateSmoothedValues(baseMean=83, volatility=3.2){ let values=[], prev=baseMean+randRange(-1.6,1.6); for(let i=0;i<7;i++){ const alpha=0.6+Math.random()*0.25; const noise=randRange(-volatility,volatility); let next=prev*alpha+(baseMean*(1-alpha))+noise*(1-alpha*0.5); next=Math.max(60,Math.min(98,Math.round(next*10)/10)); values.push(next); prev=next; } return values; }
+      function createGradient(ctx,chartArea){ const g=ctx.createLinearGradient(0,chartArea.top,0,chartArea.bottom); g.addColorStop(0,'rgba(20,184,166,0.16)'); g.addColorStop(0.45,'rgba(20,184,166,0.08)'); g.addColorStop(1,'rgba(20,184,166,0.00)'); return g; }
+      let accuracyChart=null;
+      function renderChart(labels,values){ const ctx=document.getElementById('accuracyChart').getContext('2d'); const minVal=Math.min(...values), maxVal=Math.max(...values); const suggestedMin=Math.max(60,Math.floor(minVal-3)), suggestedMax=Math.min(100,Math.ceil(maxVal+3)); if(accuracyChart){ accuracyChart.data.labels=labels; accuracyChart.data.datasets[0].data=values; accuracyChart.options.scales.y.suggestedMin=suggestedMin; accuracyChart.options.scales.y.suggestedMax=suggestedMax; accuracyChart.update(); return; } accuracyChart=new Chart(ctx,{ type:'line', data:{ labels:labels, datasets:[{ label:'Accuracy', data:values, tension:0.28, borderWidth:3, borderColor:'#10b981', pointBackgroundColor:'#34d399', pointBorderColor:'#093927', pointRadius:6, pointHoverRadius:8, fill:true, backgroundColor:function(context){ const chart=context.chart; const {ctx,chartArea}=chart; if(!chartArea) return null; return createGradient(ctx,chartArea); } }] }, options:{ maintainAspectRatio:false, plugins:{ legend:{display:false}, tooltip:{ enabled:true, backgroundColor:'#00140f', titleColor:'#fff', bodyColor:'#d7fff0', callbacks:{ label:ctx=>ctx.parsed.y+'%' } }, datalabels:{ color:'#34d399', anchor:'end', align:'start', offset:-8, font:{weight:'700',size:11}, formatter:v=>v+'%' } }, scales:{ x:{ grid:{display:false}, ticks:{color:'rgba(255,255,255,0.6)', font:{size:12}} }, y:{ beginAtZero:false, suggestedMin:suggestedMin, suggestedMax:suggestedMax, grid:{ color:()=>'rgba(255,255,255,0.03)', borderDash:[4,6] }, ticks:{ color:'rgba(255,255,255,0.42)', stepSize:5, callback:v=>v+'%' } } }, animation:{ duration:600, easing:'easeOutCubic' }, responsive:true } }); }
+      function updateStatCard(values){ const avg=values.reduce((a,b)=>a+b,0)/values.length; document.getElementById('avgPercent').innerText=avg.toFixed(1)+'%'; const ops=Math.floor(randRange(800,1600)); document.getElementById('opsCount').innerText='Based on '+ops.toLocaleString()+' operations of 1 minute'; }
+      const brokerSelect=document.getElementById('brokerSelect');
+      function onBrokerChange(){ let seed=0; const broker=brokerSelect.value; for(let i=0;i<broker.length;i++) seed+=broker.charCodeAt(i); const baseMean=78+((seed%12)+(new Date().getDate()%5))*0.8; const values=generateSmoothedValues(baseMean,3.3); renderChart(getLast7DayLabels(),values); updateStatCard(values); }
+      onBrokerChange(); brokerSelect.addEventListener('change',onBrokerChange);
+      new ResizeObserver(()=> accuracyChart && accuracyChart.update()).observe(document.getElementById('accuracyChart'));
+    })();
 
-      if (video){
-        video.addEventListener('play', ()=>{ showOverlay(false); if(video.muted && unmuteHint) unmuteHint.style.opacity='1'; });
-        video.addEventListener('pause', ()=>{ showOverlay(true); if(unmuteHint) unmuteHint.style.opacity='0'; });
-        video.addEventListener('canplay', ()=>{ if (spinner) spinner.classList.add('hidden'); if(!video.paused) showOverlay(false); });
-        video.addEventListener('volumechange', ()=>{ if(!video.muted && unmuteHint) unmuteHint.style.opacity='0'; });
-      }
-
-      setTimeout(()=> {
-        if (video && video.paused) showOverlay(true);
-      }, 300);
-
-      const style = document.createElement('style');
-      style.innerHTML = '@keyframes spin{to{transform:rotate(360deg)}}';
-      document.head.appendChild(style);
-
-      // Prevent native context menu (right click / long-press)
-      if (video) {
-        video.addEventListener('contextmenu', function (e) { e.preventDefault(); });
-        video.addEventListener('dragstart', function (e) { e.preventDefault(); });
-        video.addEventListener('touchstart', function (e) { }, { passive: true });
-      }
-
-      // Block common "save" keyboard shortcuts (Ctrl/Cmd + S)
-      document.addEventListener('keydown', function(e){
-        if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
-          e.preventDefault();
-        }
-        if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'i')) {
-          e.preventDefault();
-        }
-      });
-
-      document.addEventListener('contextmenu', function(e){
-        if (e.target && (e.target.closest && e.target.closest('.video-card'))) {
-          e.preventDefault();
-        }
-      });
-
-      // === ACCURACY CHART LOGIC ===
-
-      if (window.Chart && window.Chart.register) {
-        Chart.register(ChartDataLabels);
-      }
-
-      function formatOneDecimal(n) { return (Math.round(n * 10) / 10).toFixed(1); }
-      function randRange(min, max) { return Math.random() * (max - min) + min; }
-
-      function getLast7DayLabels() {
-        const labels = [];
-        const now = new Date();
-        for (let i = 6; i >= 0; i--) {
-          const d = new Date(now);
-          d.setDate(now.getDate() - i);
-          const month = d.toLocaleString(undefined, { month: 'short' });
-          const day = d.getDate();
-          labels.push(month + '\n' + day);
-        }
-        return labels;
-      }
-
-      function generateSmoothedValues(baseMean = 83, volatility = 3.2) {
-        const values = [];
-        let prev = baseMean + randRange(-1.6, 1.6);
-        for (let i = 0; i < 7; i++) {
-          const alpha = 0.6 + Math.random() * 0.25;
-          const noise = randRange(-volatility, volatility);
-          const next = prev * alpha + (baseMean * (1 - alpha)) + noise * (1 - alpha * 0.5);
-          const clamped = Math.max(60, Math.min(98, Math.round(next * 10) / 10));
-          values.push(clamped);
-          prev = clamped;
-        }
-        return values;
-      }
-
-      function createGradient(ctx, chartArea) {
-        const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-        gradient.addColorStop(0, 'rgba(20,184,166,0.16)');
-        gradient.addColorStop(0.45, 'rgba(20,184,166,0.08)');
-        gradient.addColorStop(1, 'rgba(20,184,166,0.00)');
-        return gradient;
-      }
-
-      let accuracyChart = null;
-
-      function renderChart(labels, values) {
-        const ctx = document.getElementById('accuracyChart').getContext('2d');
-        const minVal = Math.min(...values);
-        const maxVal = Math.max(...values);
-        const suggestedMin = Math.max(60, Math.floor(minVal - 3));
-        const suggestedMax = Math.min(100, Math.ceil(maxVal + 3));
-
-        if (accuracyChart) {
-          accuracyChart.data.labels = labels;
-          accuracyChart.data.datasets[0].data = values;
-          accuracyChart.options.scales.y.suggestedMin = suggestedMin;
-          accuracyChart.options.scales.y.suggestedMax = suggestedMax;
-          accuracyChart.update();
-          return;
-        }
-
-        accuracyChart = new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels: labels,
-            datasets: [{
-              label: 'Accuracy',
-              data: values,
-              tension: 0.28,
-              borderWidth: 3,
-              borderColor: '#10b981',
-              pointBackgroundColor: '#34d399',
-              pointBorderColor: '#093927',
-              pointRadius: 6,
-              pointHoverRadius: 8,
-              fill: true,
-              backgroundColor: function(context) {
-                const chart = context.chart;
-                const { ctx, chartArea } = chart;
-                if (!chartArea) return null;
-                return createGradient(ctx, chartArea);
-              },
-            }]
-          },
-          options: {
-            maintainAspectRatio: false,
-            plugins: {
-              legend: { display: false },
-              tooltip: {
-                enabled: true,
-                backgroundColor: '#00140f',
-                titleColor: '#fff',
-                bodyColor: '#d7fff0',
-                callbacks: {
-                  label: function(context) { return context.parsed.y + '%'; }
-                }
-              },
-              datalabels: {
-                color: '#34d399',
-                anchor: 'end',
-                align: 'start',
-                offset: -8,
-                font: { weight: '700', size: 11 },
-                formatter: function(value) { return value + '%'; }
-              }
-            },
-            elements: { line: { borderCapStyle: 'round' } },
-            scales: {
-              x: {
-                grid: { display: false },
-                ticks: {
-                  color: 'rgba(255,255,255,0.6)',
-                  font: { size: 12 },
-                  callback: function(value, index, values) { return this.getLabelForValue(index); }
-                }
-              },
-              y: {
-                beginAtZero: false,
-                suggestedMin: suggestedMin,
-                suggestedMax: suggestedMax,
-                grid: { color: function() { return 'rgba(255,255,255,0.03)'; }, borderDash: [4, 6] },
-                ticks: { color: 'rgba(255,255,255,0.42)', stepSize: 5, callback: function(val) { return val + '%'; } }
-              }
-            },
-            animation: { duration: (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) ? 0 : 800, easing: 'easeOutCubic' },
-            interaction: { mode: 'nearest', intersect: false },
-            responsive: true,
-            maintainAspectRatio: false
-          }
-        });
-      }
-
-      function updateStatCard(values) {
-        const avg = values.reduce((s, v) => s + v, 0) / values.length;
-        const avgText = formatOneDecimal(avg) + '%';
-        document.getElementById('avgPercent').innerText = avgText;
-        const ops = Math.floor(randRange(800, 1600));
-        document.getElementById('opsCount').innerText = 'Based on ' + ops.toLocaleString() + ' operations of 1 minute';
-        const labels = getLast7DayLabels().map(l => l.replace('\n', ' '));
-        const fallbackItems = labels.map((lab, i) => lab + ': ' + values[i] + '%').join('; ');
-        const fallbackEl = document.getElementById('chartFallback');
-        fallbackEl.innerText = 'Last seven days: ' + fallbackItems + '. Average: ' + formatOneDecimal(avg) + ' percent.';
-      }
-
-      const brokerSelect = document.getElementById('brokerSelect');
-      function onBrokerChange() {
-        let seed = 0;
-        const brokerName = brokerSelect.value || 'IQ OPTION';
-        for (let i = 0; i < brokerName.length; i++) seed += brokerName.charCodeAt(i);
-        const baseMean = 78 + ((seed % 12) + (new Date().getDate() % 5)) * 0.8;
-        const volatility = 3.3;
-        const values = generateSmoothedValues(baseMean, volatility);
-        const labels = getLast7DayLabels();
-        renderChart(labels, values);
-        updateStatCard(values);
-      }
-
-      onBrokerChange();
-      brokerSelect.addEventListener('change', function() { onBrokerChange(); });
-
-      const canvas = document.getElementById('accuracyChart');
-      const ro = new ResizeObserver(() => { if (accuracyChart) accuracyChart.update(); });
-      ro.observe(canvas);
-    });
-  </script>
-
-  <!-- =================== TESTIMONIAL JS (final with flag images) =================== -->
-  <script>
+    // Testimonials (fully fixed spacing & no compression)
     (function(){
-      // Number of testimonials to build (you can change this)
-      const COUNT = 25;
-      // Autoplay delay changed to 20 seconds (20000 ms)
-      const AUTOPLAY_DELAY = 20000;
       const TRACK = document.getElementById('testimonialTrack');
+      if(!TRACK) return;
       const prevBtn = document.getElementById('prevTestimonial');
       const nextBtn = document.getElementById('nextTestimonial');
-
-      const experienceSnippets = [
-        "Signals are structured and easy to follow.",
-        "I like how it doesn’t overtrade.",
-        "Support actually responds fast.",
-        "Risk management is what makes the difference.",
-        "Entries are clean and not rushed.",
-        "Much better than the other bots I tried.",
-        "Feels disciplined, not hype-based.",
-        "Good for people who work full time.",
-        "Alerts are clear and simple.",
-        "Finally something consistent."
-      ];
-      const realismSnippets = [
-        "Consistency matters — small wins add up over time.",
-        "Takes discipline, but it works when you follow the rules.",
-        "It’s not magic — structured trading and patience win out.",
-        "As long as you manage position sizes, the results compound.",
-        "Best used with sensible risk sizing and discipline."
-      ];
-      const socialSnippets = [
-        "I recommended it to two friends who also saw gains.",
-        "Community tips helped me tweak risk settings for better results."
-      ];
-      const profitTemplates = [
-        "Started with ${start} and made about ${profit} in ${period}.",
-        "Made ${profit} in ${period} — withdrew part and kept compounding.",
-        "Grew ${start} to ${end} in ${period}, took partial profits."
-      ];
-
-      function randBetween(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
-      function pickStartAmount() { const choices = [200,250,300,400,500,750,1000]; return choices[Math.floor(Math.random()*choices.length)]; }
-      function formatDollar(n) { return '$' + n; }
-
-      function genProfitSnippet() {
-        const useDays = Math.random() < 0.45;
-        let period;
-        if (useDays) {
-          const days = randBetween(3, 14);
-          period = days === 1 ? '1 day' : `${days} days`;
-        } else {
-          const weeks = randBetween(1, 6);
-          period = weeks === 1 ? '1 week' : `${weeks} weeks`;
-        }
-        const start = pickStartAmount();
-        const profitMin = Math.max(120, Math.round(start * 0.4));
-        const profitMax = Math.max(3000, Math.round(start * 3.5));
-        const profit = Math.round(randBetween(profitMin, Math.min(profitMax, 2300)) / 10) * 10;
-        const end = start + profit;
-        const tpl = profitTemplates[Math.floor(Math.random()*profitTemplates.length)];
-        return tpl.replace('${start}', formatDollar(start)).replace('${profit}', formatDollar(profit)).replace('${end}', formatDollar(end)).replace('${period}', period);
-      }
-
-      function generateTestimonial() {
-        const includeProfit = Math.random() < 0.62;
-        const includeRealism = Math.random() < 0.32;
-        const includeSocial = Math.random() < 0.18;
-        const parts = [];
-        if (includeProfit) parts.push(genProfitSnippet());
-        parts.push(experienceSnippets[Math.floor(Math.random() * experienceSnippets.length)]);
-        if (includeRealism) parts.push(realismSnippets[Math.floor(Math.random()*realismSnippets.length)]);
-        if (includeSocial) parts.push(socialSnippets[Math.floor(Math.random()*socialSnippets.length)]);
-        return parts.join(" ");
-      }
-
+      const COUNT = 25;
+      const AUTOPLAY_DELAY = 20000;
+      const experienceSnippets = ["Signals are structured and easy to follow.","I like how it doesn’t overtrade.","Support actually responds fast.","Risk management is what makes the difference.","Entries are clean and not rushed.","Much better than the other bots I tried.","Feels disciplined, not hype-based.","Good for people who work full time.","Alerts are clear and simple.","Finally something consistent."];
+      const realismSnippets = ["Consistency matters — small wins add up over time.","Takes discipline, but it works when you follow the rules.","It’s not magic — structured trading and patience win out.","As long as you manage position sizes, the results compound.","Best used with sensible risk sizing and discipline."];
+      const socialSnippets = ["I recommended it to two friends who also saw gains.","Community tips helped me tweak risk settings for better results."];
+      const profitTemplates = ["Started with ${start} and made about ${profit} in ${period}.","Made ${profit} in ${period} — withdrew part and kept compounding.","Grew ${start} to ${end} in ${period}, took partial profits."];
+      function randBetween(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+      function pickStartAmount(){ return [200,250,300,400,500,750,1000][Math.floor(Math.random()*7)]; }
+      function formatDollar(n){ return '$'+n; }
+      function genProfitSnippet(){ let period; if(Math.random()<0.45){ let days=randBetween(3,14); period=days===1?'1 day':`${days} days`; } else { let weeks=randBetween(1,6); period=weeks===1?'1 week':`${weeks} weeks`; } let start=pickStartAmount(); let profitMin=Math.max(120,Math.round(start*0.4)); let profitMax=Math.min(2300,Math.round(start*3.5)); let profit=Math.round(randBetween(profitMin,profitMax)/10)*10; let end=start+profit; let tpl=profitTemplates[Math.floor(Math.random()*profitTemplates.length)]; return tpl.replace('${start}',formatDollar(start)).replace('${profit}',formatDollar(profit)).replace('${end}',formatDollar(end)).replace('${period}',period); }
+      function generateTestimonial(){ let parts=[]; if(Math.random()<0.62) parts.push(genProfitSnippet()); parts.push(experienceSnippets[Math.floor(Math.random()*experienceSnippets.length)]); if(Math.random()<0.32) parts.push(realismSnippets[Math.floor(Math.random()*realismSnippets.length)]); if(Math.random()<0.18) parts.push(socialSnippets[Math.floor(Math.random()*socialSnippets.length)]); return parts.join(" "); }
       const NATS = ['US','GB','BR','NG','FR','ES','IT','DE','CA','AU','NL','SE','CH','DK','IE'];
-
-      function countryCodeToEmoji(code) {
-        if (!code) return '';
-        const cc = code.slice(0,2).toUpperCase();
-        const OFFSET = 0x1F1E6 - 'A'.charCodeAt(0);
-        return Array.from(cc).map(c => String.fromCodePoint(c.charCodeAt(0) + OFFSET)).join('');
-      }
-
-      function formatDaysAgo(days) {
-        if (days <= 0) return 'today';
-        if (days === 1) return '1 day ago';
-        if (days < 7) return days + ' days ago';
-        if (days < 14) return '1 week ago';
-        if (days < 30) return Math.floor(days/7) + ' weeks ago';
-        if (days < 60) return '1 month ago';
-        if (days < 365) return Math.round(days/30) + ' months ago';
-        const yrs = Math.floor(days/365);
-        return yrs + (yrs === 1 ? ' year ago' : ' years ago');
-      }
-
-      function makeHandle(first) {
-        const suffixes = ['X','Coin','Node','Dex','Trader','Swap','Chain'];
-        if (Math.random() < 0.42) {
-          if (Math.random() < 0.28) {
-            const hex = Math.random().toString(16).slice(2,10);
-            return '0x' + hex;
-          }
-          return '@' + first.toLowerCase() + suffixes[Math.floor(Math.random()*suffixes.length)];
-        } else {
-          return '@' + first.toLowerCase() + (Math.random() < 0.25 ? '_' + Math.floor(Math.random()*999) : '');
-        }
-      }
-
-      function renderStarsSVG() {
-        // Removed numeric rating to keep stars compact at top-right
-        const star = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#F59E0B" d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.402 8.168L12 18.896l-6.336 3.992 1.402-8.168L1.132 9.21l8.2-1.192z"/></svg>';
-        let html = '<div class="stars" aria-hidden="true">';
-        for (let i=0;i<5;i++) html += star;
-        html += '</div>';
-        return html;
-      }
-
-      function buildCard(person, message, daysAgo) {
-        const first = person.name.first;
-        const last = person.name.last || '';
-        const fullName = `${first} ${last}`.trim();
-        const nat = (person.nat || 'US').toLowerCase();
-        // flag PNG from flagcdn — small, crisp and consistent across platforms
-        const flagUrl = `https://flagcdn.com/24x18/${nat}.png`;
-        const handle = makeHandle(first);
-        const daysText = formatDaysAgo(daysAgo);
-
-        const card = document.createElement('article');
-        card.className = 'testimonial-card';
-        card.setAttribute('role','listitem');
-
-        card.innerHTML = `
-          <div class="testimonial-avatar" aria-hidden="true">
-            <img loading="lazy" src="${person.picture.medium}" alt="${fullName} avatar">
-          </div>
-          <div class="testimonial-body">
-            <div class="testimonial-head">
-              <div style="min-width:0">
-                <div class="testimonial-name">${fullName}</div>
-                <div class="testimonial-handle">${handle}</div>
-                <div class="testimonial-meta">
-                  <img class="flag-img" src="${flagUrl}" alt="${(person.nat||'')}" onerror="this.style.display='none'">
-                  <span style="margin-left:6px;">${person.location.country}</span>
-                </div>
-              </div>
-              <div>${renderStarsSVG()}</div>
-            </div>
-
-            <div class="testimonial-text">${escapeHtml(message)}</div>
-
-            <div class="testimonial-meta" aria-hidden="true">
-              <span>${daysText}</span>
-              <span>•</span>
-              <span class="muted">Verified community member</span>
-            </div>
-          </div>
-        `;
-        return card;
-      }
-
-      function escapeHtml(str) {
-        return (str+'').replace(/[&<>"]/g, function (c) {
-          return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];
-        });
-      }
-
-      // Robust center-scrolling helper (more consistent than scrollIntoView across browsers)
-      function scrollToCard(card) {
-        if (!card || !TRACK) return;
-        const trackRect = TRACK.getBoundingClientRect();
-        const cardRect = card.getBoundingClientRect();
-        const left = TRACK.scrollLeft + (cardRect.left - trackRect.left) - ((trackRect.width - cardRect.width) / 2);
-        TRACK.scrollTo({ left: Math.max(0, Math.round(left)), behavior: 'smooth' });
-      }
-
-      function shuffle(arr) {
-        for (let i = arr.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [arr[i], arr[j]] = [arr[j], arr[i]];
-        }
-        return arr;
-      }
-
-      function buildUniqueMessages(count) {
-        const set = new Set();
-        let attempts = 0;
-        while (set.size < count && attempts < count * 6) {
-          set.add(generateTestimonial());
-          attempts++;
-        }
-        while (set.size < count) {
-          set.add(experienceSnippets[Math.floor(Math.random()*experienceSnippets.length)]);
-        }
-        return Array.from(set);
-      }
-
-      async function fetchUsersUnique(n) {
-        const natString = NATS.join(',');
-        const url = `https://randomuser.me/api/?results=${Math.min(n, 25)}&nat=${natString}&inc=name,location,picture,nat&noinfo`;
-        try {
-          const r = await fetch(url);
-          const j = await r.json();
-          let people = j.results || [];
-          const seen = new Set();
-          people = people.filter(p => {
-            const key = (p.picture && p.picture.medium) || Math.random().toString(36).slice(2,8);
-            if (seen.has(key)) return false;
-            seen.add(key);
-            return true;
-          });
-
-          function natToCountry(nat) {
-            try {
-              if (typeof Intl !== 'undefined' && Intl.DisplayNames) {
-                const dn = new Intl.DisplayNames(undefined, { type: 'region' });
-                return dn.of(nat);
-              }
-            } catch (e) { /* ignore */ }
-            const fallback = {
-              US: 'United States', GB: 'United Kingdom', BR: 'Brazil', NG: 'Nigeria',
-              FR: 'France', ES: 'Spain', IT: 'Italy', DE: 'Germany',
-              CA: 'Canada', AU: 'Australia', NL: 'Netherlands', SE: 'Sweden',
-              CH: 'Switzerland', DK: 'Denmark', IE: 'Ireland'
-            };
-            return fallback[(nat||'US').toUpperCase()] || 'United States';
-          }
-
-          let i = 0;
-          while (people.length < n) {
-            const nat = NATS[ Math.floor(Math.random()*NATS.length) ];
-            const seed = `abrox-${Date.now()}-${i}-${Math.floor(Math.random()*9999)}`;
-            people.push({
-              name: { first: 'User'+(people.length+1), last: '' },
-              picture: { medium: `https://robohash.org/${encodeURIComponent(seed)}.png?size=120x120` },
-              nat: nat,
-              location: { country: natToCountry(nat) }
-            });
-            i++;
-          }
-          return people.slice(0, n);
-        } catch (err) {
-          console.warn('RandomUser fetch failed, falling back to robohash avatars', err);
-          const fallback = [];
-          for (let i=0;i<n;i++){
-            const nat = NATS[ Math.floor(Math.random()*NATS.length) ];
-            const seed = `abrox-fallback-${i}-${Math.floor(Math.random()*9999)}`;
-            const country = (function(n){ try { if (typeof Intl !== 'undefined' && Intl.DisplayNames) return new Intl.DisplayNames(undefined,{type:'region'}).of(n); }catch(e){} const map = {US:'United States',GB:'United Kingdom',BR:'Brazil',NG:'Nigeria',FR:'France',ES:'Spain',IT:'Italy',DE:'Germany',CA:'Canada',AU:'Australia',NL:'Netherlands',SE:'Sweden',CH:'Switzerland',DK:'Denmark',IE:'Ireland'}; return map[n]||'United States'; })(nat);
-            fallback.push({
-              name: { first: 'User'+(i+1), last: '' },
-              picture: { medium: `https://robohash.org/${encodeURIComponent(seed)}.png?size=120x120` },
-              nat: nat,
-              location: { country: country }
-            });
-          }
-          return fallback;
-        }
-      }
-
-      (async function mount(){
-        if (!TRACK) return;
-        TRACK.innerHTML = '';
-
-        const people = await fetchUsersUnique(COUNT);
-        const messages = buildUniqueMessages(COUNT);
-
-        const pairs = people.map((p, i) => ({ p, msg: messages[i] || 'Great experience.' }));
-        shuffle(pairs);
-
-        for (let i=0;i<pairs.length;i++){
-          const days = sampleDaysAgo();
-          const card = buildCard(pairs[i].p, pairs[i].msg, days);
-          TRACK.appendChild(card);
-        }
-
-        const cards = Array.from(TRACK.children);
-        if (cards.length === 0) return;
-        let index = 0;
-        function setActive(idx) { cards.forEach((c,i)=> c.classList.toggle('active', i === idx)); }
-        setActive(0);
-        setTimeout(()=> scrollToCard(cards[0]), 140);
-
-        const obs = new IntersectionObserver(entries => {
-          entries.forEach(en => {
-            if (en.isIntersecting) {
-              const idx = cards.indexOf(en.target);
-              if (idx >= 0) {
-                index = idx;
-                setActive(idx);
-              }
-            }
-          });
-        }, { root: TRACK, threshold: 0.64 });
-        cards.forEach(c => obs.observe(c));
-
-        let autoplay = setInterval(()=> {
-          index = (index + 1) % cards.length;
-          scrollToCard(cards[index]);
-        }, AUTOPLAY_DELAY);
-
-        function stopAutoplay() { if (autoplay) { clearInterval(autoplay); autoplay = null; } }
-        function startAutoplay() { stopAutoplay(); autoplay = setInterval(()=> { index = (index + 1) % cards.length; scrollToCard(cards[index]); }, AUTOPLAY_DELAY); }
-
-        TRACK.addEventListener('mouseenter', stopAutoplay);
-        TRACK.addEventListener('mouseleave', startAutoplay);
-        TRACK.addEventListener('focusin', stopAutoplay);
-        TRACK.addEventListener('focusout', startAutoplay);
-
-        TRACK.addEventListener('keydown', (ev) => {
-          if (ev.key === 'ArrowRight') nextBtn && nextBtn.click();
-          if (ev.key === 'ArrowLeft') prevBtn && prevBtn.click();
-        });
-
-        prevBtn && prevBtn.addEventListener('click', ()=> {
-          index = Math.max(0, index - 1);
-          scrollToCard(cards[index]);
-          stopAutoplay(); setTimeout(startAutoplay, AUTOPLAY_DELAY + 400);
-        });
-        nextBtn && nextBtn.addEventListener('click', ()=> {
-          index = (index + 1) % cards.length;
-          scrollToCard(cards[index]);
-          stopAutoplay(); setTimeout(startAutoplay, AUTOPLAY_DELAY + 400);
-        });
-
-        let resizeTO;
-        window.addEventListener('resize', () => {
-          clearTimeout(resizeTO);
-          resizeTO = setTimeout(()=> { scrollToCard(cards[index]); }, 120);
-        });
-
-        function sampleDaysAgo() {
-          const r = Math.random();
-          if (r < 0.40) return Math.floor(Math.random()*4);
-          if (r < 0.70) return 4 + Math.floor(Math.random()*11);
-          if (r < 0.88) return 15 + Math.floor(Math.random()*46);
-          if (r < 0.98) return 61 + Math.floor(Math.random()*305);
-          return 366 + Math.floor(Math.random()*534);
-        }
-      })();
+      function formatDaysAgo(days){ if(days<=0) return 'today'; if(days===1) return '1 day ago'; if(days<7) return days+' days ago'; if(days<14) return '1 week ago'; if(days<30) return Math.floor(days/7)+' weeks ago'; if(days<60) return '1 month ago'; if(days<365) return Math.round(days/30)+' months ago'; let yrs=Math.floor(days/365); return yrs+(yrs===1?' year ago':' years ago'); }
+      function makeHandle(first){ let suffixes=['X','Coin','Node','Dex','Trader','Swap','Chain']; if(Math.random()<0.42){ if(Math.random()<0.28) return '0x'+Math.random().toString(16).slice(2,10); return '@'+first.toLowerCase()+suffixes[Math.floor(Math.random()*suffixes.length)]; } else { return '@'+first.toLowerCase()+(Math.random()<0.25?'_'+Math.floor(Math.random()*999):''); } }
+      function renderStarsSVG(){ let stars='<div class="stars" aria-hidden="true">'; for(let i=0;i<5;i++) stars+='<svg viewBox="0 0 24 24"><path fill="#F59E0B" d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.402 8.168L12 18.896l-6.336 3.992 1.402-8.168L1.132 9.21l8.2-1.192z"/></svg>'; stars+='</div>'; return stars; }
+      function escapeHtml(str){ return (str+'').replace(/[&<>]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; }); }
+      function scrollToCard(card){ if(!card||!TRACK) return; const trackRect=TRACK.getBoundingClientRect(), cardRect=card.getBoundingClientRect(); const left=TRACK.scrollLeft+(cardRect.left-trackRect.left)-((trackRect.width-cardRect.width)/2); TRACK.scrollTo({ left:Math.max(0,Math.round(left)), behavior:'smooth' }); }
+      function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ let j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
+      function buildUniqueMessages(count){ let set=new Set(); while(set.size<count&&set.size<count*3) set.add(generateTestimonial()); while(set.size<count) set.add(experienceSnippets[Math.floor(Math.random()*experienceSnippets.length)]); return Array.from(set); }
+      async function fetchUsersUnique(n){ let natString=NATS.join(','); let url=`https://randomuser.me/api/?results=${Math.min(n,25)}&nat=${natString}&inc=name,location,picture,nat&noinfo`; try{ let r=await fetch(url); let j=await r.json(); let people=j.results||[]; let seen=new Set(); people=people.filter(p=>{ let key=p.picture?.medium||Math.random().toString(36); if(seen.has(key)) return false; seen.add(key); return true; }); function natToCountry(nat){ try{ if(typeof Intl!=='undefined'&&Intl.DisplayNames) return new Intl.DisplayNames(undefined,{type:'region'}).of(nat); }catch(e){} let fallback={US:'United States',GB:'United Kingdom',BR:'Brazil',NG:'Nigeria',FR:'France',ES:'Spain',IT:'Italy',DE:'Germany',CA:'Canada',AU:'Australia',NL:'Netherlands',SE:'Sweden',CH:'Switzerland',DK:'Denmark',IE:'Ireland'}; return fallback[nat?.toUpperCase()]||'United States'; } while(people.length<n){ let nat=NATS[Math.floor(Math.random()*NATS.length)]; let seed=`abrox-${Date.now()}-${people.length}-${Math.random()}`; people.push({ name:{first:'User'+(people.length+1),last:''}, picture:{medium:`https://robohash.org/${encodeURIComponent(seed)}.png?size=120x120`}, nat:nat, location:{country:natToCountry(nat)} }); } return people.slice(0,n); }catch(err){ let fallback=[]; for(let i=0;i<n;i++){ let nat=NATS[Math.floor(Math.random()*NATS.length)]; let seed=`abrox-fallback-${i}-${Math.random()}`; let country=(function(n){ try{if(typeof Intl!=='undefined'&&Intl.DisplayNames) return new Intl.DisplayNames(undefined,{type:'region'}).of(n); }catch(e){} let m={US:'United States',GB:'United Kingdom',BR:'Brazil',NG:'Nigeria',FR:'France',ES:'Spain',IT:'Italy',DE:'Germany',CA:'Canada',AU:'Australia',NL:'Netherlands',SE:'Sweden',CH:'Switzerland',DK:'Denmark',IE:'Ireland'}; return m[n]||'United States';})(nat); fallback.push({ name:{first:'User'+(i+1),last:''}, picture:{medium:`https://robohash.org/${encodeURIComponent(seed)}.png?size=120x120`}, nat:nat, location:{country:country} }); } return fallback; } }
+      (async function(){ TRACK.innerHTML=''; let people=await fetchUsersUnique(COUNT); let messages=buildUniqueMessages(COUNT); let pairs=people.map((p,i)=>({p,msg:messages[i]||'Great experience.'})); shuffle(pairs); for(let pair of pairs){ let days=Math.floor(Math.random()*180)+1; let first=pair.p.name.first, last=pair.p.name.last||''; let fullName=`${first} ${last}`.trim(); let nat=pair.p.nat?.toLowerCase()||'us'; let flagUrl=`https://flagcdn.com/24x18/${nat}.png`; let handle=makeHandle(first); let daysText=formatDaysAgo(days); let card=document.createElement('article'); card.className='testimonial-card'; card.setAttribute('role','listitem'); card.innerHTML=`<div class="testimonial-avatar"><img loading="lazy" src="${pair.p.picture.medium}" alt="${fullName} avatar"></div><div class="testimonial-body"><div class="testimonial-head"><div><div class="testimonial-name">${escapeHtml(fullName)}</div><div class="testimonial-handle">${escapeHtml(handle)}</div><div class="testimonial-meta"><img class="flag-img" src="${flagUrl}" alt="${pair.p.location.country}" onerror="this.style.display='none'"><span>${pair.p.location.country}</span></div></div>${renderStarsSVG()}</div><div class="testimonial-text">${escapeHtml(pair.msg)}</div><div class="testimonial-meta"><span>${daysText}</span><span>•</span><span class="muted">Verified community member</span></div></div>`; TRACK.appendChild(card); } let cards=Array.from(TRACK.children); if(!cards.length) return; let index=0; function setActive(idx){ cards.forEach((c,i)=>c.classList.toggle('active',i===idx)); } setActive(0); setTimeout(()=>scrollToCard(cards[0]),150); let obs=new IntersectionObserver(entries=>{ entries.forEach(en=>{ if(en.isIntersecting){ let idx=cards.indexOf(en.target); if(idx>=0){ index=idx; setActive(idx); } } }); },{root:TRACK,threshold:0.55}); cards.forEach(c=>obs.observe(c)); let autoplay=setInterval(()=>{ index=(index+1)%cards.length; scrollToCard(cards[index]); },AUTOPLAY_DELAY); function stop(){ if(autoplay){ clearInterval(autoplay); autoplay=null; } } function start(){ stop(); autoplay=setInterval(()=>{ index=(index+1)%cards.length; scrollToCard(cards[index]); },AUTOPLAY_DELAY); } TRACK.addEventListener('mouseenter',stop); TRACK.addEventListener('mouseleave',start); prevBtn?.addEventListener('click',()=>{ index=Math.max(0,index-1); scrollToCard(cards[index]); stop(); setTimeout(start, AUTOPLAY_DELAY+300); }); nextBtn?.addEventListener('click',()=>{ index=(index+1)%cards.length; scrollToCard(cards[index]); stop(); setTimeout(start, AUTOPLAY_DELAY+300); }); let resizeTO; window.addEventListener('resize',()=>{ clearTimeout(resizeTO); resizeTO=setTimeout(()=>scrollToCard(cards[index]),100); }); })();
     })();
   </script>
 </body>
