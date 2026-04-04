@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -96,6 +96,74 @@
     .phone-icon { width:36px; height:36px; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; }
     .phone-icon svg { width:22px; height:22px; stroke: currentColor; fill: none; stroke-width:2.4; }
 
+    /* NEW: Available on + Just Purchased section */
+    .platforms-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 28px;
+      margin: 20px 0 16px;
+    }
+    .platform-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+    }
+    .platform-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .platform-icon svg {
+      width: 28px;
+      height: 28px;
+      stroke: #48d7ff;
+      stroke-width: 1.5;
+      fill: none;
+    }
+    .just-purchased-card {
+      background: linear-gradient(145deg, rgba(20,30,55,0.85), rgba(10,18,35,0.95));
+      border: 1px solid rgba(72,215,255,0.2);
+      border-radius: 60px;
+      padding: 10px 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #fff;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      margin: 8px 0;
+    }
+    .just-purchased-card .dot {
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      display: inline-block;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 0.4; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1.2); }
+    }
+    .purchase-name {
+      font-weight: 800;
+      color: #48d7ff;
+    }
+    .purchase-country {
+      color: rgba(255,255,255,0.7);
+    }
+
     /* Brokers */
     .broker-logo-wrap{ width:76px; height:76px; border-radius:9999px; overflow:hidden; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.02); }
     .broker-logo{ width:70%; height:70%; object-fit:contain; }
@@ -191,7 +259,7 @@
     .bold-text { font-weight: 800; color: #fff; font-size: 1rem; line-height: 1.5; }
     .bonus-cta { display: inline-block; background: linear-gradient(90deg, #16a34a, #059669); border-radius: 60px; padding: 16px 32px; font-weight: 900; font-size: 1.3rem; color: white; text-decoration: none; margin-top: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
 
-    /* Testimonials - all white text, no cutting */
+    /* Testimonials */
     .testimonials-section { display:flex; justify-content:center; padding:36px 16px 36px; }
     .testimonials-shell { width:100%; max-width:1100px; border-radius:18px; background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006)); padding:22px; box-shadow: 0 28px 60px rgba(2,6,23,0.56); border:1px solid rgba(255,255,255,0.03); }
     .testimonials-header { text-align:center; margin:0 0 20px; }
@@ -258,12 +326,13 @@
       <img src="assets/logo.png" alt="Abrox Logo" class="site-logo object-contain" loading="eager">
     </header>
 
-    <!-- Hero text section (replaces hero.png) -->
+    <!-- Hero text section -->
     <section class="hero-text">
       <h1>Tired of not getting results?</h1>
       <p>You've just found the solution.</p>
     </section>
 
+    <!-- Video section -->
     <section class="flex justify-center">
       <div class="w-full max-w-[900px]">
         <div class="video-card aspect-video">
@@ -281,6 +350,27 @@
       </div>
     </section>
 
+    <!-- NEW: Available on + Just Purchased simulation -->
+    <section class="mt-6">
+      <div class="big-glass" style="padding: 24px 20px;">
+        <div class="platforms-row">
+          <div class="platform-item"><div class="platform-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="2" width="20" height="20" rx="2.18" stroke="currentColor"/><path d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 17h5M17 7h5"/></svg></div><span>iOS</span></div>
+          <div class="platform-item"><div class="platform-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="3"/></svg></div><span>Android</span></div>
+          <div class="platform-item"><div class="platform-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 2v4M16 2v4"/></svg></div><span>Windows</span></div>
+          <div class="platform-item"><div class="platform-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div><span>Mac OS</span></div>
+        </div>
+
+        <!-- Live "Just Purchased" simulation -->
+        <div class="flex justify-center mt-2">
+          <div id="purchaseAlert" class="just-purchased-card">
+            <span class="dot"></span>
+            <span id="purchaseText">Omar Al-Rashid • UAE - Just purchased!</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA buttons (already existing) -->
     <div class="cta-wrap">
       <a id="buyBtn" class="buy-btn" href="#checkout">UNLOCK ACCESS NOW</a>
       <a id="downloadBtn" class="download-btn" href="#download">
@@ -350,7 +440,7 @@
       </div>
     </section>
 
-    <!-- Pricing block 2 - "Don't Miss This Opportunity" -->
+    <!-- Pricing block 2 -->
     <section class="mt-6 px-4 w-full max-w-[1024px] mx-auto">
       <div class="big-glass pricing-card p-6 md:p-8">
         <div class="text-center"><h3 class="text-3xl sm:text-4xl font-extrabold text-white">Don't Miss This Opportunity</h3><p class="text-white/60 mt-2">Regular Price</p></div>
@@ -379,7 +469,7 @@
       </div>
     </section>
 
-    <!-- Revolution Technology + High-Frequency Volume Reading section -->
+    <!-- Revolution Technology -->
     <section class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
       <div class="big-glass">
         <div class="section-header"><h2>Revolution Technology</h2></div>
@@ -439,7 +529,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
 
   <script>
-    // Real-time animated counter for Active Traders (simulates live growth)
+    // Real-time animated counter for Active Traders
     (function() {
       const counterEl = document.getElementById('activeCounter');
       let currentValue = 25369;
@@ -453,7 +543,37 @@
       setTimeout(updateCounter, 2000);
     })();
 
-    // Video and chart logic
+    // Just Purchased simulation (rotating names every 6 seconds)
+    (function() {
+      const purchaseTextEl = document.getElementById('purchaseText');
+      const users = [
+        { name: "Omar Al-Rashid", country: "UAE" },
+        { name: "Sophia Chen", country: "Singapore" },
+        { name: "Carlos Mendez", country: "Mexico" },
+        { name: "Aisha Khan", country: "Pakistan" },
+        { name: "Liam O'Connor", country: "Ireland" },
+        { name: "Yuki Tanaka", country: "Japan" },
+        { name: "Maria Garcia", country: "Spain" },
+        { name: "David Kim", country: "South Korea" },
+        { name: "Fatima Al-Mansouri", country: "Qatar" },
+        { name: "James Wilson", country: "Australia" },
+        { name: "Elena Petrova", country: "Russia" },
+        { name: "Mohamed Ali", country: "Egypt" },
+        { name: "Nina Schmidt", country: "Germany" },
+        { name: "Rahul Mehta", country: "India" },
+        { name: "Isabella Rossi", country: "Italy" }
+      ];
+      let index = 0;
+      function updatePurchase() {
+        const user = users[index % users.length];
+        purchaseTextEl.innerHTML = `${user.name} • ${user.country} - Just purchased!`;
+        index++;
+      }
+      updatePurchase(); // initial
+      setInterval(updatePurchase, 6000); // every 6 seconds
+    })();
+
+    // Video and chart logic (existing, unchanged)
     (function(){
       const video = document.getElementById('demoVideo');
       const playBtn = document.getElementById('playBtn');
@@ -482,7 +602,7 @@
       new ResizeObserver(()=> accuracyChart && accuracyChart.update()).observe(document.getElementById('accuracyChart'));
     })();
 
-    // Testimonials
+    // Testimonials (unchanged)
     (function(){
       const TRACK = document.getElementById('testimonialTrack');
       if(!TRACK) return;
