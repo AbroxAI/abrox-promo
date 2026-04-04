@@ -12,7 +12,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
-    /* ---------- EXTREME PERFORMANCE: NO ANIMATIONS, NO FILTERS, NO BACKDROP ---------- */
+    /* ---------- EXTREME PERFORMANCE ---------- */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
       background: #03060a;
@@ -27,27 +27,22 @@
       transform: translateZ(0);
     }
 
-    /* Disable all animations that cause repaint */
-    .buy-btn, .download-btn, .pricing-cta, .play-btn, .testimonial-card, .feature-card, .benefit-card {
+    /* Disable animations that cause repaint */
+    .buy-btn, .download-btn, .pricing-cta, .play-btn, .testimonial-card, .feature-card, .benefit-card, .bonus-card {
       transition: none !important;
       animation: none !important;
     }
     .buy-btn:hover, .download-btn:hover, .pricing-cta:hover {
       transform: translateY(-2px);
     }
-    .flame-emoji {
-      display: inline-block;
-      filter: none;
-      animation: none;
-    }
 
-    /* Custom scrollbar – lightweight */
+    /* Custom scrollbar */
     ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: rgba(5,8,22,0.5); }
     ::-webkit-scrollbar-thumb { background: rgba(72,215,255,0.3); border-radius: 3px; }
     * { scrollbar-width: thin; }
 
-    /* Base components – no filters, no backdrop */
+    /* Base components */
     .site-logo { max-width: 220px; opacity: 0.95; display: block; margin: 0 auto; }
     @media (min-width:640px){ .site-logo { max-width: 360px; } }
     .hero-img { max-width:960px; display:block; margin:0 auto; border-radius: 1rem; }
@@ -87,7 +82,7 @@
     .broker-card{ background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.012)); border:1px solid rgba(255,255,255,0.03); border-radius:14px; padding:1rem; display:flex; flex-direction:column; align-items:center; gap:0.75rem; min-height:130px; }
     .broker-label { font-weight: 600; font-size: 0.9rem; letter-spacing: 0.5px; color: #e6e8eb; }
 
-    /* Pricing & glass (no backdrop) */
+    /* Pricing & glass */
     .pricing-card { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.012)); border: 1px solid rgba(255,255,255,0.03); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.55); }
     .strike { text-decoration: line-through; text-decoration-thickness: 3px; text-decoration-color: rgba(255,255,255,0.18); }
     .limited-pill { background: linear-gradient(90deg,#ff6b5f,#e0443a); border-radius: 999px; padding: 0.5rem 1.2rem; color: white; font-weight: bold; }
@@ -99,7 +94,49 @@
     .legend-square { width:18px; height:18px; border-radius:6px; background: linear-gradient(90deg,#16a34a,#34d399); display:inline-block; }
     .muted { color: rgba(255,255,255,0.58); }
 
-    /* ========== FEATURE SECTION (High-Frequency + Active Traders) ========== */
+    /* ========== STAT PILL (top right corner) ========== */
+    .stat-pill {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(72,215,255,0.3);
+      border-radius: 60px;
+      padding: 8px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: #48d7ff;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+    .stat-number {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: #fff;
+    }
+    @media (max-width: 640px) {
+      .stat-pill { top: 10px; right: 10px; padding: 6px 14px; font-size: 0.75rem; }
+      .stat-number { font-size: 1rem; }
+    }
+
+    /* ========== FEATURE SECTION with header ========== */
+    .section-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .section-header h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff, #48d7ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
+    }
     .features-grid {
       display: flex;
       flex-wrap: wrap;
@@ -155,34 +192,8 @@
       line-height: 1.6;
       font-size: 0.95rem;
     }
-    @media (max-width: 700px) {
-      .feature-title { font-size: 1.5rem; }
-      .feature-stat { font-size: 2rem; }
-      .feature-card { padding: 24px 18px; }
-    }
 
-    /* ========== "WHAT YOU'LL GET" SECTION ========== */
-    .benefits-header {
-      text-align: center;
-      margin-bottom: 32px;
-    }
-    .benefits-number {
-      font-size: 5rem;
-      font-weight: 900;
-      background: linear-gradient(135deg, #48d7ff, #7e5cff);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      letter-spacing: -0.02em;
-      line-height: 1;
-      margin-bottom: 8px;
-    }
-    .benefits-title {
-      font-size: 2rem;
-      font-weight: 800;
-      color: #fff;
-      letter-spacing: -0.5px;
-    }
+    /* ========== WHAT YOU'LL GET (no stat inside) ========== */
     .benefits-grid {
       display: flex;
       flex-wrap: wrap;
@@ -229,145 +240,137 @@
       line-height: 1.6;
     }
 
-    /* ========== BONUS / OFFER SECTION (NEW) ========== */
+    /* ========== BONUS OFFER SECTION ========== */
+    .bonus-card {
+      background: linear-gradient(145deg, rgba(20,30,55,0.85), rgba(10,18,35,0.95));
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 28px;
+      padding: 32px 28px;
+      text-align: center;
+    }
+    .bonus-header {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ff7a72, #ff3b2f);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 20px;
+    }
     .bonus-grid {
       display: flex;
       flex-wrap: wrap;
-      gap: 20px;
+      gap: 16px;
       justify-content: center;
-      margin: 20px 0 28px;
+      margin: 20px 0;
     }
     .bonus-item {
-      flex: 1 1 200px;
-      background: rgba(72,215,255,0.05);
-      border: 1px solid rgba(72,215,255,0.15);
+      background: rgba(72,215,255,0.08);
+      border: 1px solid rgba(72,215,255,0.2);
       border-radius: 60px;
-      padding: 12px 20px;
-      text-align: center;
+      padding: 10px 22px;
       font-weight: 700;
-      font-size: 1rem;
       color: #48d7ff;
-      backdrop-filter: none;
     }
     .warning-text {
-      text-align: center;
       color: #ff7a72;
       font-weight: 800;
-      font-size: 1.2rem;
-      letter-spacing: -0.3px;
+      font-size: 1.3rem;
       margin: 20px 0 16px;
     }
     .price-comparison {
-      text-align: center;
       background: rgba(0,0,0,0.3);
       border-radius: 24px;
       padding: 20px;
       margin: 20px 0;
     }
     .old-price {
-      font-size: 1.3rem;
+      font-size: 1.4rem;
       text-decoration: line-through;
       color: rgba(255,255,255,0.5);
       margin-right: 15px;
     }
     .new-price {
-      font-size: 3rem;
+      font-size: 3.2rem;
       font-weight: 900;
       color: #10b981;
-      letter-spacing: -0.02em;
     }
     .price-note {
-      font-size: 0.9rem;
-      color: rgba(255,255,255,0.6);
+      font-size: 1rem;
+      color: rgba(255,255,255,0.7);
       margin-top: 8px;
     }
+    .bold-text {
+      font-weight: 800;
+      color: #fff;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
     .bonus-cta {
-      display: block;
-      width: 100%;
-      max-width: 500px;
-      margin: 20px auto 0;
+      display: inline-block;
       background: linear-gradient(90deg, #16a34a, #059669);
       border-radius: 60px;
-      padding: 18px 28px;
-      text-align: center;
+      padding: 16px 32px;
       font-weight: 900;
-      font-size: 1.5rem;
+      font-size: 1.3rem;
       color: white;
       text-decoration: none;
+      margin-top: 20px;
       box-shadow: 0 15px 35px rgba(0,0,0,0.4);
     }
-    @media (max-width: 550px) {
-      .bonus-item { flex: 1 1 100%; border-radius: 40px; }
-      .new-price { font-size: 2.2rem; }
-      .bonus-cta { font-size: 1.2rem; padding: 14px 20px; }
-      .warning-text { font-size: 1rem; }
-    }
 
-    /* Testimonials (no active state, pure scroll) */
+    /* Testimonials */
     .testimonials-section { display:flex; justify-content:center; padding:36px 16px 36px; }
     .testimonials-shell { width:100%; max-width:1100px; border-radius:18px; background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006)); padding:22px; box-shadow: 0 28px 60px rgba(2,6,23,0.56); border:1px solid rgba(255,255,255,0.03); }
     .testimonials-header { text-align:center; margin:0 0 20px; }
-    .testimonials-header h2 { font-size: clamp(1.6rem, 3.8vw, 2.6rem); font-weight:900; letter-spacing:-0.5px; color:#fff; }
-    .testimonials-header .subtitle { margin-top:10px; color:rgba(255,255,255,0.58); font-weight:700; }
-
+    .testimonials-header h2 { font-size: clamp(1.6rem, 3.8vw, 2.6rem); font-weight:900; color:#fff; }
     .testimonial-outer { position:relative; margin-top:18px; display:flex; align-items:center; gap:12px; }
     .testimonial-track {
-      display:flex; gap:20px; overflow-x:auto; overflow-y:visible; scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch; padding: 16px 20px; align-items: stretch; width:100%;
+      display:flex; gap:20px; overflow-x:auto; scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch; padding: 16px 20px; width:100%;
       scroll-behavior: auto;
-      scroll-padding-inline: 20px;
     }
-    .testimonial-track::-webkit-scrollbar { height: 5px; }
     .testimonial-card {
-      box-sizing: border-box;
-      flex: 0 0 320px;
-      min-width: 280px;
-      max-width: 360px;
+      flex: 0 0 320px; min-width: 280px;
       scroll-snap-align: center;
       background: linear-gradient(145deg, rgba(20,30,55,0.85), rgba(10,18,35,0.95));
       border: 1px solid rgba(255,255,255,0.06);
       border-radius: 24px;
       padding: 22px 20px;
-      box-shadow: 0 20px 35px rgba(0,0,0,0.5);
       display: flex;
       flex-direction: column;
       gap: 14px;
     }
-    .testimonial-avatar { width: 70px; height: 70px; margin: 0 auto 8px; border-radius: 999px; overflow: hidden; border: 2px solid rgba(72,215,255,0.3); background: rgba(255,255,255,0.05); }
+    .testimonial-avatar { width: 70px; height: 70px; margin: 0 auto; border-radius: 999px; overflow: hidden; border: 2px solid rgba(72,215,255,0.3); }
     .testimonial-avatar img { width:100%; height:100%; object-fit:cover; }
-    .testimonial-name-row { text-align: center; display: flex; flex-direction: column; gap: 4px; }
-    .testimonial-name { font-weight: 800; font-size: 1.1rem; color: #fff; }
-    .testimonial-handle { font-size: 0.8rem; color: rgba(255,255,255,0.6); font-weight: 500; }
-    .testimonial-meta-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 4px; padding: 0 4px; }
-    .country-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 40px; font-size: 0.75rem; font-weight: 500; }
-    .flag-img { width: 20px !important; height: 14px !important; object-fit: cover; border-radius: 2px; }
-    .stars { display: flex; gap: 4px; align-items: center; }
-    .stars svg { width: 16px; height: 16px; }
-    .testimonial-text { color: rgba(255,255,255,0.9); line-height: 1.55; font-size: 0.95rem; text-align: center; margin: 8px 0 6px; word-break: break-word; }
-    .testimonial-date { text-align: center; font-size: 0.7rem; color: rgba(255,255,255,0.45); margin-top: 6px; }
+    .testimonial-name { font-weight: 800; text-align: center; color: #fff; }
+    .testimonial-handle { font-size: 0.8rem; text-align: center; color: rgba(255,255,255,0.6); }
+    .testimonial-meta-row { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+    .country-badge { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 40px; font-size: 0.75rem; }
+    .stars { display: flex; gap: 4px; }
+    .stars svg { width: 14px; height: 14px; }
+    .testimonial-text { color: rgba(255,255,255,0.9); line-height: 1.55; font-size: 0.9rem; text-align: center; margin: 8px 0; }
+    .testimonial-date { text-align: center; font-size: 0.7rem; color: rgba(255,255,255,0.45); }
     .testimonial-nav {
       position: absolute; top: 50%; transform: translateY(-50%);
       width: 40px; height: 40px; border-radius: 999px;
-      display: flex; align-items: center; justify-content: center;
       background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15);
       color: #fff; font-size: 26px; cursor: pointer; z-index: 12;
     }
     .testimonial-nav.left { left: -8px; }
     .testimonial-nav.right { right: -8px; }
-    @media (max-width: 760px) {
-      .testimonial-card { flex: 0 0 280px; padding: 18px 14px; }
-      .testimonial-avatar { width: 60px; height: 60px; }
-    }
-    @media (max-width: 520px) {
-      .testimonial-card { flex: 0 0 260px; }
-    }
-    footer { border-top: 1px solid rgba(255,255,255,0.05); margin-top: 2rem; padding: 1.5rem 0; text-align: center; color: rgba(255,255,255,0.5); font-size: 0.85rem; }
+    footer { border-top: 1px solid rgba(255,255,255,0.05); margin-top: 2rem; padding: 1.5rem 0; text-align: center; color: rgba(255,255,255,0.5); }
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
-  <div class="relative z-10 max-w-[1100px] mx-auto px-4">
+  <!-- Stat Pill - top right corner -->
+  <div class="stat-pill">
+    <span>👥 Active Members</span>
+    <span class="stat-number">25,369</span>
+  </div>
 
+  <div class="relative z-10 max-w-[1100px] mx-auto px-4">
     <header class="flex justify-center pt-4 pb-1">
       <img src="assets/logo.png" alt="Abrox Logo" class="site-logo object-contain" loading="eager">
     </header>
@@ -404,7 +407,7 @@
     <!-- Brokers -->
     <section class="mt-12 px-2 w-full">
       <div class="max-w-[1024px] mx-auto">
-        <h2 class="text-center text-2xl sm:text-3xl font-bold mb-6">Compatible Brokers</h2>
+        <h2 class="text-center text-2xl sm:text-3xl font-bold text-white mb-6">Compatible Brokers</h2>
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
           <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/iq-option.png" alt="IQ Option" class="broker-logo"></div><div class="broker-label">IQ OPTION</div></div>
           <div class="broker-card"><div class="broker-logo-wrap"><img src="assets/brokers/quotex.png" alt="QUOTEX" class="broker-logo"></div><div class="broker-label">QUOTEX</div></div>
@@ -428,7 +431,7 @@
         <div class="flex items-center pricing-columns gap-6 flex-wrap sm:flex-nowrap">
           <div class="w-1/3 min-w-[130px] text-center"><div class="text-sm text-white/60">Regular Price:</div><div class="mt-3"><span class="strike text-2xl md:text-3xl font-bold text-white/60">$500/year</span></div></div>
           <div class="hidden sm:block h-20 border-r border-white/6"></div>
-          <div class="flex-1 text-center sm:text-left"><div class="text-sm md:text-base font-extrabold uppercase text-green-400">BLACK FRIDAY SPECIAL:</div><div class="mt-2"><span class="text-[48px] md:text-[64px] font-extrabold text-green-500 leading-none">$399</span></div><div class="mt-3 uppercase text-lg md:text-xl font-semibold">LIFETIME ACCESS</div></div>
+          <div class="flex-1 text-center sm:text-left"><div class="text-sm md:text-base font-extrabold uppercase text-green-400">BLACK FRIDAY SPECIAL:</div><div class="mt-2"><span class="text-[48px] md:text-[64px] font-extrabold text-green-500 leading-none">$399</span></div><div class="mt-3 uppercase text-lg md:text-xl font-semibold text-white">LIFETIME ACCESS</div></div>
         </div>
         <div class="mt-6 flex flex-col items-center gap-4">
           <span class="limited-pill inline-flex items-center gap-3"><span>🔥</span><span>LIMITED TIME OFFER</span></span>
@@ -441,11 +444,11 @@
     <!-- EUR/USD Accuracy -->
     <section id="accuracy" class="mt-8 px-4 w-full max-w-[1024px] mx-auto">
       <div class="big-glass">
-        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center">EUR/USD Accuracy Rate</h2>
-        <p class="text-center muted mt-2 mb-4">Last 7 days performance</p>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center text-white">EUR/USD Accuracy Rate</h2>
+        <p class="text-center text-white/60 mt-2 mb-4">Last 7 days performance</p>
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
-          <label class="font-semibold">Broker:</label>
-          <select id="brokerSelect" class="bg-[#0b1220] rounded-xl px-4 py-3 border border-white/6 text-white/90 min-w-[200px]">
+          <label class="font-semibold text-white">Broker:</label>
+          <select id="brokerSelect" class="bg-[#0b1220] rounded-xl px-4 py-3 border border-white/6 text-white min-w-[200px]">
             <option>IQ OPTION</option><option>QUOTEX</option><option>POCKET OPTION</option><option>POLARIUM BROKER</option>
             <option>EXPERT OPTION</option><option>BINOMO</option><option>OLYMP TRADE</option><option>HOME BROKER</option>
             <option>EXNOVA</option><option>AVALON</option><option>BULLEX</option><option>EBINEX</option>
@@ -453,23 +456,23 @@
         </div>
         <div class="stat-card mb-6">
           <div class="flex items-center justify-between gap-4 flex-wrap">
-            <div><div class="text-sm muted uppercase">Average Accuracy</div><div id="avgPercent" class="text-[64px] md:text-[84px] font-extrabold text-green-400 leading-none">--.-%</div><div id="opsCount" class="muted mt-3">Based on — operations</div></div>
+            <div><div class="text-sm text-white/60 uppercase">Average Accuracy</div><div id="avgPercent" class="text-[64px] md:text-[84px] font-extrabold text-green-400 leading-none">--.-%</div><div id="opsCount" class="text-white/60 mt-3">Based on — operations</div></div>
             <img src="assets/pci-badge.png" alt="" style="width:94px;opacity:0.98;" class="hidden md:block">
           </div>
         </div>
         <div class="chart-card"><canvas id="accuracyChart" class="chart-canvas" style="height:260px; width:100%"></canvas></div>
-        <div class="mt-6 flex items-center justify-center gap-3"><span class="legend-square"></span><span class="muted">Accuracy Rate</span></div>
+        <div class="mt-6 flex items-center justify-center gap-3"><span class="legend-square"></span><span class="text-white/60">Accuracy Rate</span></div>
       </div>
     </section>
 
-    <!-- Pricing block 2 -->
+    <!-- Pricing block 2 - "Don't Miss This Opportunity" -->
     <section class="mt-6 px-4 w-full max-w-[1024px] mx-auto">
       <div class="big-glass pricing-card p-6 md:p-8">
-        <div class="text-center"><h3 class="text-3xl sm:text-4xl font-extrabold">Don't Miss This Opportunity</h3><p class="muted mt-2">Regular Price</p></div>
+        <div class="text-center"><h3 class="text-3xl sm:text-4xl font-extrabold text-white">Don't Miss This Opportunity</h3><p class="text-white/60 mt-2">Regular Price</p></div>
         <div class="mt-4 flex items-center justify-center gap-6 flex-wrap sm:flex-nowrap">
-          <div class="text-center"><span class="strike text-2xl md:text-3xl font-bold text-white/60">$500</span><div class="muted text-sm">per year</div></div>
+          <div class="text-center"><span class="strike text-2xl md:text-3xl font-bold text-white/60">$500</span><div class="text-white/60 text-sm">per year</div></div>
           <div class="hidden sm:block h-20 border-r border-white/6"></div>
-          <div class="text-center sm:text-left"><div class="text-sm md:text-base font-extrabold uppercase text-green-400">BLACK FRIDAY SPECIAL</div><div class="mt-2"><span class="text-[48px] md:text-[64px] font-extrabold text-green-500">$399</span></div><div class="mt-3 uppercase text-lg md:text-xl font-semibold">LIFETIME ACCESS</div></div>
+          <div class="text-center sm:text-left"><div class="text-sm md:text-base font-extrabold uppercase text-green-400">BLACK FRIDAY SPECIAL</div><div class="mt-2"><span class="text-[48px] md:text-[64px] font-extrabold text-green-500">$399</span></div><div class="mt-3 uppercase text-lg md:text-xl font-semibold text-white">LIFETIME ACCESS</div></div>
         </div>
         <div class="mt-6 flex flex-col items-center gap-4">
           <span class="limited-pill-outline"><span class="flame-emoji">🔥</span><span>20% OFF - Limited Time Only</span></span>
@@ -482,7 +485,7 @@
     <!-- Testimonials -->
     <section class="testimonials-section">
       <div class="testimonials-shell">
-        <div class="testimonials-header"><h2>What Our Users Say</h2><p class="subtitle">Real reviews from real traders</p></div>
+        <div class="testimonials-header"><h2>What Our Users Say</h2><p class="text-white/60">Real reviews from real traders</p></div>
         <div class="testimonial-outer">
           <button id="prevTestimonial" class="testimonial-nav left">‹</button>
           <div id="testimonialTrack" class="testimonial-track" role="list"></div>
@@ -491,9 +494,12 @@
       </div>
     </section>
 
-    <!-- FEATURE SECTION (High-Frequency + Active Traders) -->
+    <!-- Revolution Technology + High-Frequency Volume Reading section -->
     <section class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
       <div class="big-glass">
+        <div class="section-header">
+          <h2>Revolution Technology</h2>
+        </div>
         <div class="features-grid">
           <div class="feature-card">
             <div class="feature-icon">
@@ -531,39 +537,25 @@
       </div>
     </section>
 
-    <!-- "WHAT YOU'LL GET" SECTION -->
+    <!-- What You'll Get (without statistic inside) -->
     <section class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
       <div class="big-glass">
-        <div class="benefits-header">
-          <div class="benefits-number">25,369</div>
-          <div class="benefits-title">What You'll Get</div>
+        <div class="section-header">
+          <h2>What You'll Get</h2>
         </div>
         <div class="benefits-grid">
           <div class="benefit-card">
-            <div class="benefit-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-              </svg>
-            </div>
+            <div class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></svg></div>
             <h3>Step-by-Step Classes</h3>
             <p>Complete video lessons teaching you everything from installation to advanced strategies.</p>
           </div>
           <div class="benefit-card">
-            <div class="benefit-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <polygon points="10 8 16 12 10 16 10 8" />
-              </svg>
-            </div>
+            <div class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10" /><polygon points="10 8 16 12 10 16 10 8" /></svg></div>
             <h3>Live Trading Sessions</h3>
             <p>Access exclusive live sessions where you'll see real trades happening in real-time.</p>
           </div>
           <div class="benefit-card">
-            <div class="benefit-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
-              </svg>
-            </div>
+            <div class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" /></svg></div>
             <h3>Priority Support</h3>
             <p>Get help whenever you need it from our dedicated support team.</p>
           </div>
@@ -571,30 +563,22 @@
       </div>
     </section>
 
-    <!-- ========== NEW BONUS / OFFER SECTION (before footer) ========== -->
+    <!-- BONUS OFFER SECTION (with correct pricing $500/year → $399) -->
     <section class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
-      <div class="big-glass" style="text-align: center;">
+      <div class="bonus-card">
+        <div class="bonus-header">🎁 BONUS OFFER</div>
         <div class="bonus-grid">
           <div class="bonus-item">🔥 Exclusive trading community</div>
           <div class="bonus-item">📊 Weekly market analysis</div>
           <div class="bonus-item">🔄 Free lifetime updates</div>
         </div>
-        
-        <div class="warning-text">
-          ⚠️ This Offer Won't Last Forever
-        </div>
-        
+        <div class="warning-text">⚠️ This Offer Won't Last Forever</div>
         <div class="price-comparison">
-          <span class="old-price">$97/year</span>
-          <span class="new-price">$19</span>
+          <span class="old-price">$500/year</span>
+          <span class="new-price">$399</span>
           <div class="price-note">LIFETIME ACCESS — while others pay yearly</div>
         </div>
-        
-        <p style="color: rgba(255,255,255,0.85); margin: 20px 0 10px; font-size: 1rem; line-height: 1.5;">
-          Right now, you're looking at the lowest price Abrox has ever offered.<br>
-          Don't let this opportunity slip away. Every second counts.
-        </p>
-        
+        <p class="bold-text">Right now, you're looking at the lowest price Abrox has ever offered.<br>Don't let this opportunity slip away. Every second counts.</p>
         <a href="#checkout" class="bonus-cta">SECURE MY SPOT NOW →</a>
       </div>
     </section>
@@ -608,7 +592,6 @@
 
   <script>
     (function(){
-      // Video simple controls
       const video = document.getElementById('demoVideo');
       const playBtn = document.getElementById('playBtn');
       const overlay = document.getElementById('videoOverlay');
@@ -622,7 +605,6 @@
       setTimeout(()=>{ if(video && video.paused) showOverlay(true); }, 200);
       document.querySelectorAll('.video-card, video').forEach(el => el.addEventListener('contextmenu', e => e.preventDefault()));
 
-      // Accuracy chart (minimal animation)
       if(window.Chart && window.Chart.register) Chart.register(ChartDataLabels);
       function randRange(min,max){ return Math.random()*(max-min)+min; }
       function getLast7DayLabels(){ const labels=[]; const now=new Date(); for(let i=6;i>=0;i--){ const d=new Date(); d.setDate(now.getDate()-i); labels.push(d.toLocaleString(undefined,{month:'short'})+'\n'+d.getDate()); } return labels; }
@@ -637,7 +619,7 @@
       new ResizeObserver(()=> accuracyChart && accuracyChart.update()).observe(document.getElementById('accuracyChart'));
     })();
 
-    // Testimonials (pure scroll, no active class)
+    // Testimonials
     (function(){
       const TRACK = document.getElementById('testimonialTrack');
       if(!TRACK) return;
@@ -664,10 +646,11 @@
       async function fetchUsersUnique(n){ let url=`https://randomuser.me/api/?results=${Math.min(n,15)}&nat=US,GB,BR,NG,FR,ES,IT,DE&inc=name,location,picture,nat&noinfo`; try{ let r=await fetch(url); let j=await r.json(); let people=j.results||[]; function natToCountry(nat){ let fallback={US:'United States',GB:'United Kingdom',BR:'Brazil',NG:'Nigeria',FR:'France',ES:'Spain',IT:'Italy',DE:'Germany'}; return fallback[nat]||'United States'; } while(people.length<n){ let nat=['US','GB','BR','NG'][people.length%4]; let seed=`abrox-${Date.now()}-${people.length}`; people.push({ name:{first:'User'+(people.length+1),last:''}, picture:{medium:`https://robohash.org/${seed}.png?size=120x120`}, nat:nat, location:{country:natToCountry(nat)} }); } return people.slice(0,n); }catch(err){ let fallback=[]; for(let i=0;i<n;i++){ let nat=['US','GB','BR','NG'][i%4]; fallback.push({ name:{first:'User'+(i+1),last:''}, picture:{medium:`https://robohash.org/fallback-${i}.png?size=120x120`}, nat:nat, location:{country:nat==='US'?'United States':nat==='GB'?'United Kingdom':'Brazil'} }); } return fallback; } }
       (async function(){ TRACK.innerHTML=''; let people=await fetchUsersUnique(COUNT); let messages=buildUniqueMessages(COUNT); let pairs=people.map((p,i)=>({p,msg:messages[i]})); shuffle(pairs); for(let pair of pairs){ let days=Math.floor(Math.random()*90)+1; let first=pair.p.name.first, last=pair.p.name.last||''; let fullName=`${first} ${last}`.trim(); let nat=pair.p.nat?.toLowerCase()||'us'; let flagUrl=`https://flagcdn.com/24x18/${nat}.png`; let handle=makeHandle(first); let daysText=formatDaysAgo(days); let card=document.createElement('article'); card.className='testimonial-card'; card.innerHTML=`
           <div class="testimonial-avatar"><img loading="lazy" src="${pair.p.picture.medium}" alt="${fullName} avatar"></div>
-          <div class="testimonial-name-row"><div class="testimonial-name">${escapeHtml(fullName)}</div><div class="testimonial-handle">${escapeHtml(handle)}</div></div>
+          <div class="testimonial-name">${escapeHtml(fullName)}</div>
+          <div class="testimonial-handle">${escapeHtml(handle)}</div>
           <div class="testimonial-meta-row"><div class="country-badge"><img class="flag-img" src="${flagUrl}" alt="${pair.p.location.country}" onerror="this.style.display='none'"><span>${pair.p.location.country}</span></div>${renderStarsSVG()}</div>
           <div class="testimonial-text">${escapeHtml(pair.msg)}</div>
-          <div class="testimonial-date">${daysText} • Verified community member</div>
+          <div class="testimonial-date">${daysText} • Verified</div>
         `; TRACK.appendChild(card); } let cards=Array.from(TRACK.children); if(!cards.length) return; let index=0; let autoplay=setInterval(()=>{ index=(index+1)%cards.length; scrollToCard(cards[index]); }, AUTOPLAY_DELAY); function stop(){ if(autoplay){ clearInterval(autoplay); autoplay=null; } } function start(){ stop(); autoplay=setInterval(()=>{ index=(index+1)%cards.length; scrollToCard(cards[index]); }, AUTOPLAY_DELAY); } TRACK.addEventListener('mouseenter',stop); TRACK.addEventListener('mouseleave',start); prevBtn?.addEventListener('click',()=>{ index=Math.max(0,index-1); scrollToCard(cards[index]); stop(); setTimeout(start, AUTOPLAY_DELAY+300); }); nextBtn?.addEventListener('click',()=>{ index=(index+1)%cards.length; scrollToCard(cards[index]); stop(); setTimeout(start, AUTOPLAY_DELAY+300); }); })();
     })();
   </script>
