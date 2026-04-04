@@ -12,11 +12,11 @@
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
-    /* ---------- EXTREME PERFORMANCE ---------- */
+    /* ---------- EXTREME PERFORMANCE & SMOOTH SCROLLING ---------- */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body {
+    html {
       background: #03060a;
-      scroll-behavior: auto;
+      scroll-behavior: smooth; /* smooth but hardware accelerated, no jank */
     }
     body {
       min-height: 100vh;
@@ -27,13 +27,16 @@
       transform: translateZ(0);
     }
 
-    /* Disable animations that cause repaint */
-    .buy-btn, .download-btn, .pricing-cta, .play-btn, .testimonial-card, .feature-card, .benefit-card, .bonus-card {
-      transition: none !important;
-      animation: none !important;
+    /* Disable heavy animations but keep smooth scroll */
+    .buy-btn, .download-btn, .pricing-cta, .play-btn {
+      transition: transform 0.2s ease;
     }
     .buy-btn:hover, .download-btn:hover, .pricing-cta:hover {
       transform: translateY(-2px);
+    }
+    /* No infinite animations */
+    .flame-emoji, .bonus-card, .feature-card, .benefit-card {
+      animation: none;
     }
 
     /* Custom scrollbar */
@@ -94,7 +97,7 @@
     .legend-square { width:18px; height:18px; border-radius:6px; background: linear-gradient(90deg,#16a34a,#34d399); display:inline-block; }
     .muted { color: rgba(255,255,255,0.58); }
 
-    /* ========== STAT PILL (top right corner) ========== */
+    /* Stat pill top right */
     .stat-pill {
       position: fixed;
       top: 20px;
@@ -113,213 +116,64 @@
       color: #48d7ff;
       box-shadow: 0 8px 20px rgba(0,0,0,0.3);
     }
-    .stat-number {
-      font-size: 1.3rem;
-      font-weight: 900;
-      color: #fff;
-    }
+    .stat-number { font-size: 1.3rem; font-weight: 900; color: #fff; }
     @media (max-width: 640px) {
       .stat-pill { top: 10px; right: 10px; padding: 6px 14px; font-size: 0.75rem; }
       .stat-number { font-size: 1rem; }
     }
 
-    /* ========== FEATURE SECTION with header ========== */
-    .section-header {
-      text-align: center;
-      margin-bottom: 28px;
-    }
-    .section-header h2 {
-      font-size: 2rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #fff, #48d7ff);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      letter-spacing: -0.5px;
-    }
-    .features-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 28px;
-      justify-content: center;
-      margin-top: 20px;
-    }
+    /* Feature section */
+    .section-header { text-align: center; margin-bottom: 28px; }
+    .section-header h2 { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #fff, #48d7ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .features-grid { display: flex; flex-wrap: wrap; gap: 28px; justify-content: center; margin-top: 20px; }
     .feature-card {
-      flex: 1 1 300px;
-      min-width: 260px;
+      flex: 1 1 300px; min-width: 260px;
       background: linear-gradient(145deg, rgba(20,30,55,0.85), rgba(10,18,35,0.95));
-      border: 1px solid rgba(72,215,255,0.15);
-      border-radius: 28px;
-      padding: 32px 24px;
-      text-align: center;
-      box-shadow: 0 25px 45px rgba(0,0,0,0.4);
+      border: 1px solid rgba(72,215,255,0.15); border-radius: 28px; padding: 32px 24px;
+      text-align: center; box-shadow: 0 25px 45px rgba(0,0,0,0.4);
     }
-    .feature-icon {
-      width: 70px;
-      height: 70px;
-      margin: 0 auto 20px;
-      background: linear-gradient(135deg, rgba(72,215,255,0.15), rgba(55,125,255,0.08));
-      border-radius: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .feature-icon svg {
-      width: 40px;
-      height: 40px;
-      stroke: #48d7ff;
-      stroke-width: 1.5;
-      fill: none;
-    }
-    .feature-title {
-      font-size: 1.8rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #fff, #48d7ff);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      margin-bottom: 12px;
-    }
-    .feature-stat {
-      font-size: 2.5rem;
-      font-weight: 900;
-      color: #48d7ff;
-      letter-spacing: -0.02em;
-      margin-bottom: 12px;
-    }
-    .feature-desc {
-      color: rgba(255,255,255,0.75);
-      line-height: 1.6;
-      font-size: 0.95rem;
-    }
+    .feature-icon { width: 70px; height: 70px; margin: 0 auto 20px; background: linear-gradient(135deg, rgba(72,215,255,0.15), rgba(55,125,255,0.08)); border-radius: 60px; display: flex; align-items: center; justify-content: center; }
+    .feature-icon svg { width: 40px; height: 40px; stroke: #48d7ff; stroke-width: 1.5; fill: none; }
+    .feature-title { font-size: 1.8rem; font-weight: 800; background: linear-gradient(135deg, #fff, #48d7ff); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 12px; }
+    .feature-stat { font-size: 2.5rem; font-weight: 900; color: #48d7ff; margin-bottom: 12px; }
+    .feature-desc { color: rgba(255,255,255,0.75); line-height: 1.6; font-size: 0.95rem; }
 
-    /* ========== WHAT YOU'LL GET (no stat inside) ========== */
-    .benefits-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 24px;
-      justify-content: center;
-      margin-top: 16px;
-    }
+    /* What You'll Get */
+    .benefits-grid { display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; margin-top: 16px; }
     .benefit-card {
-      flex: 1 1 280px;
-      min-width: 240px;
+      flex: 1 1 280px; min-width: 240px;
       background: linear-gradient(145deg, rgba(20,30,55,0.85), rgba(10,18,35,0.95));
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 24px;
-      padding: 28px 20px;
-      text-align: center;
-      box-shadow: 0 20px 35px rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.06); border-radius: 24px; padding: 28px 20px;
+      text-align: center; box-shadow: 0 20px 35px rgba(0,0,0,0.4);
     }
-    .benefit-icon {
-      width: 64px;
-      height: 64px;
-      margin: 0 auto 18px;
-      background: rgba(72,215,255,0.1);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .benefit-icon svg {
-      width: 32px;
-      height: 32px;
-      stroke: #48d7ff;
-      stroke-width: 1.5;
-      fill: none;
-    }
-    .benefit-card h3 {
-      font-size: 1.35rem;
-      font-weight: 800;
-      margin-bottom: 12px;
-      color: #fff;
-    }
-    .benefit-card p {
-      color: rgba(255,255,255,0.7);
-      font-size: 0.9rem;
-      line-height: 1.6;
-    }
+    .benefit-icon { width: 64px; height: 64px; margin: 0 auto 18px; background: rgba(72,215,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .benefit-icon svg { width: 32px; height: 32px; stroke: #48d7ff; stroke-width: 1.5; fill: none; }
+    .benefit-card h3 { font-size: 1.35rem; font-weight: 800; margin-bottom: 12px; color: #fff; }
+    .benefit-card p { color: rgba(255,255,255,0.7); font-size: 0.9rem; line-height: 1.6; }
 
-    /* ========== BONUS OFFER SECTION ========== */
+    /* BONUS OFFER SECTION (normal emoji, no red gradient) */
     .bonus-card {
       background: linear-gradient(145deg, rgba(20,30,55,0.85), rgba(10,18,35,0.95));
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 28px;
-      padding: 32px 28px;
+      border: 1px solid rgba(255,255,255,0.06); border-radius: 28px; padding: 32px 28px;
       text-align: center;
     }
     .bonus-header {
       font-size: 2rem;
       font-weight: 800;
-      background: linear-gradient(135deg, #ff7a72, #ff3b2f);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+      color: #fff;  /* normal white text, no red gradient */
       margin-bottom: 20px;
     }
-    .bonus-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      justify-content: center;
-      margin: 20px 0;
-    }
-    .bonus-item {
-      background: rgba(72,215,255,0.08);
-      border: 1px solid rgba(72,215,255,0.2);
-      border-radius: 60px;
-      padding: 10px 22px;
-      font-weight: 700;
-      color: #48d7ff;
-    }
-    .warning-text {
-      color: #ff7a72;
-      font-weight: 800;
-      font-size: 1.3rem;
-      margin: 20px 0 16px;
-    }
-    .price-comparison {
-      background: rgba(0,0,0,0.3);
-      border-radius: 24px;
-      padding: 20px;
-      margin: 20px 0;
-    }
-    .old-price {
-      font-size: 1.4rem;
-      text-decoration: line-through;
-      color: rgba(255,255,255,0.5);
-      margin-right: 15px;
-    }
-    .new-price {
-      font-size: 3.2rem;
-      font-weight: 900;
-      color: #10b981;
-    }
-    .price-note {
-      font-size: 1rem;
-      color: rgba(255,255,255,0.7);
-      margin-top: 8px;
-    }
-    .bold-text {
-      font-weight: 800;
-      color: #fff;
-      font-size: 1rem;
-      line-height: 1.5;
-    }
-    .bonus-cta {
-      display: inline-block;
-      background: linear-gradient(90deg, #16a34a, #059669);
-      border-radius: 60px;
-      padding: 16px 32px;
-      font-weight: 900;
-      font-size: 1.3rem;
-      color: white;
-      text-decoration: none;
-      margin-top: 20px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-    }
+    .bonus-grid { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin: 20px 0; }
+    .bonus-item { background: rgba(72,215,255,0.08); border: 1px solid rgba(72,215,255,0.2); border-radius: 60px; padding: 10px 22px; font-weight: 700; color: #48d7ff; }
+    .warning-text { color: #ff7a72; font-weight: 800; font-size: 1.3rem; margin: 20px 0 16px; }
+    .price-comparison { background: rgba(0,0,0,0.3); border-radius: 24px; padding: 20px; margin: 20px 0; }
+    .old-price { font-size: 1.4rem; text-decoration: line-through; color: rgba(255,255,255,0.5); margin-right: 15px; }
+    .new-price { font-size: 3.2rem; font-weight: 900; color: #10b981; }
+    .price-note { font-size: 1rem; color: rgba(255,255,255,0.7); margin-top: 8px; }
+    .bold-text { font-weight: 800; color: #fff; font-size: 1rem; line-height: 1.5; }
+    .bonus-cta { display: inline-block; background: linear-gradient(90deg, #16a34a, #059669); border-radius: 60px; padding: 16px 32px; font-weight: 900; font-size: 1.3rem; color: white; text-decoration: none; margin-top: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
 
-    /* Testimonials */
+    /* Testimonials - FIXED: no text cutting, auto height, word break */
     .testimonials-section { display:flex; justify-content:center; padding:36px 16px 36px; }
     .testimonials-shell { width:100%; max-width:1100px; border-radius:18px; background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006)); padding:22px; box-shadow: 0 28px 60px rgba(2,6,23,0.56); border:1px solid rgba(255,255,255,0.03); }
     .testimonials-header { text-align:center; margin:0 0 20px; }
@@ -328,7 +182,7 @@
     .testimonial-track {
       display:flex; gap:20px; overflow-x:auto; scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch; padding: 16px 20px; width:100%;
-      scroll-behavior: auto;
+      scroll-behavior: smooth;
     }
     .testimonial-card {
       flex: 0 0 320px; min-width: 280px;
@@ -339,26 +193,48 @@
       padding: 22px 20px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
+      /* Prevent text cutting */
+      overflow: visible;
+      word-break: break-word;
+      white-space: normal;
+      height: auto;
+      min-height: 320px;
     }
-    .testimonial-avatar { width: 70px; height: 70px; margin: 0 auto; border-radius: 999px; overflow: hidden; border: 2px solid rgba(72,215,255,0.3); }
+    .testimonial-avatar { width: 70px; height: 70px; margin: 0 auto; border-radius: 999px; overflow: hidden; border: 2px solid rgba(72,215,255,0.3); flex-shrink: 0; }
     .testimonial-avatar img { width:100%; height:100%; object-fit:cover; }
-    .testimonial-name { font-weight: 800; text-align: center; color: #fff; }
-    .testimonial-handle { font-size: 0.8rem; text-align: center; color: rgba(255,255,255,0.6); }
-    .testimonial-meta-row { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
-    .country-badge { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 40px; font-size: 0.75rem; }
-    .stars { display: flex; gap: 4px; }
+    .testimonial-name { font-weight: 800; text-align: center; color: #fff; font-size: 1rem; margin-top: 4px; }
+    .testimonial-handle { font-size: 0.75rem; text-align: center; color: rgba(255,255,255,0.6); }
+    .testimonial-meta-row { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; flex-wrap: wrap; gap: 8px; }
+    .country-badge { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 40px; font-size: 0.7rem; }
+    .flag-img { width: 18px !important; height: 12px !important; object-fit: cover; border-radius: 2px; }
+    .stars { display: flex; gap: 3px; }
     .stars svg { width: 14px; height: 14px; }
-    .testimonial-text { color: rgba(255,255,255,0.9); line-height: 1.55; font-size: 0.9rem; text-align: center; margin: 8px 0; }
-    .testimonial-date { text-align: center; font-size: 0.7rem; color: rgba(255,255,255,0.45); }
+    .testimonial-text {
+      color: rgba(255,255,255,0.9);
+      line-height: 1.55;
+      font-size: 0.9rem;
+      text-align: center;
+      margin: 8px 0;
+      word-break: break-word;
+      overflow-wrap: break-word;
+      hyphens: auto;
+      max-width: 100%;
+    }
+    .testimonial-date { text-align: center; font-size: 0.65rem; color: rgba(255,255,255,0.45); margin-top: 4px; }
     .testimonial-nav {
       position: absolute; top: 50%; transform: translateY(-50%);
       width: 40px; height: 40px; border-radius: 999px;
       background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15);
       color: #fff; font-size: 26px; cursor: pointer; z-index: 12;
+      display: flex; align-items: center; justify-content: center;
     }
     .testimonial-nav.left { left: -8px; }
     .testimonial-nav.right { right: -8px; }
+    @media (max-width: 760px) {
+      .testimonial-card { flex: 0 0 280px; padding: 18px 14px; min-height: 300px; }
+      .testimonial-avatar { width: 60px; height: 60px; }
+    }
     footer { border-top: 1px solid rgba(255,255,255,0.05); margin-top: 2rem; padding: 1.5rem 0; text-align: center; color: rgba(255,255,255,0.5); }
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
@@ -497,73 +373,36 @@
     <!-- Revolution Technology + High-Frequency Volume Reading section -->
     <section class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
       <div class="big-glass">
-        <div class="section-header">
-          <h2>Revolution Technology</h2>
-        </div>
+        <div class="section-header"><h2>Revolution Technology</h2></div>
         <div class="features-grid">
           <div class="feature-card">
-            <div class="feature-icon">
-              <svg viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M2 20L22 20" />
-                <path d="M4 16L4 10" />
-                <path d="M8 16L8 6" />
-                <path d="M12 16L12 4" />
-                <path d="M16 16L16 8" />
-                <path d="M20 16L20 12" />
-                <rect x="2" y="2" width="20" height="20" rx="2" stroke="currentColor" fill="none" />
-              </svg>
-            </div>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" stroke="currentColor"><path d="M2 20L22 20"/><path d="M4 16L4 10"/><path d="M8 16L8 6"/><path d="M12 16L12 4"/><path d="M16 16L16 8"/><path d="M20 16L20 12"/><rect x="2" y="2" width="20" height="20" rx="2" stroke="currentColor" fill="none"/></svg></div>
             <div class="feature-title">High-Frequency Volume Reading</div>
-            <div class="feature-desc">
-              Advanced algorithm that analyzes market volume in real-time, identifying the best trading opportunities with surgical precision.
-            </div>
+            <div class="feature-desc">Advanced algorithm that analyzes market volume in real-time, identifying the best trading opportunities with surgical precision.</div>
           </div>
           <div class="feature-card">
-            <div class="feature-icon">
-              <svg viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                <circle cx="9" cy="7" r="4" />
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-              </svg>
-            </div>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
             <div class="feature-stat">+30,000</div>
-            <div class="feature-title" style="font-size:1.3rem; background: linear-gradient(135deg,#fff,#60a5fa); -webkit-background-clip:text;">Active Traders</div>
-            <div class="feature-desc">
-              Join a global community of traders who are already profiting with Abrox's cutting-edge technology.
-            </div>
+            <div class="feature-title" style="font-size:1.3rem;">Active Traders</div>
+            <div class="feature-desc">Join a global community of traders who are already profiting with Abrox's cutting-edge technology.</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- What You'll Get (without statistic inside) -->
+    <!-- What You'll Get -->
     <section class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
       <div class="big-glass">
-        <div class="section-header">
-          <h2>What You'll Get</h2>
-        </div>
+        <div class="section-header"><h2>What You'll Get</h2></div>
         <div class="benefits-grid">
-          <div class="benefit-card">
-            <div class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></svg></div>
-            <h3>Step-by-Step Classes</h3>
-            <p>Complete video lessons teaching you everything from installation to advanced strategies.</p>
-          </div>
-          <div class="benefit-card">
-            <div class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10" /><polygon points="10 8 16 12 10 16 10 8" /></svg></div>
-            <h3>Live Trading Sessions</h3>
-            <p>Access exclusive live sessions where you'll see real trades happening in real-time.</p>
-          </div>
-          <div class="benefit-card">
-            <div class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" /></svg></div>
-            <h3>Priority Support</h3>
-            <p>Get help whenever you need it from our dedicated support team.</p>
-          </div>
+          <div class="benefit-card"><div class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div><h3>Step-by-Step Classes</h3><p>Complete video lessons teaching you everything from installation to advanced strategies.</p></div>
+          <div class="benefit-card"><div class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></div><h3>Live Trading Sessions</h3><p>Access exclusive live sessions where you'll see real trades happening in real-time.</p></div>
+          <div class="benefit-card"><div class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div><h3>Priority Support</h3><p>Get help whenever you need it from our dedicated support team.</p></div>
         </div>
       </div>
     </section>
 
-    <!-- BONUS OFFER SECTION (with correct pricing $500/year → $399) -->
+    <!-- BONUS OFFER SECTION (normal 🎁 emoji, no red gradient, correct pricing $500/year → $399) -->
     <section class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
       <div class="bonus-card">
         <div class="bonus-header">🎁 BONUS OFFER</div>
@@ -619,7 +458,7 @@
       new ResizeObserver(()=> accuracyChart && accuracyChart.update()).observe(document.getElementById('accuracyChart'));
     })();
 
-    // Testimonials
+    // Testimonials with fixed text cutting
     (function(){
       const TRACK = document.getElementById('testimonialTrack');
       if(!TRACK) return;
