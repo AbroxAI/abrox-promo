@@ -74,11 +74,12 @@
     .platform-item { display: flex; flex-direction: column; align-items: center; gap: 8px; font-weight: 600; color: rgba(255,255,255,0.8); }
     .platform-icon { width: 52px; height: 52px; background: rgba(255,255,255,0.05); border-radius: 60px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.08); }
     .platform-icon svg { width: 28px; height: 28px; stroke: #48d7ff; stroke-width: 1.5; fill: none; }
-    /* FIXED TOAST – bottom-left, checkmark, wraps text, never cut */
+    /* FIXED TOAST – middle-left, checkmark, never moves with scroll */
     .toast-alert {
       position: fixed;
-      bottom: 20px;
+      top: 50%;
       left: 20px;
+      transform: translateY(-50%) translateX(-120%);
       background: linear-gradient(135deg, rgba(16,185,129,0.96), rgba(5,150,105,0.96));
       backdrop-filter: blur(8px);
       border: 1px solid rgba(255,255,255,0.25);
@@ -92,7 +93,6 @@
       color: white;
       box-shadow: 0 10px 25px rgba(0,0,0,0.3);
       z-index: 1000;
-      transform: translateX(-120%);
       transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
       max-width: 280px;
       white-space: normal;
@@ -101,7 +101,7 @@
       font-family: monospace;
       letter-spacing: 0.2px;
     }
-    .toast-alert.show { transform: translateX(0); }
+    .toast-alert.show { transform: translateY(-50%) translateX(0); }
     .toast-check {
       width: 22px;
       height: 22px;
@@ -116,7 +116,7 @@
       flex-shrink: 0;
     }
     @media (max-width: 640px) {
-      .toast-alert { bottom: 15px; left: 15px; max-width: 260px; font-size: 0.8rem; padding: 8px 14px; }
+      .toast-alert { left: 15px; max-width: 260px; font-size: 0.8rem; padding: 8px 14px; }
       .toast-check { width: 18px; height: 18px; font-size: 11px; }
     }
     .broker-logo-wrap{ width:76px; height:76px; border-radius:9999px; overflow:hidden; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.02); }
@@ -240,7 +240,7 @@
     <span id="activeCounter" class="stat-number">25,369</span>
   </div>
 
-  <!-- Fixed bottom-left toast (checkmark, wraps text) -->
+  <!-- Fixed middle-left toast (checkmark, always visible, never moves with scroll) -->
   <div id="purchaseToast" class="toast-alert">
     <div class="toast-check">✓</div>
     <span id="toastText">James Okafor (Nigeria) just purchased!</span>
@@ -425,7 +425,7 @@
       setTimeout(updateCounter, 2000);
     })();
 
-    // Just purchased toast – fixed bottom-left, shorter text, wraps
+    // Just purchased toast – fixed middle-left, random 6-10 sec
     (function() {
       const toast = document.getElementById('purchaseToast');
       const toastText = document.getElementById('toastText');
@@ -459,7 +459,7 @@
       scheduleNext();
     })();
 
-    // Video & chart logic (same as before, works)
+    // Video & chart logic (unchanged)
     (function() {
       const video = document.getElementById('demoVideo');
       const playBtn = document.getElementById('playBtn');
@@ -498,7 +498,7 @@
       new ResizeObserver(() => accuracyChart && accuracyChart.update()).observe(document.getElementById('accuracyChart'));
     })();
 
-    // Testimonials (unchanged, fully functional)
+    // Testimonials (unchanged)
     (function() {
       const TRACK = document.getElementById('testimonialTrack');
       if (!TRACK) return;
