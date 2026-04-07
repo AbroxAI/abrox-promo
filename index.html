@@ -75,7 +75,7 @@
     .platform-item { display: flex; flex-direction: column; align-items: center; gap: 8px; font-weight: 600; color: rgba(255,255,255,0.8); }
     .platform-icon { width: 52px; height: 52px; background: rgba(255,255,255,0.05); border-radius: 60px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.08); }
     .platform-icon svg { width: 28px; height: 28px; stroke: #48d7ff; stroke-width: 1.5; fill: none; }
-    /* BOLD TOAST – bottom-left, larger checkmark, bolder text */
+    /* BOLD TOAST – fixed bottom-left, larger, always visible */
     .toast-alert {
       position: fixed;
       bottom: 30px;
@@ -121,14 +121,14 @@
       .toast-alert { left: 15px; bottom: 20px; max-width: 280px; font-size: 0.85rem; padding: 10px 16px; }
       .toast-check { width: 22px; height: 22px; font-size: 14px; }
     }
-    /* MODAL STYLES */
+    /* MODAL STYLES – centered */
     .modal-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.85);
       backdrop-filter: blur(5px);
       z-index: 2000;
       display: flex;
@@ -318,7 +318,7 @@
     <span id="activeCounter" class="stat-number">25,369</span>
   </div>
 
-  <!-- Fixed bottom-left bold toast -->
+  <!-- Fixed bottom-left bold toast (always visible while scrolling) -->
   <div id="purchaseToast" class="toast-alert">
     <div class="toast-check">✓</div>
     <span id="toastText">James Okafor (Nigeria) just purchased!</span>
@@ -447,7 +447,7 @@
         </div>
         <div class="mt-6 flex flex-col items-center gap-4">
           <span class="limited-pill-outline"><span class="flame-emoji">🔥</span><span>50% OFF - Limited Time Only</span></span>
-          <!-- 3rd button: changed to SECURE YOUR SPOT NOW, same Telegram link -->
+          <!-- 3rd button: SECURE YOUR SPOT NOW, same Telegram link -->
           <a href="https://t.me/john_hunters_robot" target="_blank" class="pricing-cta" style="max-width:640px; padding:1.5rem;">SECURE YOUR SPOT NOW</a>
           <p class="text-center text-white/60">Click the button above to unlock your access</p>
         </div>
@@ -507,7 +507,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
   <script>
-    // Active traders counter (unchanged)
+    // Active traders counter
     (function() {
       const counterEl = document.getElementById('activeCounter');
       let currentValue = 25369;
