@@ -540,7 +540,7 @@
       setTimeout(updateCounter, 2000);
     })();
 
-    // ----- TOAST WITH MODAL INTEGRATION -----
+    // ----- TOAST WITH MODAL INTEGRATION & WIDE VERTICAL RANGE (5% to 95%) -----
     (function() {
       const toast = document.getElementById('purchaseToast');
       const toastText = document.getElementById('toastText');
@@ -560,10 +560,10 @@
       let toastsEnabled = true;          // controls whether new toasts can appear
       let activeToastVisible = false;    // tracks if a toast is currently visible
 
-      // random vertical position (20vh to 80vh)
+      // random vertical position between 5% and 95% to cover all sections
       function randomizeVerticalPosition() {
         if (!toast) return;
-        const top = Math.floor(Math.random() * 60) + 20; // 20-80vh
+        const top = Math.floor(Math.random() * 90) + 5; // 5% to 95%
         toast.style.top = `${top}vh`;
       }
 
@@ -586,7 +586,7 @@
         if (activeToastVisible) {
           hideToastImmediately();
         }
-        randomizeVerticalPosition();
+        randomizeVerticalPosition();           // new random vertical position each time
         toastText.innerText = message;
         toast.classList.add('show');
         activeToastVisible = true;
