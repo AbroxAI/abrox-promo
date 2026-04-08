@@ -20,6 +20,11 @@
       overscroll-behavior: none;
       transform: translateZ(0);
     }
+    body.modal-open {
+      overflow: hidden;
+      position: fixed;
+      width: 100%;
+    }
     .buy-btn, .download-btn, .pricing-cta, .play-btn { transition: transform 0.2s ease; }
     .buy-btn:hover, .download-btn:hover, .pricing-cta:hover { transform: translateY(-2px); }
     ::-webkit-scrollbar { width: 5px; height: 5px; }
@@ -62,6 +67,8 @@
       white-space:nowrap; text-decoration:none; color:#fff; background: linear-gradient(90deg,#3b82f6,#60a5fa);
       box-shadow: 0 12px 30px rgba(59,130,246,0.12);
       cursor: pointer;
+      border: none;
+      appearance: none;
     }
     .phone-icon { width:36px; height:36px; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; }
     .phone-icon svg { width:22px; height:22px; stroke: currentColor; fill: none; stroke-width:2.4; }
@@ -75,7 +82,6 @@
     .platform-item { display: flex; flex-direction: column; align-items: center; gap: 8px; font-weight: 600; color: rgba(255,255,255,0.8); }
     .platform-icon { width: 52px; height: 52px; background: rgba(255,255,255,0.05); border-radius: 60px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.08); }
     .platform-icon svg { width: 28px; height: 28px; stroke: #48d7ff; stroke-width: 1.5; fill: none; }
-    /* BOLD TOAST – MIDDLE-LEFT, always visible while scrolling */
     .toast-alert {
       position: fixed;
       top: 50%;
@@ -93,16 +99,22 @@
       font-size: 1rem;
       color: white;
       box-shadow: 0 12px 30px rgba(0,0,0,0.4);
-      z-index: 1000;
-      transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      z-index: 3000;
+      transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1), opacity 0.25s ease;
       max-width: 320px;
       white-space: normal;
       word-break: break-word;
       line-height: 1.4;
-      font-family: 'Inter', system-ui, monospace;
+      font-family: system-ui, sans-serif;
       letter-spacing: 0.3px;
+      opacity: 0;
+      pointer-events: none;
     }
-    .toast-alert.show { transform: translateY(-50%) translateX(0); }
+    .toast-alert.show {
+      transform: translateY(-50%) translateX(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
     .toast-check {
       width: 28px;
       height: 28px;
@@ -121,7 +133,6 @@
       .toast-alert { left: 15px; max-width: 280px; font-size: 0.85rem; padding: 10px 16px; }
       .toast-check { width: 22px; height: 22px; font-size: 14px; }
     }
-    /* MODAL STYLES – centered */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -137,6 +148,8 @@
       opacity: 0;
       visibility: hidden;
       transition: opacity 0.3s ease, visibility 0.3s;
+      overscroll-behavior: contain;
+      touch-action: none;
     }
     .modal-overlay.active {
       opacity: 1;
@@ -311,20 +324,17 @@
   </style>
 </head>
 <body>
-  <!-- Top-right pill with green dot -->
   <div class="stat-pill">
     <span class="green-dot"></span>
     <span>Active Traders</span>
     <span id="activeCounter" class="stat-number">25,369</span>
   </div>
 
-  <!-- Fixed middle-left bold toast (always visible while scrolling) -->
   <div id="purchaseToast" class="toast-alert">
     <div class="toast-check">✓</div>
     <span id="toastText">James Okafor (Nigeria) just purchased!</span>
   </div>
 
-  <!-- Modal for Download button -->
   <div id="downloadModal" class="modal-overlay">
     <div class="modal-content">
       <h3>📱 Download App</h3>
@@ -334,7 +344,7 @@
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
         Contact Support on Telegram
       </a>
-      <button class="modal-close" id="closeModalBtn">Close</button>
+      <button class="modal-close" id="closeModalBtn" type="button">Close</button>
     </div>
   </div>
 
@@ -342,10 +352,12 @@
     <header class="flex justify-center pt-4 pb-1">
       <img src="assets/logo.png" alt="Abrox Logo" class="site-logo object-contain" loading="eager">
     </header>
+
     <section class="hero-text">
       <h1>Tired of not getting results?</h1>
       <p>You've just found the solution.</p>
     </section>
+
     <section class="flex justify-center">
       <div class="w-full max-w-[900px]">
         <div class="video-card aspect-video">
@@ -353,7 +365,7 @@
             <source src="assets/demo.mp4" type="video/mp4">
           </video>
           <div class="video-overlay" id="videoOverlay">
-            <button id="playBtn" class="play-btn" aria-label="Play demo">
+            <button id="playBtn" class="play-btn" aria-label="Play demo" type="button">
               <svg viewBox="0 0 24 24" width="36" height="36"><path d="M8 5v14l11-7-11-7z" fill="#000"/></svg>
             </button>
           </div>
@@ -362,6 +374,7 @@
         </div>
       </div>
     </section>
+
     <section class="mt-6">
       <div class="platforms-card">
         <div class="platforms-heading">Available on</div>
@@ -373,15 +386,16 @@
         </div>
       </div>
     </section>
+
     <div class="cta-wrap">
-      <!-- Big top button: Telegram link -->
       <a id="buyBtn" class="buy-btn" href="https://t.me/john_hunters_robot" target="_blank">UNLOCK ACCESS NOW</a>
-      <!-- Download button: opens modal -->
-      <div id="downloadBtn" class="download-btn" style="cursor:pointer;">
+
+      <button id="downloadBtn" type="button" class="download-btn" style="cursor:pointer;">
         <span class="phone-icon"><svg viewBox="0 0 24 24" width="28" height="28"><rect x="6" y="2" width="12" height="20" rx="2" stroke="currentColor" stroke-width="2.4" fill="none" /><circle cx="12" cy="18.2" r="1.6" fill="currentColor" /></svg></span>
         <span>Download App</span>
-      </div>
+      </button>
     </div>
+
     <section class="mt-12 px-2 w-full">
       <div class="max-w-[1024px] mx-auto">
         <h2 class="text-center text-2xl sm:text-3xl font-bold text-white mb-6">Compatible Brokers</h2>
@@ -401,6 +415,7 @@
         </div>
       </div>
     </section>
+
     <section class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
       <div class="pricing-card p-6 md:p-8">
         <div class="flex items-center pricing-columns gap-6 flex-wrap sm:flex-nowrap">
@@ -415,6 +430,7 @@
         </div>
       </div>
     </section>
+
     <section id="accuracy" class="mt-8 px-4 w-full max-w-[1024px] mx-auto">
       <div class="big-glass">
         <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center text-white">EUR/USD Accuracy Rate</h2>
@@ -437,6 +453,7 @@
         <div class="mt-6 flex items-center justify-center gap-3"><span class="legend-square"></span><span class="text-white/60">Accuracy Rate</span></div>
       </div>
     </section>
+
     <section class="mt-6 px-4 w-full max-w-[1024px] mx-auto">
       <div class="big-glass pricing-card p-6 md:p-8">
         <div class="text-center"><h3 class="text-3xl sm:text-4xl font-extrabold text-white">Don't Miss This Opportunity</h3><p class="text-white/60 mt-2">Regular Price</p></div>
@@ -447,12 +464,12 @@
         </div>
         <div class="mt-6 flex flex-col items-center gap-4">
           <span class="limited-pill-outline"><span class="flame-emoji">🔥</span><span>50% OFF - Limited Time Only</span></span>
-          <!-- 3rd button: SECURE YOUR SPOT NOW, same Telegram link -->
           <a href="https://t.me/john_hunters_robot" target="_blank" class="pricing-cta" style="max-width:640px; padding:1.5rem;">SECURE YOUR SPOT NOW</a>
           <p class="text-center text-white/60">Click the button above to unlock your access</p>
         </div>
       </div>
     </section>
+
     <section class="testimonials-section">
       <div class="testimonials-shell">
         <div class="testimonials-header"><h2>What Our Users Say</h2><p class="text-white/60">Real reviews from real traders</p></div>
@@ -463,6 +480,7 @@
         </div>
       </div>
     </section>
+
     <section class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
       <div class="big-glass">
         <div class="section-header"><h2>Revolution Technology</h2></div>
@@ -472,6 +490,7 @@
         </div>
       </div>
     </section>
+
     <section class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
       <div class="big-glass">
         <div class="section-header"><h2>What You'll Get</h2></div>
@@ -482,6 +501,7 @@
         </div>
       </div>
     </section>
+
     <section class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
       <div class="bonus-card">
         <div class="bonus-header">🎁 BONUS OFFER</div>
@@ -500,6 +520,7 @@
         <a href="https://t.me/john_hunters_robot" target="_blank" class="bonus-cta">SECURE MY SPOT NOW →</a>
       </div>
     </section>
+
     <footer>© 2026 Abrox. All rights reserved.</footer>
   </div>
 
@@ -507,7 +528,6 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
   <script>
-    // Active traders counter
     (function() {
       const counterEl = document.getElementById('activeCounter');
       let currentValue = 25369;
@@ -520,7 +540,6 @@
       setTimeout(updateCounter, 2000);
     })();
 
-    // Just purchased toast – middle-left, bold, random 6-10 sec
     (function() {
       const toast = document.getElementById('purchaseToast');
       const toastText = document.getElementById('toastText');
@@ -532,46 +551,85 @@
         "Nina Schmidt (Germany)", "Rahul Mehta (India)", "Isabella Rossi (Italy)",
         "James Okafor (Nigeria)", "Wei Zhang (China)", "Lucas Martin (France)"
       ];
+
       let index = 0;
+      let hideTimer = null;
+      let nextTimer = null;
+      let lastScrollTrigger = 0;
+
       function showToast(message) {
+        if (!toast || !toastText) return;
         toastText.innerText = message;
         toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 4000);
+
+        clearTimeout(hideTimer);
+        hideTimer = setTimeout(() => {
+          toast.classList.remove('show');
+        }, 4000);
       }
+
       function rotatePurchase() {
         const user = users[index % users.length];
         showToast(`${user} just purchased!`);
         index++;
       }
-      setTimeout(rotatePurchase, 2000);
+
       function scheduleNext() {
+        clearTimeout(nextTimer);
         const delay = Math.random() * 4000 + 6000;
-        setTimeout(() => {
+        nextTimer = setTimeout(() => {
           rotatePurchase();
           scheduleNext();
         }, delay);
       }
+
+      rotatePurchase();
       scheduleNext();
+
+      window.addEventListener('scroll', () => {
+        const now = Date.now();
+        if (now - lastScrollTrigger > 6000) {
+          lastScrollTrigger = now;
+          rotatePurchase();
+        }
+      }, { passive: true });
     })();
 
-    // Modal logic for Download button
     const modal = document.getElementById('downloadModal');
     const downloadBtn = document.getElementById('downloadBtn');
     const closeModalBtn = document.getElementById('closeModalBtn');
+    let savedScrollY = 0;
+
+    function openModal() {
+      savedScrollY = window.scrollY || window.pageYOffset || 0;
+      document.body.classList.add('modal-open');
+      document.body.style.top = `-${savedScrollY}px`;
+      modal.classList.add('active');
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+      document.body.classList.remove('modal-open');
+      document.body.style.top = '';
+      window.scrollTo(0, savedScrollY);
+    }
+
     if (downloadBtn && modal) {
-      downloadBtn.addEventListener('click', () => {
-        modal.classList.add('active');
-      });
-      closeModalBtn.addEventListener('click', () => {
-        modal.classList.remove('active');
-      });
-      // Close modal when clicking outside content
+      downloadBtn.addEventListener('click', openModal);
+
+      closeModalBtn.addEventListener('click', closeModal);
+
       modal.addEventListener('click', (e) => {
-        if (e.target === modal) modal.classList.remove('active');
+        if (e.target === modal) closeModal();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+          closeModal();
+        }
       });
     }
 
-    // Video & chart logic (unchanged)
     (function() {
       const video = document.getElementById('demoVideo');
       const playBtn = document.getElementById('playBtn');
@@ -602,15 +660,78 @@
       function generateSmoothedValues(baseMean = 83, volatility = 3.2) { let values = [], prev = baseMean + randRange(-1.6, 1.6); for (let i = 0; i < 7; i++) { const alpha = 0.6 + Math.random() * 0.25; const noise = randRange(-volatility, volatility); let next = prev * alpha + (baseMean * (1 - alpha)) + noise * (1 - alpha * 0.5); next = Math.max(60, Math.min(98, Math.round(next * 10) / 10)); values.push(next); prev = next; } return values; }
       function createGradient(ctx, chartArea) { const g = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom); g.addColorStop(0, 'rgba(20,184,166,0.16)'); g.addColorStop(0.45, 'rgba(20,184,166,0.08)'); g.addColorStop(1, 'rgba(20,184,166,0.00)'); return g; }
       let accuracyChart = null;
-      function renderChart(labels, values) { const ctx = document.getElementById('accuracyChart').getContext('2d'); const minVal = Math.min(...values), maxVal = Math.max(...values); const suggestedMin = Math.max(60, Math.floor(minVal - 3)), suggestedMax = Math.min(100, Math.ceil(maxVal + 3)); if (accuracyChart) { accuracyChart.data.labels = labels; accuracyChart.data.datasets[0].data = values; accuracyChart.options.scales.y.suggestedMin = suggestedMin; accuracyChart.options.scales.y.suggestedMax = suggestedMax; accuracyChart.update(); return; } accuracyChart = new Chart(ctx, { type: 'line', data: { labels: labels, datasets: [{ label: 'Accuracy', data: values, tension: 0.28, borderWidth: 3, borderColor: '#10b981', pointBackgroundColor: '#34d399', pointBorderColor: '#093927', pointRadius: 5, pointHoverRadius: 7, fill: true, backgroundColor: function (context) { const chart = context.chart; const { ctx, chartArea } = chart; if (!chartArea) return null; return createGradient(ctx, chartArea); } }] }, options: { maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { enabled: true, backgroundColor: '#00140f', callbacks: { label: ctx => ctx.parsed.y + '%' } }, datalabels: { color: '#34d399', anchor: 'end', align: 'start', offset: -6, font: { weight: '700', size: 10 }, formatter: v => v + '%' } }, scales: { x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.6)', font: { size: 11 } } }, y: { beginAtZero: false, suggestedMin: suggestedMin, suggestedMax: suggestedMax, grid: { color: () => 'rgba(255,255,255,0.03)', borderDash: [4, 6] }, ticks: { color: 'rgba(255,255,255,0.42)', stepSize: 5, callback: v => v + '%' } } }, animation: { duration: 0 }, responsive: true } }); }
-      function updateStatCard(values) { const avg = values.reduce((a, b) => a + b, 0) / values.length; document.getElementById('avgPercent').innerText = avg.toFixed(1) + '%'; const ops = Math.floor(randRange(800, 1600)); document.getElementById('opsCount').innerText = 'Based on ' + ops.toLocaleString() + ' operations of 1 minute'; }
+      function renderChart(labels, values) {
+        const ctx = document.getElementById('accuracyChart').getContext('2d');
+        const minVal = Math.min(...values), maxVal = Math.max(...values);
+        const suggestedMin = Math.max(60, Math.floor(minVal - 3)), suggestedMax = Math.min(100, Math.ceil(maxVal + 3));
+        if (accuracyChart) {
+          accuracyChart.data.labels = labels;
+          accuracyChart.data.datasets[0].data = values;
+          accuracyChart.options.scales.y.suggestedMin = suggestedMin;
+          accuracyChart.options.scales.y.suggestedMax = suggestedMax;
+          accuracyChart.update();
+          return;
+        }
+        accuracyChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Accuracy',
+              data: values,
+              tension: 0.28,
+              borderWidth: 3,
+              borderColor: '#10b981',
+              pointBackgroundColor: '#34d399',
+              pointBorderColor: '#093927',
+              pointRadius: 5,
+              pointHoverRadius: 7,
+              fill: true,
+              backgroundColor: function (context) {
+                const chart = context.chart;
+                const { ctx, chartArea } = chart;
+                if (!chartArea) return null;
+                return createGradient(ctx, chartArea);
+              }
+            }]
+          },
+          options: {
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: { enabled: true, backgroundColor: '#00140f', callbacks: { label: ctx => ctx.parsed.y + '%' } },
+              datalabels: { color: '#34d399', anchor: 'end', align: 'start', offset: -6, font: { weight: '700', size: 10 }, formatter: v => v + '%' }
+            },
+            scales: {
+              x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.6)', font: { size: 11 } } },
+              y: { beginAtZero: false, suggestedMin: suggestedMin, suggestedMax: suggestedMax, grid: { color: () => 'rgba(255,255,255,0.03)', borderDash: [4, 6] }, ticks: { color: 'rgba(255,255,255,0.42)', stepSize: 5, callback: v => v + '%' } }
+            },
+            animation: { duration: 0 },
+            responsive: true
+          }
+        });
+      }
+      function updateStatCard(values) {
+        const avg = values.reduce((a, b) => a + b, 0) / values.length;
+        document.getElementById('avgPercent').innerText = avg.toFixed(1) + '%';
+        const ops = Math.floor(randRange(800, 1600));
+        document.getElementById('opsCount').innerText = 'Based on ' + ops.toLocaleString() + ' operations of 1 minute';
+      }
       const brokerSelect = document.getElementById('brokerSelect');
-      function onBrokerChange() { let seed = 0; const broker = brokerSelect.value; for (let i = 0; i < broker.length; i++) seed += broker.charCodeAt(i); const baseMean = 78 + ((seed % 12) + (new Date().getDate() % 5)) * 0.8; const values = generateSmoothedValues(baseMean, 3.3); renderChart(getLast7DayLabels(), values); updateStatCard(values); }
-      onBrokerChange(); brokerSelect.addEventListener('change', onBrokerChange);
+      function onBrokerChange() {
+        let seed = 0;
+        const broker = brokerSelect.value;
+        for (let i = 0; i < broker.length; i++) seed += broker.charCodeAt(i);
+        const baseMean = 78 + ((seed % 12) + (new Date().getDate() % 5)) * 0.8;
+        const values = generateSmoothedValues(baseMean, 3.3);
+        renderChart(getLast7DayLabels(), values);
+        updateStatCard(values);
+      }
+      onBrokerChange();
+      brokerSelect.addEventListener('change', onBrokerChange);
       new ResizeObserver(() => accuracyChart && accuracyChart.update()).observe(document.getElementById('accuracyChart'));
     })();
 
-    // Testimonials (unchanged)
     (function() {
       const TRACK = document.getElementById('testimonialTrack');
       if (!TRACK) return;
@@ -634,8 +755,61 @@
       function scrollToCard(card) { if (!card || !TRACK) return; const trackRect = TRACK.getBoundingClientRect(), cardRect = card.getBoundingClientRect(); const left = TRACK.scrollLeft + (cardRect.left - trackRect.left) - ((trackRect.width - cardRect.width) / 2); TRACK.scrollTo({ left: Math.max(0, Math.round(left)), behavior: 'smooth' }); }
       function shuffle(arr) { for (let i = arr.length - 1; i > 0; i--) { let j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; }
       function buildUniqueMessages(count) { let set = new Set(); while (set.size < count) set.add(generateTestimonial()); return Array.from(set); }
-      async function fetchUsersUnique(n) { let url = `https://randomuser.me/api/?results=${Math.min(n, 15)}&nat=US,GB,BR,NG,FR,ES,IT,DE&inc=name,location,picture,nat&noinfo`; try { let r = await fetch(url); let j = await r.json(); let people = j.results || []; function natToCountry(nat) { let fallback = { US: 'United States', GB: 'United Kingdom', BR: 'Brazil', NG: 'Nigeria', FR: 'France', ES: 'Spain', IT: 'Italy', DE: 'Germany' }; return fallback[nat] || 'United States'; } while (people.length < n) { let nat = ['US', 'GB', 'BR', 'NG'][people.length % 4]; let seed = `abrox-${Date.now()}-${people.length}`; people.push({ name: { first: 'User' + (people.length + 1), last: '' }, picture: { medium: `https://robohash.org/${seed}.png?size=120x120` }, nat: nat, location: { country: natToCountry(nat) } }); } return people.slice(0, n); } catch (err) { let fallback = []; for (let i = 0; i < n; i++) { let nat = ['US', 'GB', 'BR', 'NG'][i % 4]; fallback.push({ name: { first: 'User' + (i + 1), last: '' }, picture: { medium: `https://robohash.org/fallback-${i}.png?size=120x120` }, nat: nat, location: { country: nat === 'US' ? 'United States' : nat === 'GB' ? 'United Kingdom' : 'Brazil' } }); } return fallback; } }
-      (async function () { TRACK.innerHTML = ''; let people = await fetchUsersUnique(COUNT); let messages = buildUniqueMessages(COUNT); let pairs = people.map((p, i) => ({ p, msg: messages[i] })); shuffle(pairs); for (let pair of pairs) { let days = Math.floor(Math.random() * 90) + 1; let first = pair.p.name.first, last = pair.p.name.last || ''; let fullName = `${first} ${last}`.trim(); let nat = pair.p.nat?.toLowerCase() || 'us'; let flagUrl = `https://flagcdn.com/24x18/${nat}.png`; let handle = makeHandle(first); let daysText = formatDaysAgo(days); let card = document.createElement('article'); card.className = 'testimonial-card'; card.innerHTML = `<div class="testimonial-avatar"><img loading="lazy" src="${pair.p.picture.medium}" alt="${fullName} avatar"></div><div class="testimonial-name">${escapeHtml(fullName)}</div><div class="testimonial-handle">${escapeHtml(handle)}</div><div class="testimonial-meta-row"><div class="country-badge"><img class="flag-img" src="${flagUrl}" alt="${pair.p.location.country}" onerror="this.style.display='none'"><span>${pair.p.location.country}</span></div>${renderStarsSVG()}</div><div class="testimonial-text">${escapeHtml(pair.msg)}</div><div class="testimonial-date">${daysText} • Verified</div>`; TRACK.appendChild(card); } let cards = Array.from(TRACK.children); if (!cards.length) return; let index = 0; let autoplay = setInterval(() => { index = (index + 1) % cards.length; scrollToCard(cards[index]); }, AUTOPLAY_DELAY); function stop() { if (autoplay) { clearInterval(autoplay); autoplay = null; } } function start() { stop(); autoplay = setInterval(() => { index = (index + 1) % cards.length; scrollToCard(cards[index]); }, AUTOPLAY_DELAY); } TRACK.addEventListener('mouseenter', stop); TRACK.addEventListener('mouseleave', start); prevBtn?.addEventListener('click', () => { index = Math.max(0, index - 1); scrollToCard(cards[index]); stop(); setTimeout(start, AUTOPLAY_DELAY + 300); }); nextBtn?.addEventListener('click', () => { index = (index + 1) % cards.length; scrollToCard(cards[index]); stop(); setTimeout(start, AUTOPLAY_DELAY + 300); }); })();
+      async function fetchUsersUnique(n) {
+        let url = `https://randomuser.me/api/?results=${Math.min(n, 15)}&nat=US,GB,BR,NG,FR,ES,IT,DE&inc=name,location,picture,nat&noinfo`;
+        try {
+          let r = await fetch(url);
+          let j = await r.json();
+          let people = j.results || [];
+          function natToCountry(nat) { let fallback = { US: 'United States', GB: 'United Kingdom', BR: 'Brazil', NG: 'Nigeria', FR: 'France', ES: 'Spain', IT: 'Italy', DE: 'Germany' }; return fallback[nat] || 'United States'; }
+          while (people.length < n) {
+            let nat = ['US', 'GB', 'BR', 'NG'][people.length % 4];
+            let seed = `abrox-${Date.now()}-${people.length}`;
+            people.push({ name: { first: 'User' + (people.length + 1), last: '' }, picture: { medium: `https://robohash.org/${seed}.png?size=120x120` }, nat: nat, location: { country: natToCountry(nat) } });
+          }
+          return people.slice(0, n);
+        } catch (err) {
+          let fallback = [];
+          for (let i = 0; i < n; i++) {
+            let nat = ['US', 'GB', 'BR', 'NG'][i % 4];
+            fallback.push({ name: { first: 'User' + (i + 1), last: '' }, picture: { medium: `https://robohash.org/fallback-${i}.png?size=120x120` }, nat: nat, location: { country: nat === 'US' ? 'United States' : nat === 'GB' ? 'United Kingdom' : 'Brazil' } });
+          }
+          return fallback;
+        }
+      }
+      (async function () {
+        TRACK.innerHTML = '';
+        let people = await fetchUsersUnique(COUNT);
+        let messages = buildUniqueMessages(COUNT);
+        let pairs = people.map((p, i) => ({ p, msg: messages[i] }));
+        shuffle(pairs);
+        for (let pair of pairs) {
+          let days = Math.floor(Math.random() * 90) + 1;
+          let first = pair.p.name.first, last = pair.p.name.last || '';
+          let fullName = `${first} ${last}`.trim();
+          let nat = pair.p.nat?.toLowerCase() || 'us';
+          let flagUrl = `https://flagcdn.com/24x18/${nat}.png`;
+          let handle = makeHandle(first);
+          let daysText = formatDaysAgo(days);
+          let card = document.createElement('article');
+          card.className = 'testimonial-card';
+          card.innerHTML = `<div class="testimonial-avatar"><img loading="lazy" src="${pair.p.picture.medium}" alt="${fullName} avatar"></div><div class="testimonial-name">${escapeHtml(fullName)}</div><div class="testimonial-handle">${escapeHtml(handle)}</div><div class="testimonial-meta-row"><div class="country-badge"><img class="flag-img" src="${flagUrl}" alt="${pair.p.location.country}" onerror="this.style.display='none'"><span>${pair.p.location.country}</span></div>${renderStarsSVG()}</div><div class="testimonial-text">${escapeHtml(pair.msg)}</div><div class="testimonial-date">${daysText} • Verified</div>`;
+          TRACK.appendChild(card);
+        }
+        let cards = Array.from(TRACK.children);
+        if (!cards.length) return;
+        let index = 0;
+        let autoplay = setInterval(() => {
+          index = (index + 1) % cards.length;
+          scrollToCard(cards[index]);
+        }, AUTOPLAY_DELAY);
+        function stop() { if (autoplay) { clearInterval(autoplay); autoplay = null; } }
+        function start() { stop(); autoplay = setInterval(() => { index = (index + 1) % cards.length; scrollToCard(cards[index]); }, AUTOPLAY_DELAY); }
+        TRACK.addEventListener('mouseenter', stop);
+        TRACK.addEventListener('mouseleave', start);
+        prevBtn?.addEventListener('click', () => { index = Math.max(0, index - 1); scrollToCard(cards[index]); stop(); setTimeout(start, AUTOPLAY_DELAY + 300); });
+        nextBtn?.addEventListener('click', () => { index = (index + 1) % cards.length; scrollToCard(cards[index]); stop(); setTimeout(start, AUTOPLAY_DELAY + 300); });
+      })();
     })();
   </script>
 </body>
