@@ -20,10 +20,10 @@
       overscroll-behavior: none;
       transform: translateZ(0);
     }
+    html.modal-open,
     body.modal-open {
       overflow: hidden;
-      position: fixed;
-      width: 100%;
+      height: 100%;
     }
     .buy-btn, .download-btn, .pricing-cta, .play-btn { transition: transform 0.2s ease; }
     .buy-btn:hover, .download-btn:hover, .pricing-cta:hover { transform: translateY(-2px); }
@@ -82,11 +82,12 @@
     .platform-item { display: flex; flex-direction: column; align-items: center; gap: 8px; font-weight: 600; color: rgba(255,255,255,0.8); }
     .platform-icon { width: 52px; height: 52px; background: rgba(255,255,255,0.05); border-radius: 60px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.08); }
     .platform-icon svg { width: 28px; height: 28px; stroke: #48d7ff; stroke-width: 1.5; fill: none; }
+
     .toast-alert {
       position: fixed;
-      top: 50%;
-      left: 20px;
-      transform: translateY(-50%) translateX(-120%);
+      left: 16px;
+      top: 50vh;
+      transform: translateX(-120%) translateY(-50%);
       background: linear-gradient(135deg, rgba(16,185,129,0.98), rgba(5,150,105,0.98));
       backdrop-filter: blur(12px);
       border: 1px solid rgba(255,255,255,0.3);
@@ -100,7 +101,7 @@
       color: white;
       box-shadow: 0 12px 30px rgba(0,0,0,0.4);
       z-index: 3000;
-      transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1), opacity 0.25s ease;
+      transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1), opacity 0.25s ease, top 0.25s ease;
       max-width: 320px;
       white-space: normal;
       word-break: break-word;
@@ -111,7 +112,7 @@
       pointer-events: none;
     }
     .toast-alert.show {
-      transform: translateY(-50%) translateX(0);
+      transform: translateX(0) translateY(-50%);
       opacity: 1;
       pointer-events: auto;
     }
@@ -130,15 +131,13 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
     @media (max-width: 640px) {
-      .toast-alert { left: 15px; max-width: 280px; font-size: 0.85rem; padding: 10px 16px; }
+      .toast-alert { left: 12px; max-width: 280px; font-size: 0.85rem; padding: 10px 16px; }
       .toast-check { width: 22px; height: 22px; font-size: 14px; }
     }
+
     .modal-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       background: rgba(0,0,0,0.85);
       backdrop-filter: blur(5px);
       z-index: 2000;
@@ -148,7 +147,7 @@
       opacity: 0;
       visibility: hidden;
       transition: opacity 0.3s ease, visibility 0.3s;
-      overscroll-behavior: contain;
+      overscroll-behavior: none;
       touch-action: none;
     }
     .modal-overlay.active {
@@ -210,6 +209,7 @@
       transition: background 0.2s;
     }
     .modal-close:hover { background: rgba(255,255,255,0.2); }
+
     .broker-logo-wrap{ width:76px; height:76px; border-radius:9999px; overflow:hidden; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.02); }
     .broker-logo{ width:70%; height:70%; object-fit:contain; }
     .broker-card{ background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.012)); border:1px solid rgba(255,255,255,0.03); border-radius:14px; padding:1rem; display:flex; flex-direction:column; align-items:center; gap:0.75rem; min-height:130px; }
@@ -557,8 +557,15 @@
       let nextTimer = null;
       let lastScrollTrigger = 0;
 
+      function randomizePosition() {
+        if (!toast) return;
+        const top = Math.floor(Math.random() * 60) + 20; // 20vh to 80vh
+        toast.style.top = `${top}vh`;
+      }
+
       function showToast(message) {
         if (!toast || !toastText) return;
+        randomizePosition();
         toastText.innerText = message;
         toast.classList.add('show');
 
@@ -588,47 +595,50 @@
 
       window.addEventListener('scroll', () => {
         const now = Date.now();
-        if (now - lastScrollTrigger > 6000) {
+        if (now - lastScrollTrigger > 5000) {
           lastScrollTrigger = now;
           rotatePurchase();
         }
       }, { passive: true });
     })();
 
-    const modal = document.getElementById('downloadModal');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const closeModalBtn = document.getElementById('closeModalBtn');
-    let savedScrollY = 0;
+    (function() {
+      const modal = document.getElementById('downloadModal');
+      const downloadBtn = document.getElementById('downloadBtn');
+      const closeModalBtn = document.getElementById('closeModalBtn');
+      const htmlEl = document.documentElement;
 
-    function openModal() {
-      savedScrollY = window.scrollY || window.pageYOffset || 0;
-      document.body.classList.add('modal-open');
-      document.body.style.top = `-${savedScrollY}px`;
-      modal.classList.add('active');
-    }
+      function openModal() {
+        htmlEl.classList.add('modal-open');
+        document.body.classList.add('modal-open');
+        modal.classList.add('active');
+      }
 
-    function closeModal() {
-      modal.classList.remove('active');
-      document.body.classList.remove('modal-open');
-      document.body.style.top = '';
-      window.scrollTo(0, savedScrollY);
-    }
+      function closeModal() {
+        modal.classList.remove('active');
+        htmlEl.classList.remove('modal-open');
+        document.body.classList.remove('modal-open');
+      }
 
-    if (downloadBtn && modal) {
-      downloadBtn.addEventListener('click', openModal);
+      if (downloadBtn && modal) {
+        downloadBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          openModal();
+        });
 
-      closeModalBtn.addEventListener('click', closeModal);
+        closeModalBtn.addEventListener('click', closeModal);
 
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
-      });
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) closeModal();
+        });
 
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-          closeModal();
-        }
-      });
-    }
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+          }
+        });
+      }
+    })();
 
     (function() {
       const video = document.getElementById('demoVideo');
@@ -747,7 +757,6 @@
       function formatDollar(n) { return '$' + n; }
       function genProfitSnippet() { let period; if (Math.random() < 0.45) { let days = randBetween(3, 14); period = days === 1 ? '1 day' : `${days} days`; } else { let weeks = randBetween(1, 6); period = weeks === 1 ? '1 week' : `${weeks} weeks`; } let start = pickStartAmount(); let profitMin = Math.max(120, Math.round(start * 0.4)); let profitMax = Math.min(2300, Math.round(start * 3.5)); let profit = Math.round(randBetween(profitMin, profitMax) / 10) * 10; let end = start + profit; let tpl = profitTemplates[Math.floor(Math.random() * profitTemplates.length)]; return tpl.replace('${start}', formatDollar(start)).replace('${profit}', formatDollar(profit)).replace('${end}', formatDollar(end)).replace('${period}', period); }
       function generateTestimonial() { let parts = []; if (Math.random() < 0.6) parts.push(genProfitSnippet()); parts.push(experienceSnippets[Math.floor(Math.random() * experienceSnippets.length)]); if (Math.random() < 0.3) parts.push(realismSnippets[Math.floor(Math.random() * realismSnippets.length)]); return parts.join(" "); }
-      const NATS = ['US', 'GB', 'BR', 'NG', 'FR', 'ES', 'IT', 'DE', 'CA', 'AU', 'NL', 'SE', 'CH', 'DK', 'IE'];
       function formatDaysAgo(days) { if (days <= 0) return 'today'; if (days === 1) return '1 day ago'; if (days < 7) return days + ' days ago'; if (days < 14) return '1 week ago'; if (days < 30) return Math.floor(days / 7) + ' weeks ago'; if (days < 60) return '1 month ago'; if (days < 365) return Math.round(days / 30) + ' months ago'; let yrs = Math.floor(days / 365); return yrs + (yrs === 1 ? ' year ago' : ' years ago'); }
       function makeHandle(first) { let suffixes = ['X', 'Coin', 'Node', 'Dex', 'Trader', 'Swap']; if (Math.random() < 0.4) { return '@' + first.toLowerCase() + suffixes[Math.floor(Math.random() * suffixes.length)]; } else { return '@' + first.toLowerCase() + (Math.random() < 0.2 ? '_' + Math.floor(Math.random() * 999) : ''); } }
       function renderStarsSVG() { let stars = '<div class="stars">'; for (let i = 0; i < 5; i++) stars += '<svg viewBox="0 0 24 24"><path fill="#F59E0B" d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.402 8.168L12 18.896l-6.336 3.992 1.402-8.168L1.132 9.21l8.2-1.192z"/></svg>'; stars += '</div>'; return stars; }
