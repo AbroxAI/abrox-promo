@@ -396,7 +396,8 @@
       </button>
     </div>
 
-    <section class="mt-12 px-2 w-full">
+    <!-- Compatible Brokers section -->
+    <section id="brokers-section" class="mt-12 px-2 w-full">
       <div class="max-w-[1024px] mx-auto">
         <h2 class="text-center text-2xl sm:text-3xl font-bold text-white mb-6">Compatible Brokers</h2>
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
@@ -416,7 +417,8 @@
       </div>
     </section>
 
-    <section class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
+    <!-- Pricing section 1 -->
+    <section id="pricing-section" class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
       <div class="pricing-card p-6 md:p-8">
         <div class="flex items-center pricing-columns gap-6 flex-wrap sm:flex-nowrap">
           <div class="w-1/3 min-w-[130px] text-center"><div class="text-sm text-white/60">Regular Price:</div><div class="mt-3"><span class="strike text-2xl md:text-3xl font-bold text-white/60">$500/year</span></div></div>
@@ -431,7 +433,8 @@
       </div>
     </section>
 
-    <section id="accuracy" class="mt-8 px-4 w-full max-w-[1024px] mx-auto">
+    <!-- Accuracy section -->
+    <section id="accuracy-section" class="mt-8 px-4 w-full max-w-[1024px] mx-auto">
       <div class="big-glass">
         <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center text-white">EUR/USD Accuracy Rate</h2>
         <p class="text-center text-white/60 mt-2 mb-4">Last 7 days performance</p>
@@ -454,7 +457,8 @@
       </div>
     </section>
 
-    <section class="mt-6 px-4 w-full max-w-[1024px] mx-auto">
+    <!-- Pricing section 2 -->
+    <section id="pricing2-section" class="mt-6 px-4 w-full max-w-[1024px] mx-auto">
       <div class="big-glass pricing-card p-6 md:p-8">
         <div class="text-center"><h3 class="text-3xl sm:text-4xl font-extrabold text-white">Don't Miss This Opportunity</h3><p class="text-white/60 mt-2">Regular Price</p></div>
         <div class="mt-4 flex items-center justify-center gap-6 flex-wrap sm:flex-nowrap">
@@ -470,7 +474,8 @@
       </div>
     </section>
 
-    <section class="testimonials-section">
+    <!-- Testimonials section -->
+    <section id="testimonials-section" class="testimonials-section">
       <div class="testimonials-shell">
         <div class="testimonials-header"><h2>What Our Users Say</h2><p class="text-white/60">Real reviews from real traders</p></div>
         <div class="testimonial-outer">
@@ -481,7 +486,8 @@
       </div>
     </section>
 
-    <section class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
+    <!-- Features section -->
+    <section id="features-section" class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
       <div class="big-glass">
         <div class="section-header"><h2>Revolution Technology</h2></div>
         <div class="features-grid">
@@ -491,7 +497,8 @@
       </div>
     </section>
 
-    <section class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
+    <!-- Benefits section -->
+    <section id="benefits-section" class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
       <div class="big-glass">
         <div class="section-header"><h2>What You'll Get</h2></div>
         <div class="benefits-grid">
@@ -502,7 +509,8 @@
       </div>
     </section>
 
-    <section class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
+    <!-- Bonus section -->
+    <section id="bonus-section" class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
       <div class="bonus-card">
         <div class="bonus-header">🎁 BONUS OFFER</div>
         <div class="bonus-grid">
@@ -540,7 +548,7 @@
       setTimeout(updateCounter, 2000);
     })();
 
-    // ----- TOAST WITH MODAL INTEGRATION & WIDE VERTICAL RANGE (5% to 95%) -----
+    // ----- TOAST WITH SECTION-BASED POSITIONING -----
     (function() {
       const toast = document.getElementById('purchaseToast');
       const toastText = document.getElementById('toastText');
@@ -556,18 +564,11 @@
       let index = 0;
       let hideTimer = null;
       let nextTimer = null;
-      let lastScrollTrigger = 0;
-      let toastsEnabled = true;          // controls whether new toasts can appear
-      let activeToastVisible = false;    // tracks if a toast is currently visible
+      let toastsEnabled = true;
+      let activeToastVisible = false;
+      let lastTriggeredSection = null;
 
-      // random vertical position between 5% and 95% to cover all sections
-      function randomizeVerticalPosition() {
-        if (!toast) return;
-        const top = Math.floor(Math.random() * 90) + 5; // 5% to 95%
-        toast.style.top = `${top}vh`;
-      }
-
-      // hide toast immediately (without waiting for timer)
+      // Hide toast immediately
       function hideToastImmediately() {
         if (!toast) return;
         toast.classList.remove('show');
@@ -578,15 +579,26 @@
         }
       }
 
-      // show a new toast with given message (only if toastsEnabled)
-      function showToastMessage(message) {
-        if (!toastsEnabled) return;           // modal is open → do not show
+      // Position the toast relative to a given DOM element (section)
+      function positionToastNearElement(element) {
+        if (!element || !toast) return;
+        const rect = element.getBoundingClientRect();
+        // Place the toast at the top of the section + 30px, but clamp between 20vh and 80vh
+        let top = rect.top + 30;
+        const minTop = window.innerHeight * 0.1;   // 10vh
+        const maxTop = window.innerHeight * 0.85;  // 85vh
+        top = Math.min(maxTop, Math.max(minTop, top));
+        toast.style.top = `${top}px`;
+      }
+
+      // Show toast with a specific message and position relative to a section
+      function showToastMessageForSection(message, sectionElement) {
+        if (!toastsEnabled) return;
         if (!toast || !toastText) return;
-        // if a toast is already visible, hide it first (fresh one)
         if (activeToastVisible) {
           hideToastImmediately();
         }
-        randomizeVerticalPosition();           // new random vertical position each time
+        positionToastNearElement(sectionElement);
         toastText.innerText = message;
         toast.classList.add('show');
         activeToastVisible = true;
@@ -599,57 +611,98 @@
         }, 4000);
       }
 
-      // generate and show a random purchase toast
-      function rotatePurchase() {
+      // Generate random purchase message
+      function getRandomPurchaseMessage() {
         const user = users[index % users.length];
-        showToastMessage(`${user} just purchased!`);
         index++;
+        return `${user} just purchased!`;
       }
 
-      // schedule next automatic toast (only if enabled)
-      function scheduleNext() {
+      // Trigger toast for a given section (with a cooldown per section)
+      let sectionCooldown = {};
+      function triggerToastForSection(sectionId, sectionElement) {
+        const now = Date.now();
+        if (sectionCooldown[sectionId] && now - sectionCooldown[sectionId] < 15000) return; // 15 sec cooldown per section
+        sectionCooldown[sectionId] = now;
+        const msg = getRandomPurchaseMessage();
+        showToastMessageForSection(msg, sectionElement);
+      }
+
+      // Set up IntersectionObserver to detect when each section becomes visible
+      const sections = [
+        { id: 'hero', element: document.querySelector('.hero-text') },
+        { id: 'brokers', element: document.getElementById('brokers-section') },
+        { id: 'pricing', element: document.getElementById('pricing-section') },
+        { id: 'accuracy', element: document.getElementById('accuracy-section') },
+        { id: 'pricing2', element: document.getElementById('pricing2-section') },
+        { id: 'testimonials', element: document.getElementById('testimonials-section') },
+        { id: 'features', element: document.getElementById('features-section') },
+        { id: 'benefits', element: document.getElementById('benefits-section') },
+        { id: 'bonus', element: document.getElementById('bonus-section') }
+      ].filter(s => s.element);
+
+      const observer = new IntersectionObserver((entries) => {
+        if (!toastsEnabled) return;
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const sectionEl = entry.target;
+            const sectionId = sectionEl.id || sectionEl.classList?.[0] || 'unknown';
+            triggerToastForSection(sectionId, sectionEl);
+            // Only trigger once per scroll into a section (observer will call again if it leaves and re-enters, but cooldown prevents spam)
+          }
+        }
+      }, { threshold: 0.4 }); // trigger when 40% of the section is visible
+
+      sections.forEach(s => observer.observe(s.element));
+
+      // Also keep a random timer (every 8-12 seconds) that picks a random section currently in view
+      function getRandomVisibleSection() {
+        const visible = sections.filter(s => {
+          const rect = s.element.getBoundingClientRect();
+          return rect.top < window.innerHeight - 100 && rect.bottom > 100;
+        });
+        if (visible.length === 0) return null;
+        return visible[Math.floor(Math.random() * visible.length)];
+      }
+
+      function randomTimerToast() {
+        if (!toastsEnabled) return;
+        const visibleSection = getRandomVisibleSection();
+        if (visibleSection) {
+          triggerToastForSection(visibleSection.id + '_timer', visibleSection.element);
+        } else {
+          // fallback: just show anywhere with a default position (20-80vh random)
+          if (!activeToastVisible) {
+            const msg = getRandomPurchaseMessage();
+            showToastMessageForSection(msg, document.body);
+          }
+        }
+        scheduleRandomTimer();
+      }
+
+      function scheduleRandomTimer() {
         if (!toastsEnabled) return;
         clearTimeout(nextTimer);
-        const delay = Math.random() * 4000 + 6000; // 6-10 seconds
-        nextTimer = setTimeout(() => {
-          rotatePurchase();
-          scheduleNext();   // re-schedule after showing
-        }, delay);
+        const delay = Math.random() * 5000 + 8000; // 8-13 seconds
+        nextTimer = setTimeout(randomTimerToast, delay);
       }
 
-      // ---- public controls for modal ----
+      // Disable toasts (modal open)
       function disableToastsAndHide() {
         toastsEnabled = false;
-        // clear any pending scheduled toast
-        if (nextTimer) {
-          clearTimeout(nextTimer);
-          nextTimer = null;
-        }
-        // hide currently visible toast
+        if (nextTimer) clearTimeout(nextTimer);
         hideToastImmediately();
       }
 
       function enableToastsAndResume() {
         toastsEnabled = true;
-        // start the automatic cycle again
-        scheduleNext();
+        scheduleRandomTimer();
       }
 
-      // initial start
-      rotatePurchase();        // show first toast immediately
-      scheduleNext();          // start the recurring cycle
+      // Initial start
+      scheduleRandomTimer();
 
-      // scroll trigger – only when toasts are enabled
-      window.addEventListener('scroll', () => {
-        if (!toastsEnabled) return;
-        const now = Date.now();
-        if (now - lastScrollTrigger > 5000) {
-          lastScrollTrigger = now;
-          rotatePurchase();
-        }
-      }, { passive: true });
-
-      // expose functions globally for modal integration
+      // Expose for modal
       window.__toastController = {
         disable: disableToastsAndHide,
         enable: enableToastsAndResume
@@ -664,10 +717,7 @@
       const htmlEl = document.documentElement;
 
       function openModal() {
-        // disable toasts and hide any visible toast
-        if (window.__toastController) {
-          window.__toastController.disable();
-        }
+        if (window.__toastController) window.__toastController.disable();
         htmlEl.classList.add('modal-open');
         document.body.classList.add('modal-open');
         modal.classList.add('active');
@@ -677,10 +727,7 @@
         modal.classList.remove('active');
         htmlEl.classList.remove('modal-open');
         document.body.classList.remove('modal-open');
-        // re-enable toasts and resume schedule
-        if (window.__toastController) {
-          window.__toastController.enable();
-        }
+        if (window.__toastController) window.__toastController.enable();
       }
 
       if (downloadBtn && modal) {
@@ -688,21 +735,17 @@
           e.preventDefault();
           openModal();
         });
-
         closeModalBtn.addEventListener('click', closeModal);
-
         modal.addEventListener('click', (e) => {
           if (e.target === modal) closeModal();
         });
-
         document.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-          }
+          if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
         });
       }
     })();
 
+    // ----- Video & Chart & Testimonials (unchanged except section IDs) -----
     (function() {
       const video = document.getElementById('demoVideo');
       const playBtn = document.getElementById('playBtn');
