@@ -354,7 +354,7 @@
       <img src="assets/logo.png" alt="Abrox Logo" class="site-logo object-contain" loading="eager">
     </header>
 
-    <section class="hero-text">
+    <section id="hero-section" class="hero-text">
       <h1>Tired of not getting results?</h1>
       <p>You've just found the solution.</p>
     </section>
@@ -396,7 +396,6 @@
       </button>
     </div>
 
-    <!-- Sections with IDs for toast triggering -->
     <section id="brokers-section" class="mt-12 px-2 w-full">
       <div class="max-w-[1024px] mx-auto">
         <h2 class="text-center text-2xl sm:text-3xl font-bold text-white mb-6">Compatible Brokers</h2>
@@ -522,7 +521,7 @@
       </div>
     </section>
 
-    <footer>© 2026 Abrox. All rights reserved.</footer>
+    <footer id="footer-section">© 2026 Abrox. All rights reserved.</footer>
   </div>
 
   <script src="https://unpkg.com/lucide@latest/dist/lucide.min.js" defer></script>
@@ -541,7 +540,7 @@
       setTimeout(updateCounter, 2000);
     })();
 
-    // ----- SECTION-BASED TOAST (left-side notification) -----
+    // ----- SECTION-BASED TOAST (triggers on hero, every section, and footer) -----
     (function () {
       const toast = document.getElementById('purchaseToast');
       const toastText = document.getElementById('toastText');
@@ -555,10 +554,9 @@
 
       let userIndex = 0;
       let hideTimer = null;
-      let lastShownAt = 0;
       let modalOpen = false;
-
-      const COOLDOWN_MS = 2500;
+      const sectionCooldown = new Map();
+      const COOLDOWN_MS = 12000;
 
       function nextMessage() {
         const name = users[userIndex % users.length];
@@ -567,13 +565,9 @@
       }
 
       function showToast(message) {
-        const now = Date.now();
-        if (now - lastShownAt < COOLDOWN_MS) return;
         if (!toast || !toastText || modalOpen) return;
 
-        lastShownAt = now;
         toastText.textContent = message;
-
         toast.style.top = `${Math.max(120, window.innerHeight * 0.72)}px`;
         toast.classList.add('show');
 
@@ -583,26 +577,33 @@
         }, 3500);
       }
 
-      const sections = document.querySelectorAll(
-        '#brokers-section, #pricing1-section, #accuracy-section, #pricing2-section, #testimonials-section, #features-section, #benefits-section, #bonus-section'
-      );
+      function trigger(sectionId) {
+        const now = Date.now();
+        const last = sectionCooldown.get(sectionId) || 0;
+        if (now - last < COOLDOWN_MS) return;
+
+        sectionCooldown.set(sectionId, now);
+        showToast(nextMessage());
+      }
+
+      const sections = document.querySelectorAll('section[id], footer[id]');
 
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && !modalOpen) {
-            showToast(nextMessage());
-          }
+          if (!entry.isIntersecting || modalOpen) return;
+          trigger(entry.target.id);
         });
-      }, { threshold: 0.45 });
+      }, {
+        threshold: 0,
+        rootMargin: '0px 0px -65% 0px'
+      });
 
       sections.forEach(section => observer.observe(section));
 
       window.__toastController = {
         setModalOpen: (open) => {
           modalOpen = open;
-          if (open && toast) {
-            toast.classList.remove('show');
-          }
+          if (open && toast) toast.classList.remove('show');
         }
       };
     })();
@@ -907,7 +908,7 @@
         if (days < 60) return '1 month ago';
         if (days < 365) return Math.round(days / 30) + ' months ago';
         let yrs = Math.floor(days / 365);
-        return yrs + (yrs === 1 ? ' year ago' : 'years ago');
+        return yrs + (yrs === 1 ? ' year ago' : ' years ago');
       }
 
       function makeHandle(first) {
@@ -997,20 +998,7 @@
 
           let card = document.createElement('article');
           card.className = 'testimonial-card';
-          card.innerHTML = `
-            <div class="testimonial-avatar"><img loading="lazy" src="${pair.p.picture.medium}" alt="${fullName} avatar"></div>
-            <div class="testimonial-name">${escapeHtml(fullName)}</div>
-            <div class="testimonial-handle">${escapeHtml(handle)}</div>
-            <div class="testimonial-meta-row">
-              <div class="country-badge">
-                <img class="flag-img" src="${flagUrl}" alt="${pair.p.location.country}" onerror="this.style.display='none'">
-                <span>${pair.p.location.country}</span>
-              </div>
-              ${renderStarsSVG()}
-            </div>
-            <div class="testimonial-text">${escapeHtml(pair.msg)}</div>
-            <div class="testimonial-date">${daysText} • Verified</div>
-          `;
+          card.innerHTML = `<div class="testimonial-avatar"><img loading="lazy" src="${pair.p.picture.medium}" alt="${fullName} avatar"></div><div class="testimonial-name">${escapeHtml(fullName)}</div><div class="testimonial-handle">${escapeHtml(handle)}</div><div class="testimonial-meta-row"><div class="country-badge"><img class="flag-img" src="${flagUrl}" alt="${pair.p.location.country}" onerror="this.style.display='none'"><span>${pair.p.location.country}</span></div>${renderStarsSVG()}</div><div class="testimonial-text">${escapeHtml(pair.msg)}</div><div class="testimonial-date">${daysText} • Verified</div>`;
           TRACK.appendChild(card);
         }
 
