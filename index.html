@@ -83,26 +83,25 @@
     .platform-icon { width: 52px; height: 52px; background: rgba(255,255,255,0.05); border-radius: 60px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.08); }
     .platform-icon svg { width: 28px; height: 28px; stroke: #48d7ff; stroke-width: 1.5; fill: none; }
 
-    /* Toast - fixed at bottom left */
     .toast-alert {
       position: fixed;
       left: 16px;
-      bottom: 20px;
-      transform: translateX(-120%);
+      top: 72vh;
+      transform: translateX(-120%) translateY(-50%);
       background: linear-gradient(135deg, rgba(16,185,129,0.98), rgba(5,150,105,0.98));
       backdrop-filter: blur(12px);
       border: 1px solid rgba(255,255,255,0.3);
       border-radius: 20px;
-      padding: 12px 20px;
+      padding: 14px 22px;
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-weight: 700;
-      font-size: 0.95rem;
+      gap: 14px;
+      font-weight: 800;
+      font-size: 1rem;
       color: white;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.4);
       z-index: 3000;
-      transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1), opacity 0.25s ease;
+      transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1), opacity 0.25s ease;
       max-width: 320px;
       white-space: normal;
       word-break: break-word;
@@ -111,15 +110,16 @@
       letter-spacing: 0.3px;
       opacity: 0;
       pointer-events: none;
+      will-change: transform, opacity, top;
     }
     .toast-alert.show {
-      transform: translateX(0);
+      transform: translateX(0) translateY(-50%);
       opacity: 1;
       pointer-events: auto;
     }
     .toast-check {
-      width: 26px;
-      height: 26px;
+      width: 28px;
+      height: 28px;
       background: white;
       border-radius: 50%;
       display: inline-flex;
@@ -127,12 +127,12 @@
       justify-content: center;
       color: #10b981;
       font-weight: 900;
-      font-size: 16px;
+      font-size: 18px;
       flex-shrink: 0;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
     @media (max-width: 640px) {
-      .toast-alert { left: 12px; bottom: 12px; max-width: 280px; font-size: 0.85rem; padding: 10px 16px; }
+      .toast-alert { left: 12px; max-width: 280px; font-size: 0.85rem; padding: 10px 16px; }
       .toast-check { width: 22px; height: 22px; font-size: 14px; }
     }
 
@@ -333,7 +333,7 @@
 
   <div id="purchaseToast" class="toast-alert">
     <div class="toast-check">✓</div>
-    <span id="toastText">Felipe Cardoso – Brazil – Just purchased!</span>
+    <span id="toastText">James Okafor (Nigeria) just purchased!</span>
   </div>
 
   <div id="downloadModal" class="modal-overlay">
@@ -396,7 +396,8 @@
       </button>
     </div>
 
-    <section class="mt-12 px-2 w-full">
+    <!-- Sections with IDs for toast triggering -->
+    <section id="brokers-section" class="mt-12 px-2 w-full">
       <div class="max-w-[1024px] mx-auto">
         <h2 class="text-center text-2xl sm:text-3xl font-bold text-white mb-6">Compatible Brokers</h2>
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
@@ -416,7 +417,7 @@
       </div>
     </section>
 
-    <section class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
+    <section id="pricing1-section" class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
       <div class="pricing-card p-6 md:p-8">
         <div class="flex items-center pricing-columns gap-6 flex-wrap sm:flex-nowrap">
           <div class="w-1/3 min-w-[130px] text-center"><div class="text-sm text-white/60">Regular Price:</div><div class="mt-3"><span class="strike text-2xl md:text-3xl font-bold text-white/60">$500/year</span></div></div>
@@ -431,7 +432,7 @@
       </div>
     </section>
 
-    <section id="accuracy" class="mt-8 px-4 w-full max-w-[1024px] mx-auto">
+    <section id="accuracy-section" class="mt-8 px-4 w-full max-w-[1024px] mx-auto">
       <div class="big-glass">
         <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center text-white">EUR/USD Accuracy Rate</h2>
         <p class="text-center text-white/60 mt-2 mb-4">Last 7 days performance</p>
@@ -454,7 +455,7 @@
       </div>
     </section>
 
-    <section class="mt-6 px-4 w-full max-w-[1024px] mx-auto">
+    <section id="pricing2-section" class="mt-6 px-4 w-full max-w-[1024px] mx-auto">
       <div class="big-glass pricing-card p-6 md:p-8">
         <div class="text-center"><h3 class="text-3xl sm:text-4xl font-extrabold text-white">Don't Miss This Opportunity</h3><p class="text-white/60 mt-2">Regular Price</p></div>
         <div class="mt-4 flex items-center justify-center gap-6 flex-wrap sm:flex-nowrap">
@@ -470,7 +471,7 @@
       </div>
     </section>
 
-    <section class="testimonials-section">
+    <section id="testimonials-section" class="testimonials-section">
       <div class="testimonials-shell">
         <div class="testimonials-header"><h2>What Our Users Say</h2><p class="text-white/60">Real reviews from real traders</p></div>
         <div class="testimonial-outer">
@@ -481,7 +482,7 @@
       </div>
     </section>
 
-    <section class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
+    <section id="features-section" class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
       <div class="big-glass">
         <div class="section-header"><h2>Revolution Technology</h2></div>
         <div class="features-grid">
@@ -491,7 +492,7 @@
       </div>
     </section>
 
-    <section class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
+    <section id="benefits-section" class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
       <div class="big-glass">
         <div class="section-header"><h2>What You'll Get</h2></div>
         <div class="benefits-grid">
@@ -502,7 +503,7 @@
       </div>
     </section>
 
-    <section class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
+    <section id="bonus-section" class="mt-10 px-4 w-full max-w-[1024px] mx-auto">
       <div class="bonus-card">
         <div class="bonus-header">🎁 BONUS OFFER</div>
         <div class="bonus-grid">
@@ -540,104 +541,73 @@
       setTimeout(updateCounter, 2000);
     })();
 
-    // ----- SIMPLE BOTTOM-LEFT TOAST (no section tracking, just timer + scroll) -----
-    (function() {
+    // ----- SECTION-BASED TOAST (left-side notification) -----
+    (function () {
       const toast = document.getElementById('purchaseToast');
       const toastText = document.getElementById('toastText');
+
       const users = [
-        "Felipe Cardoso – Brazil", "Omar Al-Rashid – UAE", "Sophia Chen – Singapore",
-        "Carlos Mendez – Mexico", "Aisha Khan – Pakistan", "Liam O'Connor – Ireland",
-        "Yuki Tanaka – Japan", "Maria Garcia – Spain", "David Kim – South Korea",
-        "Fatima Al-Mansouri – Qatar", "James Wilson – Australia", "Elena Petrova – Russia",
-        "Mohamed Ali – Egypt", "Nina Schmidt – Germany", "Rahul Mehta – India",
-        "Isabella Rossi – Italy", "James Okafor – Nigeria", "Wei Zhang – China",
-        "Lucas Martin – France"
+        "Felipe Cardoso (Brazil)", "Sophia Chen (Singapore)", "James Okafor (Nigeria)",
+        "Maria Garcia (Spain)", "Liam O'Connor (Ireland)", "Yuki Tanaka (Japan)",
+        "Omar Al-Rashid (UAE)", "Aisha Khan (Pakistan)", "David Kim (South Korea)",
+        "Fatima Al-Mansouri (Qatar)", "Elena Petrova (Russia)", "Mohamed Ali (Egypt)"
       ];
 
       let userIndex = 0;
       let hideTimer = null;
-      let nextTimer = null;
-      let lastScrollTrigger = 0;
-      let toastsEnabled = true;
-      let activeToastVisible = false;
+      let lastShownAt = 0;
+      let modalOpen = false;
 
-      function hideToastImmediately() {
-        if (!toast) return;
-        toast.classList.remove('show');
-        activeToastVisible = false;
-        if (hideTimer) {
-          clearTimeout(hideTimer);
-          hideTimer = null;
-        }
+      const COOLDOWN_MS = 2500;
+
+      function nextMessage() {
+        const name = users[userIndex % users.length];
+        userIndex++;
+        return `${name} - Just purchased!`;
       }
 
-      function showToastMessage(message) {
-        if (!toastsEnabled) return;
-        if (!toast || !toastText) return;
-        if (activeToastVisible) hideToastImmediately();
+      function showToast(message) {
+        const now = Date.now();
+        if (now - lastShownAt < COOLDOWN_MS) return;
+        if (!toast || !toastText || modalOpen) return;
 
-        toastText.innerText = message;
+        lastShownAt = now;
+        toastText.textContent = message;
+
+        toast.style.top = `${Math.max(120, window.innerHeight * 0.72)}px`;
         toast.classList.add('show');
-        activeToastVisible = true;
 
         clearTimeout(hideTimer);
         hideTimer = setTimeout(() => {
           toast.classList.remove('show');
-          activeToastVisible = false;
-          hideTimer = null;
-        }, 4000);
+        }, 3500);
       }
 
-      function getNextPurchaseMessage() {
-        const user = users[userIndex % users.length];
-        userIndex++;
-        return `${user} just purchased!`;
-      }
+      const sections = document.querySelectorAll(
+        '#brokers-section, #pricing1-section, #accuracy-section, #pricing2-section, #testimonials-section, #features-section, #benefits-section, #bonus-section'
+      );
 
-      function rotatePurchase() {
-        const msg = getNextPurchaseMessage();
-        showToastMessage(msg);
-      }
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !modalOpen) {
+            showToast(nextMessage());
+          }
+        });
+      }, { threshold: 0.45 });
 
-      function scheduleNext() {
-        if (!toastsEnabled) return;
-        clearTimeout(nextTimer);
-        const delay = Math.random() * 4000 + 6000; // 6-10 seconds
-        nextTimer = setTimeout(() => {
-          rotatePurchase();
-          scheduleNext();
-        }, delay);
-      }
+      sections.forEach(section => observer.observe(section));
 
-      // Scroll trigger (5 sec cooldown)
-      window.addEventListener('scroll', () => {
-        if (!toastsEnabled) return;
-        const now = Date.now();
-        if (now - lastScrollTrigger > 5000) {
-          lastScrollTrigger = now;
-          rotatePurchase();
-        }
-      }, { passive: true });
-
-      // Initial start
-      rotatePurchase();
-      scheduleNext();
-
-      // Expose controller for modal
       window.__toastController = {
-        disable: () => {
-          toastsEnabled = false;
-          if (nextTimer) clearTimeout(nextTimer);
-          hideToastImmediately();
-        },
-        enable: () => {
-          toastsEnabled = true;
-          scheduleNext();
+        setModalOpen: (open) => {
+          modalOpen = open;
+          if (open && toast) {
+            toast.classList.remove('show');
+          }
         }
       };
     })();
 
-    // ----- MODAL (disables toasts when open) -----
+    // ----- MODAL -----
     (function() {
       const modal = document.getElementById('downloadModal');
       const downloadBtn = document.getElementById('downloadBtn');
@@ -645,7 +615,7 @@
       const htmlEl = document.documentElement;
 
       function openModal() {
-        if (window.__toastController) window.__toastController.disable();
+        if (window.__toastController) window.__toastController.setModalOpen(true);
         htmlEl.classList.add('modal-open');
         document.body.classList.add('modal-open');
         modal.classList.add('active');
@@ -655,7 +625,7 @@
         modal.classList.remove('active');
         htmlEl.classList.remove('modal-open');
         document.body.classList.remove('modal-open');
-        if (window.__toastController) window.__toastController.enable();
+        if (window.__toastController) window.__toastController.setModalOpen(false);
       }
 
       if (downloadBtn && modal) {
@@ -663,51 +633,112 @@
           e.preventDefault();
           openModal();
         });
+
         closeModalBtn.addEventListener('click', closeModal);
+
         modal.addEventListener('click', (e) => {
           if (e.target === modal) closeModal();
         });
+
         document.addEventListener('keydown', (e) => {
           if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
         });
       }
     })();
 
-    // ----- Video & Chart & Testimonials (unchanged) -----
+    // ----- Video & Chart & Testimonials -----
     (function() {
       const video = document.getElementById('demoVideo');
       const playBtn = document.getElementById('playBtn');
       const overlay = document.getElementById('videoOverlay');
       const spinner = document.getElementById('loadingSpinner');
       const unmuteHint = document.getElementById('unmuteHint');
-      function showOverlay(show) { if(overlay) { overlay.style.opacity = show ? '1' : '0'; overlay.style.pointerEvents = show ? 'auto' : 'none'; } }
+
+      function showOverlay(show) {
+        if (overlay) {
+          overlay.style.opacity = show ? '1' : '0';
+          overlay.style.pointerEvents = show ? 'auto' : 'none';
+        }
+      }
+
       if (playBtn && video) {
         playBtn.addEventListener('click', (e) => {
           e.stopPropagation();
           if (video.paused) {
             if (spinner) spinner.classList.remove('hidden');
-            video.play().then(() => { if (spinner) spinner.classList.add('hidden'); showOverlay(false); }).catch(() => { if (spinner) spinner.classList.add('hidden'); });
-          } else { video.pause(); showOverlay(true); }
+            video.play().then(() => {
+              if (spinner) spinner.classList.add('hidden');
+              showOverlay(false);
+            }).catch(() => {
+              if (spinner) spinner.classList.add('hidden');
+            });
+          } else {
+            video.pause();
+            showOverlay(true);
+          }
         });
       }
+
       if (video) {
-        video.addEventListener('play', () => { showOverlay(false); if (video.muted && unmuteHint) unmuteHint.style.opacity = '1'; });
-        video.addEventListener('pause', () => { showOverlay(true); if (unmuteHint) unmuteHint.style.opacity = '0'; });
-        video.addEventListener('canplay', () => { if (spinner) spinner.classList.add('hidden'); if (!video.paused) showOverlay(false); });
+        video.addEventListener('play', () => {
+          showOverlay(false);
+          if (video.muted && unmuteHint) unmuteHint.style.opacity = '1';
+        });
+        video.addEventListener('pause', () => {
+          showOverlay(true);
+          if (unmuteHint) unmuteHint.style.opacity = '0';
+        });
+        video.addEventListener('canplay', () => {
+          if (spinner) spinner.classList.add('hidden');
+          if (!video.paused) showOverlay(false);
+        });
       }
+
       setTimeout(() => { if (video && video.paused) showOverlay(true); }, 200);
       document.querySelectorAll('.video-card, video').forEach(el => el.addEventListener('contextmenu', e => e.preventDefault()));
 
       if (window.Chart && window.Chart.register) Chart.register(ChartDataLabels);
+
       function randRange(min, max) { return Math.random() * (max - min) + min; }
-      function getLast7DayLabels() { const labels = []; const now = new Date(); for (let i = 6; i >= 0; i--) { const d = new Date(); d.setDate(now.getDate() - i); labels.push(d.toLocaleString(undefined, { month: 'short' }) + '\n' + d.getDate()); } return labels; }
-      function generateSmoothedValues(baseMean = 83, volatility = 3.2) { let values = [], prev = baseMean + randRange(-1.6, 1.6); for (let i = 0; i < 7; i++) { const alpha = 0.6 + Math.random() * 0.25; const noise = randRange(-volatility, volatility); let next = prev * alpha + (baseMean * (1 - alpha)) + noise * (1 - alpha * 0.5); next = Math.max(60, Math.min(98, Math.round(next * 10) / 10)); values.push(next); prev = next; } return values; }
-      function createGradient(ctx, chartArea) { const g = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom); g.addColorStop(0, 'rgba(20,184,166,0.16)'); g.addColorStop(0.45, 'rgba(20,184,166,0.08)'); g.addColorStop(1, 'rgba(20,184,166,0.00)'); return g; }
+      function getLast7DayLabels() {
+        const labels = [];
+        const now = new Date();
+        for (let i = 6; i >= 0; i--) {
+          const d = new Date();
+          d.setDate(now.getDate() - i);
+          labels.push(d.toLocaleString(undefined, { month: 'short' }) + '\n' + d.getDate());
+        }
+        return labels;
+      }
+
+      function generateSmoothedValues(baseMean = 83, volatility = 3.2) {
+        let values = [], prev = baseMean + randRange(-1.6, 1.6);
+        for (let i = 0; i < 7; i++) {
+          const alpha = 0.6 + Math.random() * 0.25;
+          const noise = randRange(-volatility, volatility);
+          let next = prev * alpha + (baseMean * (1 - alpha)) + noise * (1 - alpha * 0.5);
+          next = Math.max(60, Math.min(98, Math.round(next * 10) / 10));
+          values.push(next);
+          prev = next;
+        }
+        return values;
+      }
+
+      function createGradient(ctx, chartArea) {
+        const g = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+        g.addColorStop(0, 'rgba(20,184,166,0.16)');
+        g.addColorStop(0.45, 'rgba(20,184,166,0.08)');
+        g.addColorStop(1, 'rgba(20,184,166,0.00)');
+        return g;
+      }
+
       let accuracyChart = null;
+
       function renderChart(labels, values) {
         const ctx = document.getElementById('accuracyChart').getContext('2d');
         const minVal = Math.min(...values), maxVal = Math.max(...values);
         const suggestedMin = Math.max(60, Math.floor(minVal - 3)), suggestedMax = Math.min(100, Math.ceil(maxVal + 3));
+
         if (accuracyChart) {
           accuracyChart.data.labels = labels;
           accuracyChart.data.datasets[0].data = values;
@@ -716,6 +747,7 @@
           accuracyChart.update();
           return;
         }
+
         accuracyChart = new Chart(ctx, {
           type: 'line',
           data: {
@@ -743,25 +775,48 @@
             maintainAspectRatio: false,
             plugins: {
               legend: { display: false },
-              tooltip: { enabled: true, backgroundColor: '#00140f', callbacks: { label: ctx => ctx.parsed.y + '%' } },
-              datalabels: { color: '#34d399', anchor: 'end', align: 'start', offset: -6, font: { weight: '700', size: 10 }, formatter: v => v + '%' }
+              tooltip: {
+                enabled: true,
+                backgroundColor: '#00140f',
+                callbacks: { label: ctx => ctx.parsed.y + '%' }
+              },
+              datalabels: {
+                color: '#34d399',
+                anchor: 'end',
+                align: 'start',
+                offset: -6,
+                font: { weight: '700', size: 10 },
+                formatter: v => v + '%'
+              }
             },
             scales: {
-              x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.6)', font: { size: 11 } } },
-              y: { beginAtZero: false, suggestedMin: suggestedMin, suggestedMax: suggestedMax, grid: { color: () => 'rgba(255,255,255,0.03)', borderDash: [4, 6] }, ticks: { color: 'rgba(255,255,255,0.42)', stepSize: 5, callback: v => v + '%' } }
+              x: {
+                grid: { display: false },
+                ticks: { color: 'rgba(255,255,255,0.6)', font: { size: 11 } }
+              },
+              y: {
+                beginAtZero: false,
+                suggestedMin: suggestedMin,
+                suggestedMax: suggestedMax,
+                grid: { color: () => 'rgba(255,255,255,0.03)', borderDash: [4, 6] },
+                ticks: { color: 'rgba(255,255,255,0.42)', stepSize: 5, callback: v => v + '%' }
+              }
             },
             animation: { duration: 0 },
             responsive: true
           }
         });
       }
+
       function updateStatCard(values) {
         const avg = values.reduce((a, b) => a + b, 0) / values.length;
         document.getElementById('avgPercent').innerText = avg.toFixed(1) + '%';
         const ops = Math.floor(randRange(800, 1600));
         document.getElementById('opsCount').innerText = 'Based on ' + ops.toLocaleString() + ' operations of 1 minute';
       }
+
       const brokerSelect = document.getElementById('brokerSelect');
+
       function onBrokerChange() {
         let seed = 0;
         const broker = brokerSelect.value;
@@ -771,6 +826,7 @@
         renderChart(getLast7DayLabels(), values);
         updateStatCard(values);
       }
+
       onBrokerChange();
       brokerSelect.addEventListener('change', onBrokerChange);
       new ResizeObserver(() => accuracyChart && accuracyChart.update()).observe(document.getElementById('accuracyChart'));
@@ -779,32 +835,134 @@
     (function() {
       const TRACK = document.getElementById('testimonialTrack');
       if (!TRACK) return;
+
       const prevBtn = document.getElementById('prevTestimonial');
       const nextBtn = document.getElementById('nextTestimonial');
       const COUNT = 10;
       const AUTOPLAY_DELAY = 20000;
-      const experienceSnippets = ["Signals are structured and easy to follow.", "I like how it doesn’t overtrade.", "Support actually responds fast.", "Risk management is what makes the difference.", "Entries are clean and not rushed.", "Much better than the other bots I tried.", "Feels disciplined, not hype-based.", "Good for people who work full time.", "Alerts are clear and simple.", "Finally something consistent."];
-      const realismSnippets = ["Consistency matters — small wins add up over time.", "Takes discipline, but it works when you follow the rules.", "It’s not magic — structured trading and patience win out.", "As long as you manage position sizes, the results compound.", "Best used with sensible risk sizing and discipline."];
-      const profitTemplates = ["Started with ${start} and made about ${profit} in ${period}.", "Made ${profit} in ${period} — withdrew part and kept compounding.", "Grew ${start} to ${end} in ${period}, took partial profits."];
+
+      const experienceSnippets = [
+        "Signals are structured and easy to follow.",
+        "I like how it doesn’t overtrade.",
+        "Support actually responds fast.",
+        "Risk management is what makes the difference.",
+        "Entries are clean and not rushed.",
+        "Much better than the other bots I tried.",
+        "Feels disciplined, not hype-based.",
+        "Good for people who work full time.",
+        "Alerts are clear and simple.",
+        "Finally something consistent."
+      ];
+
+      const realismSnippets = [
+        "Consistency matters — small wins add up over time.",
+        "Takes discipline, but it works when you follow the rules.",
+        "It’s not magic — structured trading and patience win out.",
+        "As long as you manage position sizes, the results compound.",
+        "Best used with sensible risk sizing and discipline."
+      ];
+
+      const profitTemplates = [
+        "Started with ${start} and made about ${profit} in ${period}.",
+        "Made ${profit} in ${period} — withdrew part and kept compounding.",
+        "Grew ${start} to ${end} in ${period}, took partial profits."
+      ];
+
       function randBetween(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
       function pickStartAmount() { return [200, 250, 300, 400, 500, 750, 1000][Math.floor(Math.random() * 7)]; }
       function formatDollar(n) { return '$' + n; }
-      function genProfitSnippet() { let period; if (Math.random() < 0.45) { let days = randBetween(3, 14); period = days === 1 ? '1 day' : `${days} days`; } else { let weeks = randBetween(1, 6); period = weeks === 1 ? '1 week' : `${weeks} weeks`; } let start = pickStartAmount(); let profitMin = Math.max(120, Math.round(start * 0.4)); let profitMax = Math.min(2300, Math.round(start * 3.5)); let profit = Math.round(randBetween(profitMin, profitMax) / 10) * 10; let end = start + profit; let tpl = profitTemplates[Math.floor(Math.random() * profitTemplates.length)]; return tpl.replace('${start}', formatDollar(start)).replace('${profit}', formatDollar(profit)).replace('${end}', formatDollar(end)).replace('${period}', period); }
-      function generateTestimonial() { let parts = []; if (Math.random() < 0.6) parts.push(genProfitSnippet()); parts.push(experienceSnippets[Math.floor(Math.random() * experienceSnippets.length)]); if (Math.random() < 0.3) parts.push(realismSnippets[Math.floor(Math.random() * realismSnippets.length)]); return parts.join(" "); }
-      function formatDaysAgo(days) { if (days <= 0) return 'today'; if (days === 1) return '1 day ago'; if (days < 7) return days + ' days ago'; if (days < 14) return '1 week ago'; if (days < 30) return Math.floor(days / 7) + ' weeks ago'; if (days < 60) return '1 month ago'; if (days < 365) return Math.round(days / 30) + ' months ago'; let yrs = Math.floor(days / 365); return yrs + (yrs === 1 ? ' year ago' : ' years ago'); }
-      function makeHandle(first) { let suffixes = ['X', 'Coin', 'Node', 'Dex', 'Trader', 'Swap']; if (Math.random() < 0.4) { return '@' + first.toLowerCase() + suffixes[Math.floor(Math.random() * suffixes.length)]; } else { return '@' + first.toLowerCase() + (Math.random() < 0.2 ? '_' + Math.floor(Math.random() * 999) : ''); } }
-      function renderStarsSVG() { let stars = '<div class="stars">'; for (let i = 0; i < 5; i++) stars += '<svg viewBox="0 0 24 24"><path fill="#F59E0B" d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.402 8.168L12 18.896l-6.336 3.992 1.402-8.168L1.132 9.21l8.2-1.192z"/></svg>'; stars += '</div>'; return stars; }
-      function escapeHtml(str) { return (str + '').replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); }
-      function scrollToCard(card) { if (!card || !TRACK) return; const trackRect = TRACK.getBoundingClientRect(), cardRect = card.getBoundingClientRect(); const left = TRACK.scrollLeft + (cardRect.left - trackRect.left) - ((trackRect.width - cardRect.width) / 2); TRACK.scrollTo({ left: Math.max(0, Math.round(left)), behavior: 'smooth' }); }
-      function shuffle(arr) { for (let i = arr.length - 1; i > 0; i--) { let j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; }
-      function buildUniqueMessages(count) { let set = new Set(); while (set.size < count) set.add(generateTestimonial()); return Array.from(set); }
+
+      function genProfitSnippet() {
+        let period;
+        if (Math.random() < 0.45) {
+          let days = randBetween(3, 14);
+          period = days === 1 ? '1 day' : `${days} days`;
+        } else {
+          let weeks = randBetween(1, 6);
+          period = weeks === 1 ? '1 week' : `${weeks} weeks`;
+        }
+        let start = pickStartAmount();
+        let profitMin = Math.max(120, Math.round(start * 0.4));
+        let profitMax = Math.min(2300, Math.round(start * 3.5));
+        let profit = Math.round(randBetween(profitMin, profitMax) / 10) * 10;
+        let end = start + profit;
+        let tpl = profitTemplates[Math.floor(Math.random() * profitTemplates.length)];
+        return tpl.replace('${start}', formatDollar(start)).replace('${profit}', formatDollar(profit)).replace('${end}', formatDollar(end)).replace('${period}', period);
+      }
+
+      function generateTestimonial() {
+        let parts = [];
+        if (Math.random() < 0.6) parts.push(genProfitSnippet());
+        parts.push(experienceSnippets[Math.floor(Math.random() * experienceSnippets.length)]);
+        if (Math.random() < 0.3) parts.push(realismSnippets[Math.floor(Math.random() * realismSnippets.length)]);
+        return parts.join(" ");
+      }
+
+      function formatDaysAgo(days) {
+        if (days <= 0) return 'today';
+        if (days === 1) return '1 day ago';
+        if (days < 7) return days + ' days ago';
+        if (days < 14) return '1 week ago';
+        if (days < 30) return Math.floor(days / 7) + ' weeks ago';
+        if (days < 60) return '1 month ago';
+        if (days < 365) return Math.round(days / 30) + ' months ago';
+        let yrs = Math.floor(days / 365);
+        return yrs + (yrs === 1 ? ' year ago' : 'years ago');
+      }
+
+      function makeHandle(first) {
+        let suffixes = ['X', 'Coin', 'Node', 'Dex', 'Trader', 'Swap'];
+        if (Math.random() < 0.4) {
+          return '@' + first.toLowerCase() + suffixes[Math.floor(Math.random() * suffixes.length)];
+        } else {
+          return '@' + first.toLowerCase() + (Math.random() < 0.2 ? '_' + Math.floor(Math.random() * 999) : '');
+        }
+      }
+
+      function renderStarsSVG() {
+        let stars = '<div class="stars">';
+        for (let i = 0; i < 5; i++) stars += '<svg viewBox="0 0 24 24"><path fill="#F59E0B" d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.402 8.168L12 18.896l-6.336 3.992 1.402-8.168L1.132 9.21l8.2-1.192z"/></svg>';
+        stars += '</div>';
+        return stars;
+      }
+
+      function escapeHtml(str) {
+        return (str + '').replace(/[&<>]/g, function (c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c];
+        });
+      }
+
+      function scrollToCard(card) {
+        if (!card || !TRACK) return;
+        const trackRect = TRACK.getBoundingClientRect(), cardRect = card.getBoundingClientRect();
+        const left = TRACK.scrollLeft + (cardRect.left - trackRect.left) - ((trackRect.width - cardRect.width) / 2);
+        TRACK.scrollTo({ left: Math.max(0, Math.round(left)), behavior: 'smooth' });
+      }
+
+      function shuffle(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+          let j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+      }
+
+      function buildUniqueMessages(count) {
+        let set = new Set();
+        while (set.size < count) set.add(generateTestimonial());
+        return Array.from(set);
+      }
+
       async function fetchUsersUnique(n) {
         let url = `https://randomuser.me/api/?results=${Math.min(n, 15)}&nat=US,GB,BR,NG,FR,ES,IT,DE&inc=name,location,picture,nat&noinfo`;
         try {
           let r = await fetch(url);
           let j = await r.json();
           let people = j.results || [];
-          function natToCountry(nat) { let fallback = { US: 'United States', GB: 'United Kingdom', BR: 'Brazil', NG: 'Nigeria', FR: 'France', ES: 'Spain', IT: 'Italy', DE: 'Germany' }; return fallback[nat] || 'United States'; }
+          function natToCountry(nat) {
+            let fallback = { US: 'United States', GB: 'United Kingdom', BR: 'Brazil', NG: 'Nigeria', FR: 'France', ES: 'Spain', IT: 'Italy', DE: 'Germany' };
+            return fallback[nat] || 'United States';
+          }
           while (people.length < n) {
             let nat = ['US', 'GB', 'BR', 'NG'][people.length % 4];
             let seed = `abrox-${Date.now()}-${people.length}`;
@@ -820,12 +978,14 @@
           return fallback;
         }
       }
+
       (async function () {
         TRACK.innerHTML = '';
         let people = await fetchUsersUnique(COUNT);
         let messages = buildUniqueMessages(COUNT);
         let pairs = people.map((p, i) => ({ p, msg: messages[i] }));
         shuffle(pairs);
+
         for (let pair of pairs) {
           let days = Math.floor(Math.random() * 90) + 1;
           let first = pair.p.name.first, last = pair.p.name.last || '';
@@ -834,24 +994,64 @@
           let flagUrl = `https://flagcdn.com/24x18/${nat}.png`;
           let handle = makeHandle(first);
           let daysText = formatDaysAgo(days);
+
           let card = document.createElement('article');
           card.className = 'testimonial-card';
-          card.innerHTML = `<div class="testimonial-avatar"><img loading="lazy" src="${pair.p.picture.medium}" alt="${fullName} avatar"></div><div class="testimonial-name">${escapeHtml(fullName)}</div><div class="testimonial-handle">${escapeHtml(handle)}</div><div class="testimonial-meta-row"><div class="country-badge"><img class="flag-img" src="${flagUrl}" alt="${pair.p.location.country}" onerror="this.style.display='none'"><span>${pair.p.location.country}</span></div>${renderStarsSVG()}</div><div class="testimonial-text">${escapeHtml(pair.msg)}</div><div class="testimonial-date">${daysText} • Verified</div>`;
+          card.innerHTML = `
+            <div class="testimonial-avatar"><img loading="lazy" src="${pair.p.picture.medium}" alt="${fullName} avatar"></div>
+            <div class="testimonial-name">${escapeHtml(fullName)}</div>
+            <div class="testimonial-handle">${escapeHtml(handle)}</div>
+            <div class="testimonial-meta-row">
+              <div class="country-badge">
+                <img class="flag-img" src="${flagUrl}" alt="${pair.p.location.country}" onerror="this.style.display='none'">
+                <span>${pair.p.location.country}</span>
+              </div>
+              ${renderStarsSVG()}
+            </div>
+            <div class="testimonial-text">${escapeHtml(pair.msg)}</div>
+            <div class="testimonial-date">${daysText} • Verified</div>
+          `;
           TRACK.appendChild(card);
         }
+
         let cards = Array.from(TRACK.children);
         if (!cards.length) return;
+
         let index = 0;
         let autoplay = setInterval(() => {
           index = (index + 1) % cards.length;
           scrollToCard(cards[index]);
         }, AUTOPLAY_DELAY);
-        function stop() { if (autoplay) { clearInterval(autoplay); autoplay = null; } }
-        function start() { stop(); autoplay = setInterval(() => { index = (index + 1) % cards.length; scrollToCard(cards[index]); }, AUTOPLAY_DELAY); }
+
+        function stop() {
+          if (autoplay) {
+            clearInterval(autoplay);
+            autoplay = null;
+          }
+        }
+
+        function start() {
+          stop();
+          autoplay = setInterval(() => {
+            index = (index + 1) % cards.length;
+            scrollToCard(cards[index]);
+          }, AUTOPLAY_DELAY);
+        }
+
         TRACK.addEventListener('mouseenter', stop);
         TRACK.addEventListener('mouseleave', start);
-        prevBtn?.addEventListener('click', () => { index = Math.max(0, index - 1); scrollToCard(cards[index]); stop(); setTimeout(start, AUTOPLAY_DELAY + 300); });
-        nextBtn?.addEventListener('click', () => { index = (index + 1) % cards.length; scrollToCard(cards[index]); stop(); setTimeout(start, AUTOPLAY_DELAY + 300); });
+        prevBtn?.addEventListener('click', () => {
+          index = Math.max(0, index - 1);
+          scrollToCard(cards[index]);
+          stop();
+          setTimeout(start, AUTOPLAY_DELAY + 300);
+        });
+        nextBtn?.addEventListener('click', () => {
+          index = (index + 1) % cards.length;
+          scrollToCard(cards[index]);
+          stop();
+          setTimeout(start, AUTOPLAY_DELAY + 300);
+        });
       })();
     })();
   </script>
