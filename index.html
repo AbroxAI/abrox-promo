@@ -10,7 +10,6 @@
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* (All other existing styles remain exactly the same) */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { background: #03060a; scroll-behavior: smooth; }
     body {
@@ -84,11 +83,11 @@
     .platform-icon { width: 52px; height: 52px; background: rgba(255,255,255,0.05); border-radius: 60px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.08); }
     .platform-icon svg { width: 28px; height: 28px; stroke: #48d7ff; stroke-width: 1.5; fill: none; }
 
-    /* Toast repositioned to left-middle */
+    /* Toast fixed at left‑middle */
     .toast-alert {
       position: fixed;
       left: 16px;
-      top: 50%;                      /* vertical center */
+      top: 50%;
       transform: translateX(-120%) translateY(-50%);
       background: linear-gradient(135deg, rgba(16,185,129,0.98), rgba(5,150,105,0.98));
       backdrop-filter: blur(12px);
@@ -138,7 +137,6 @@
       .toast-check { width: 22px; height: 22px; font-size: 14px; }
     }
 
-    /* All other CSS unchanged... */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -531,7 +529,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
   <script>
-    // (All existing JavaScript logic remains unchanged except for toast positioning)
+    // Counter
     (function() {
       const counterEl = document.getElementById('activeCounter');
       let currentValue = 25369;
@@ -544,7 +542,7 @@
       setTimeout(updateCounter, 2000);
     })();
 
-    // ----- SECTION-BASED TOAST (left‑middle version) -----
+    // ----- TOAST (Left‑Middle, triggers on sections AND after scroll stops) -----
     (function () {
       const toast = document.getElementById('purchaseToast');
       const toastText = document.getElementById('toastText');
@@ -562,6 +560,10 @@
       const sectionCooldown = new Map();
       const COOLDOWN_MS = 12000;
 
+      // Scroll‑stop detection
+      let scrollEndTimer = null;
+      const SCROLL_STOP_DELAY = 3000; // 3 seconds after scrolling stops
+
       function nextMessage() {
         const name = users[userIndex % users.length];
         userIndex++;
@@ -572,7 +574,6 @@
         if (!toast || !toastText || modalOpen) return;
 
         toastText.textContent = message;
-        // No dynamic top setting – CSS handles vertical centering
         toast.classList.add('show');
 
         clearTimeout(hideTimer);
@@ -590,8 +591,8 @@
         showToast(nextMessage());
       }
 
+      // Intersection Observer for sections
       const sections = document.querySelectorAll('section[id], footer[id]');
-
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting || modalOpen) return;
@@ -603,6 +604,21 @@
       });
 
       sections.forEach(section => observer.observe(section));
+
+      // Scroll‑stop trigger
+      function handleScrollStop() {
+        if (modalOpen) return;
+        const now = Date.now();
+        const last = sectionCooldown.get('__scrollStop__') || 0;
+        if (now - last < COOLDOWN_MS) return;
+        sectionCooldown.set('__scrollStop__', now);
+        showToast(nextMessage());
+      }
+
+      window.addEventListener('scroll', () => {
+        clearTimeout(scrollEndTimer);
+        scrollEndTimer = setTimeout(handleScrollStop, SCROLL_STOP_DELAY);
+      }, { passive: true });
 
       window.__toastController = {
         setModalOpen: (open) => {
