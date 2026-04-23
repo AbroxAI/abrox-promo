@@ -542,7 +542,7 @@
       setTimeout(updateCounter, 2000);
     })();
 
-    // ----- TOAST (Left‑Middle, triggers on sections AND after scroll stops) -----
+    // ----- TOAST (Left‑Middle, triggers periodically + sections + scroll‑stop) -----
     (function () {
       const toast = document.getElementById('purchaseToast');
       const toastText = document.getElementById('toastText');
@@ -619,6 +619,16 @@
         clearTimeout(scrollEndTimer);
         scrollEndTimer = setTimeout(handleScrollStop, SCROLL_STOP_DELAY);
       }, { passive: true });
+
+      // --- PERIODIC TOAST (every 12 seconds) ---
+      setInterval(() => {
+        if (modalOpen) return;
+        const now = Date.now();
+        const last = sectionCooldown.get('__periodic__') || 0;
+        if (now - last < COOLDOWN_MS) return;
+        sectionCooldown.set('__periodic__', now);
+        showToast(nextMessage());
+      }, 12000);
 
       window.__toastController = {
         setModalOpen: (open) => {
