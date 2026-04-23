@@ -560,9 +560,8 @@
       const sectionCooldown = new Map();
       const COOLDOWN_MS = 12000;
 
-      // Scroll‑stop detection
       let scrollEndTimer = null;
-      const SCROLL_STOP_DELAY = 3000; // 3 seconds after scrolling stops
+      const SCROLL_STOP_DELAY = 3000;
 
       function nextMessage() {
         const name = users[userIndex % users.length];
@@ -591,7 +590,6 @@
         showToast(nextMessage());
       }
 
-      // Intersection Observer for sections
       const sections = document.querySelectorAll('section[id], footer[id]');
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
@@ -605,7 +603,6 @@
 
       sections.forEach(section => observer.observe(section));
 
-      // Scroll‑stop trigger
       function handleScrollStop() {
         if (modalOpen) return;
         const now = Date.now();
@@ -620,7 +617,6 @@
         scrollEndTimer = setTimeout(handleScrollStop, SCROLL_STOP_DELAY);
       }, { passive: true });
 
-      // --- PERIODIC TOAST (every 12 seconds) ---
       setInterval(() => {
         if (modalOpen) return;
         const now = Date.now();
