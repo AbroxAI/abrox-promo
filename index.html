@@ -10,6 +10,7 @@
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    /* (All other existing styles remain exactly the same) */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { background: #03060a; scroll-behavior: smooth; }
     body {
@@ -83,10 +84,11 @@
     .platform-icon { width: 52px; height: 52px; background: rgba(255,255,255,0.05); border-radius: 60px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.08); }
     .platform-icon svg { width: 28px; height: 28px; stroke: #48d7ff; stroke-width: 1.5; fill: none; }
 
+    /* Toast repositioned to left-middle */
     .toast-alert {
       position: fixed;
       left: 16px;
-      top: 72vh;
+      top: 50%;                      /* vertical center */
       transform: translateX(-120%) translateY(-50%);
       background: linear-gradient(135deg, rgba(16,185,129,0.98), rgba(5,150,105,0.98));
       backdrop-filter: blur(12px);
@@ -110,7 +112,7 @@
       letter-spacing: 0.3px;
       opacity: 0;
       pointer-events: none;
-      will-change: transform, opacity, top;
+      will-change: transform, opacity;
     }
     .toast-alert.show {
       transform: translateX(0) translateY(-50%);
@@ -136,6 +138,7 @@
       .toast-check { width: 22px; height: 22px; font-size: 14px; }
     }
 
+    /* All other CSS unchanged... */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -528,6 +531,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
   <script>
+    // (All existing JavaScript logic remains unchanged except for toast positioning)
     (function() {
       const counterEl = document.getElementById('activeCounter');
       let currentValue = 25369;
@@ -540,7 +544,7 @@
       setTimeout(updateCounter, 2000);
     })();
 
-    // ----- SECTION-BASED TOAST (triggers on hero, every section, and footer) -----
+    // ----- SECTION-BASED TOAST (left‑middle version) -----
     (function () {
       const toast = document.getElementById('purchaseToast');
       const toastText = document.getElementById('toastText');
@@ -568,7 +572,7 @@
         if (!toast || !toastText || modalOpen) return;
 
         toastText.textContent = message;
-        toast.style.top = `${Math.max(120, window.innerHeight * 0.72)}px`;
+        // No dynamic top setting – CSS handles vertical centering
         toast.classList.add('show');
 
         clearTimeout(hideTimer);
@@ -647,7 +651,7 @@
       }
     })();
 
-    // ----- Video & Chart & Testimonials -----
+    // ----- Video & Chart & Testimonials (unchanged) -----
     (function() {
       const video = document.getElementById('demoVideo');
       const playBtn = document.getElementById('playBtn');
